@@ -1,0 +1,31 @@
+[
+  {
+    "version": "0.1",
+    "date": "2026-08-10T17:30:00",
+    "author": "claude",
+    "summary": "Projeto criado: estrutura de pastas e documentacao base, seguindo o padrao do vintage e do BBB.",
+    "details": {
+      "commits": [],
+      "files": [
+        "package.json",
+        "client/package.json",
+        "client/vite.config.js",
+        ".gitignore",
+        "CLAUDE.md",
+        "AGENTS.md",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md",
+        "docs/DESIGN-SYSTEM.md",
+        "handoff_compass.md",
+        "CHANGELOG.json"
+      ],
+      "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18 + react-router-dom, backend em Pages Functions, banco D1 com binding DB. npm run build roda os testes antes de propósito: teste de equilibrio vermelho tem que impedir o deploy. Sem biblioteca de UI: SVG a mao, animacao em CSS, card social em Canvas 2D.",
+      "pending": [
+        "git init e repositorio publico no GitHub (autorizacao do dono)",
+        "criar compass-db e compass-db-dev no D1 (autorizacao do dono)",
+        "wrangler.jsonc depende do database_id dos bancos",
+        "Fase 1 inteira: fontes, questionarios, perguntas, scoring e testes de equilibrio"
+      ]
+    }
+  }
+]

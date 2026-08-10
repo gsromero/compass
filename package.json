@@ -1,0 +1,20 @@
+{
+  "name": "compass",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bussola politica com resultado explicado e perguntas derivadas de instrumentos de pesquisa validados (Cloudflare Pages)",
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "test": "cd client && npm test",
+    "dev:pages": "npm run build && wrangler pages dev client/dist --d1 DB=compass-db-dev",
+    "deploy": "npm run build && wrangler pages deploy client/dist --project-name compass --branch main",
+    "db:migrate:dev": "wrangler d1 migrations apply compass-db-dev --local",
+    "db:migrate:remote:dev": "wrangler d1 migrations apply compass-db-dev --remote",
+    "db:migrate:prod": "wrangler d1 migrations apply compass-db --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.120.1"
+  }
+}
