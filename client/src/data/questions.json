@@ -1,0 +1,596 @@
+{
+  "versao": 1,
+  "atualizado": "2026-08-10",
+  "nota": "Cada pergunta carrega o instrumento de origem e como foi derivada. 'adaptado' = redacao adaptada de um item que foi conferido palavra por palavra no questionario publico da fonte. 'construto' = redacao propria, baseada num construto documentado, usada quando a escala original tem direitos ou quando o item nao pode ser conferido na fonte primaria. Ver docs/FONTES.md.",
+  "eixos": {
+    "economico": { "neg": "igualdade", "pos": "mercado" },
+    "autoridade": { "neg": "liberdade", "pos": "autoridade" },
+    "fronteiras": { "neg": "mundo", "pos": "nacao" },
+    "costumes": { "neg": "progresso", "pos": "tradicao" },
+    "ecologia": { "neg": "sustentabilidade", "pos": "crescimento" },
+    "povo": { "neg": "instituicoes", "pos": "povo" }
+  },
+  "perguntas": [
+    {
+      "id": "econ-renda-igual",
+      "eixo": "economico",
+      "peso": -1.0,
+      "par": "econ-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q107", "nota": "polo esquerdo do item de escala 1 a 10" },
+      "texto": {
+        "pt": "A renda deveria ser mais igual entre as pessoas.",
+        "en": "Incomes should be made more equal."
+      }
+    },
+    {
+      "id": "econ-propriedade-privada",
+      "eixo": "economico",
+      "peso": 1.0,
+      "par": "econ-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q108" },
+      "texto": {
+        "pt": "A propriedade privada de empresas e da indústria deveria aumentar.",
+        "en": "Private ownership of business and industry should be increased."
+      }
+    },
+    {
+      "id": "econ-estado-provedor",
+      "eixo": "economico",
+      "peso": -0.9,
+      "par": "econ-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q109", "nota": "polo esquerdo" },
+      "texto": {
+        "pt": "O governo deveria assumir mais responsabilidade para garantir o sustento de todos.",
+        "en": "Government should take more responsibility to ensure that everyone is provided for."
+      }
+    },
+    {
+      "id": "econ-incentivo-esforco",
+      "eixo": "economico",
+      "peso": 0.9,
+      "par": "econ-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q107", "nota": "polo direito" },
+      "texto": {
+        "pt": "Deveria haver incentivos maiores para o esforço individual.",
+        "en": "There should be greater incentives for individual effort."
+      }
+    },
+    {
+      "id": "econ-taxar-ricos",
+      "eixo": "economico",
+      "peso": -0.8,
+      "par": "econ-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q211" },
+      "texto": {
+        "pt": "Cobrar mais imposto de quem é rico para financiar serviços a quem é pobre é o certo a fazer.",
+        "en": "Taxing the rich to fund services for the poor is the right thing to do."
+      }
+    },
+    {
+      "id": "econ-responsabilidade-propria",
+      "eixo": "economico",
+      "peso": 0.8,
+      "par": "econ-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q109", "nota": "polo direito" },
+      "texto": {
+        "pt": "Cada pessoa deveria assumir mais responsabilidade pelo próprio sustento.",
+        "en": "People should take more responsibility to provide for themselves."
+      }
+    },
+    {
+      "id": "econ-seguro-desemprego",
+      "eixo": "economico",
+      "peso": -0.7,
+      "par": "econ-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q214" },
+      "texto": {
+        "pt": "Quem perde o emprego deveria receber apoio financeiro do Estado.",
+        "en": "People who lose their jobs should receive financial support from the state."
+      }
+    },
+    {
+      "id": "econ-competicao",
+      "eixo": "economico",
+      "peso": 0.7,
+      "par": "econ-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q110" },
+      "texto": {
+        "pt": "A competição faz bem: ela estimula as pessoas a se esforçar e a criar.",
+        "en": "Competition is good: it stimulates people to work hard and to create."
+      }
+    },
+
+    {
+      "id": "auth-liberdade-expressao",
+      "eixo": "autoridade",
+      "peso": -1.0,
+      "par": "auth-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q193" },
+      "texto": {
+        "pt": "A liberdade de expressão deveria ser protegida mesmo quando o que se diz incomoda muita gente.",
+        "en": "Freedom of speech should be protected even when what is said offends many people."
+      }
+    },
+    {
+      "id": "auth-lider-forte",
+      "eixo": "autoridade",
+      "peso": 1.0,
+      "par": "auth-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q197" },
+      "texto": {
+        "pt": "O país funcionaria melhor com um líder forte que não precisasse se preocupar com o Congresso nem com eleições.",
+        "en": "The country would work better with a strong leader who does not have to bother with parliament or elections."
+      }
+    },
+    {
+      "id": "auth-direitos-civis",
+      "eixo": "autoridade",
+      "peso": -0.9,
+      "par": "auth-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q216" },
+      "texto": {
+        "pt": "Os direitos individuais existem sobretudo para proteger as pessoas de abusos do próprio Estado.",
+        "en": "Individual rights exist above all to protect people from abuses by the state itself."
+      }
+    },
+    {
+      "id": "auth-policia-ordem",
+      "eixo": "autoridade",
+      "peso": 0.9,
+      "par": "auth-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q202" },
+      "texto": {
+        "pt": "A polícia deveria manter a segurança mesmo que isso limite manifestações pacíficas.",
+        "en": "The police should maintain security even if this restricts peaceful protests."
+      }
+    },
+    {
+      "id": "auth-protesto",
+      "eixo": "autoridade",
+      "peso": -0.8,
+      "par": "auth-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q196", "nota": "item original mede limites ao protesto; aqui a redacao foi invertida de proposito, para equilibrar a codificacao" },
+      "texto": {
+        "pt": "O direito de protestar em público deveria ser preservado mesmo quando o protesto atrapalha a rotina da cidade.",
+        "en": "The right to protest in public should be preserved even when it disrupts daily life in the city."
+      }
+    },
+    {
+      "id": "auth-obedecer",
+      "eixo": "autoridade",
+      "peso": 0.8,
+      "par": "auth-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q218" },
+      "texto": {
+        "pt": "Obedecer a quem governa é um dever, mesmo quando discordamos.",
+        "en": "Obeying those who govern is a duty, even when we disagree."
+      }
+    },
+    {
+      "id": "auth-participacao",
+      "eixo": "autoridade",
+      "peso": -0.7,
+      "par": "auth-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q195" },
+      "texto": {
+        "pt": "Todo cidadão deveria ter oportunidade real de participar das decisões políticas.",
+        "en": "Every citizen should have a real opportunity to take part in political decisions."
+      }
+    },
+    {
+      "id": "auth-imprensa-crise",
+      "eixo": "autoridade",
+      "peso": 0.7,
+      "par": "auth-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q201" },
+      "texto": {
+        "pt": "Em uma crise nacional, a imprensa deveria apoiar o governo.",
+        "en": "In a national crisis, the press should back the government."
+      }
+    },
+
+    {
+      "id": "front-imigracao-beneficio",
+      "eixo": "fronteiras",
+      "peso": -1.0,
+      "par": "front-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q114" },
+      "texto": {
+        "pt": "No conjunto, a chegada de pessoas de outros países faz bem ao país.",
+        "en": "On the whole, people coming from other countries to live here is good for the country."
+      }
+    },
+    {
+      "id": "front-limites-imigracao",
+      "eixo": "fronteiras",
+      "peso": 1.0,
+      "par": "front-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q116", "nota": "opcao 3 do item original" },
+      "texto": {
+        "pt": "O país deveria impor limites rígidos ao número de estrangeiros que podem entrar.",
+        "en": "The country should place strict limits on the number of foreigners who can come here."
+      }
+    },
+    {
+      "id": "front-cultura-enriquece",
+      "eixo": "fronteiras",
+      "peso": -0.9,
+      "par": "front-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q117" },
+      "texto": {
+        "pt": "A vida cultural do país fica mais rica com quem vem de fora.",
+        "en": "The country's cultural life is enriched by people who come from abroad."
+      }
+    },
+    {
+      "id": "front-apoiar-pais-errado",
+      "eixo": "fronteiras",
+      "peso": 0.9,
+      "par": "front-b",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "ISSP National Identity", "item": "nacionalismo", "nota": "construto de nacionalismo do modulo; redacao propria" },
+      "texto": {
+        "pt": "As pessoas deveriam apoiar seu país mesmo quando ele está errado.",
+        "en": "People should support their country even when it is in the wrong."
+      }
+    },
+    {
+      "id": "front-cidadao-mundo",
+      "eixo": "fronteiras",
+      "peso": -0.8,
+      "par": "front-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q227" },
+      "texto": {
+        "pt": "Sinto que faço parte do mundo tanto quanto do meu próprio país.",
+        "en": "I feel that I am part of the world as much as of my own country."
+      }
+    },
+    {
+      "id": "front-proteger-economia",
+      "eixo": "fronteiras",
+      "peso": 0.8,
+      "par": "front-c",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "ISSP National Identity", "item": "protecionismo", "nota": "construto de nacionalismo economico; redacao propria" },
+      "texto": {
+        "pt": "O país deveria limitar a entrada de produtos estrangeiros para proteger sua economia.",
+        "en": "The country should limit foreign products to protect its own economy."
+      }
+    },
+    {
+      "id": "front-acordos-internacionais",
+      "eixo": "fronteiras",
+      "peso": -0.7,
+      "par": "front-d",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "ISSP National Identity", "item": "governanca internacional", "nota": "construto de cooperacao supranacional; redacao propria" },
+      "texto": {
+        "pt": "Problemas que atravessam fronteiras deveriam ser resolvidos por acordos entre países.",
+        "en": "Problems that cross borders should be settled by agreements between countries."
+      }
+    },
+    {
+      "id": "front-interesse-nacional",
+      "eixo": "fronteiras",
+      "peso": 0.7,
+      "par": "front-d",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "ISSP National Identity", "item": "interesse nacional", "nota": "construto de nacionalismo; redacao propria" },
+      "texto": {
+        "pt": "O país deveria seguir seus próprios interesses mesmo quando isso gera atrito com outros países.",
+        "en": "The country should pursue its own interests even when this creates friction with other countries."
+      }
+    },
+
+    {
+      "id": "cost-identidade-genero",
+      "eixo": "costumes",
+      "peso": -1.0,
+      "par": "cost-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q152" },
+      "texto": {
+        "pt": "Pessoas que se vestem, agem ou se identificam com outro gênero deveriam ser tratadas como qualquer outra pessoa.",
+        "en": "People who dress, act or identify as another gender should be treated just as anyone else."
+      }
+    },
+    {
+      "id": "cost-religiao-ciencia",
+      "eixo": "costumes",
+      "peso": 1.0,
+      "par": "cost-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q124" },
+      "texto": {
+        "pt": "Quando ciência e religião entram em conflito, a religião é que está certa.",
+        "en": "Whenever science and religion conflict, religion is the one that is right."
+      }
+    },
+    {
+      "id": "cost-aborto-acesso",
+      "eixo": "costumes",
+      "peso": -0.9,
+      "par": "cost-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q148" },
+      "texto": {
+        "pt": "Mulheres deveriam ter acesso a serviços seguros para interromper uma gravidez indesejada.",
+        "en": "Women should have access to safe services to end an unwanted pregnancy."
+      }
+    },
+    {
+      "id": "cost-mae-trabalha",
+      "eixo": "costumes",
+      "peso": 0.9,
+      "par": "cost-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q25" },
+      "texto": {
+        "pt": "Quando a mãe trabalha fora, os filhos saem perdendo.",
+        "en": "When a mother works for pay, the children lose out."
+      }
+    },
+    {
+      "id": "cost-educacao-sexual",
+      "eixo": "costumes",
+      "peso": -0.8,
+      "par": "cost-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q153" },
+      "texto": {
+        "pt": "Educação sexual ajuda os jovens a tomar decisões informadas.",
+        "en": "Sexuality education helps young people make informed decisions."
+      }
+    },
+    {
+      "id": "cost-lideres-homens",
+      "eixo": "costumes",
+      "peso": 0.8,
+      "par": "cost-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q26" },
+      "texto": {
+        "pt": "No geral, homens são melhores líderes políticos do que mulheres.",
+        "en": "On the whole, men make better political leaders than women do."
+      }
+    },
+    {
+      "id": "cost-contraceptivos",
+      "eixo": "costumes",
+      "peso": -0.7,
+      "par": "cost-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q147" },
+      "texto": {
+        "pt": "Métodos contraceptivos deveriam estar disponíveis para todos, independentemente de idade ou estado civil.",
+        "en": "Contraceptives should be available to everyone, regardless of age or marital status."
+      }
+    },
+    {
+      "id": "cost-obediencia-crianca",
+      "eixo": "costumes",
+      "peso": 0.7,
+      "par": "cost-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q17", "nota": "qualidade 'obediencia' da lista de valores ensinados a criancas" },
+      "texto": {
+        "pt": "Obediência é uma das qualidades mais importantes a ensinar a uma criança.",
+        "en": "Obedience is one of the most important qualities to teach a child."
+      }
+    },
+
+    {
+      "id": "eco-prioridade-ambiente",
+      "eixo": "ecologia",
+      "peso": -1.0,
+      "par": "eco-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q122", "nota": "opcao 1 da escolha forcada" },
+      "texto": {
+        "pt": "Proteger o meio ambiente deveria ser prioridade, mesmo que isso torne o crescimento econômico mais lento.",
+        "en": "Protecting the environment should be a priority, even if it makes economic growth slower."
+      }
+    },
+    {
+      "id": "eco-prioridade-crescimento",
+      "eixo": "ecologia",
+      "peso": 1.0,
+      "par": "eco-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q122", "nota": "opcao 2 da escolha forcada" },
+      "texto": {
+        "pt": "Crescimento econômico e geração de empregos deveriam ser a prioridade, mesmo que o meio ambiente sofra um pouco.",
+        "en": "Economic growth and creating jobs should be the priority, even if the environment suffers somewhat."
+      }
+    },
+    {
+      "id": "eco-responsabilidade-clima",
+      "eixo": "ecologia",
+      "peso": -0.9,
+      "par": "eco-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q120" },
+      "texto": {
+        "pt": "Sinto responsabilidade pessoal em contribuir para reduzir a mudança climática.",
+        "en": "I feel a personal responsibility to help reduce climate change."
+      }
+    },
+    {
+      "id": "eco-tecnologia-resolve",
+      "eixo": "ecologia",
+      "peso": 0.9,
+      "par": "eco-b",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "New Ecological Paradigm", "item": "isencao humana", "nota": "construto de exempcionalismo humano (Dunlap et al.); redacao propria" },
+      "texto": {
+        "pt": "O avanço da tecnologia vai resolver os problemas ambientais sem exigir mudança no nosso modo de vida.",
+        "en": "Advancing technology will solve environmental problems without requiring changes to our way of life."
+      }
+    },
+    {
+      "id": "eco-limites-planeta",
+      "eixo": "ecologia",
+      "peso": -0.8,
+      "par": "eco-c",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "New Ecological Paradigm", "item": "limites ao crescimento", "nota": "construto de limites ao crescimento (Dunlap et al.); redacao propria" },
+      "texto": {
+        "pt": "Existe um limite para quanto crescimento econômico o planeta aguenta.",
+        "en": "There is a limit to how much economic growth the planet can take."
+      }
+    },
+    {
+      "id": "eco-gravidade-exagerada",
+      "eixo": "ecologia",
+      "peso": 0.8,
+      "par": "eco-c",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "New Ecological Paradigm", "item": "crise ecologica", "nota": "construto de crise ecologica, polo cetico (Dunlap et al.); redacao propria" },
+      "texto": {
+        "pt": "A gravidade dos problemas ambientais costuma ser exagerada.",
+        "en": "The seriousness of environmental problems is usually exaggerated."
+      }
+    },
+    {
+      "id": "eco-natureza-fragil",
+      "eixo": "ecologia",
+      "peso": -0.7,
+      "par": "eco-d",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "New Ecological Paradigm", "item": "equilibrio da natureza", "nota": "construto de fragilidade do equilibrio natural (Dunlap et al.); redacao propria" },
+      "texto": {
+        "pt": "O equilíbrio da natureza é frágil e se desfaz com facilidade.",
+        "en": "The balance of nature is fragile and easily upset."
+      }
+    },
+    {
+      "id": "eco-recursos-para-uso",
+      "eixo": "ecologia",
+      "peso": 0.7,
+      "par": "eco-d",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "New Ecological Paradigm", "item": "antropocentrismo", "nota": "construto de dominio humano sobre a natureza (Dunlap et al.); redacao propria" },
+      "texto": {
+        "pt": "Os recursos naturais existem para serem usados em benefício das pessoas.",
+        "en": "Natural resources exist to be used for people's benefit."
+      }
+    },
+
+    {
+      "id": "povo-evidencia-cientifica",
+      "eixo": "povo",
+      "peso": -1.0,
+      "par": "povo-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q206" },
+      "texto": {
+        "pt": "As políticas públicas deveriam seguir a evidência científica, e não a preferência política.",
+        "en": "Public policies should follow scientific evidence, not political preferences."
+      }
+    },
+    {
+      "id": "povo-decisoes-diretas",
+      "eixo": "povo",
+      "peso": 1.0,
+      "par": "povo-a",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q208" },
+      "texto": {
+        "pt": "As decisões mais importantes deveriam ser tomadas pelo povo, e não pelos políticos.",
+        "en": "The most important decisions should be made by the people, not by politicians."
+      }
+    },
+    {
+      "id": "povo-especialistas-decidem",
+      "eixo": "povo",
+      "peso": -0.9,
+      "par": "povo-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q198" },
+      "texto": {
+        "pt": "Decisões complexas de governo funcionam melhor nas mãos de especialistas.",
+        "en": "Complex government decisions work better in the hands of experts."
+      }
+    },
+    {
+      "id": "povo-confio-pessoas-comuns",
+      "eixo": "povo",
+      "peso": 0.9,
+      "par": "povo-b",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q207" },
+      "texto": {
+        "pt": "Confio mais na opinião das pessoas comuns do que na dos especialistas.",
+        "en": "I trust the opinions of ordinary people more than those of experts."
+      }
+    },
+    {
+      "id": "povo-julgamento-lideres",
+      "eixo": "povo",
+      "peso": -0.8,
+      "par": "povo-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q205" },
+      "texto": {
+        "pt": "Líderes eleitos deveriam decidir segundo seu melhor julgamento, e não segundo a vontade da maioria.",
+        "en": "Elected leaders should decide according to their best judgment, not the will of the majority."
+      }
+    },
+    {
+      "id": "povo-elites-corruptas",
+      "eixo": "povo",
+      "peso": 0.8,
+      "par": "povo-c",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q210" },
+      "texto": {
+        "pt": "O país está dividido entre elites corruptas e cidadãos comuns.",
+        "en": "The country is divided between corrupt elites and ordinary citizens."
+      }
+    },
+    {
+      "id": "povo-freios-institucionais",
+      "eixo": "povo",
+      "peso": -0.7,
+      "par": "povo-d",
+      "derivacao": "construto",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q213/Q216", "nota": "construto de freios e contrapesos, derivado do conjunto sobre caracteristicas essenciais da democracia; redacao propria" },
+      "texto": {
+        "pt": "Tribunais e órgãos de controle deveriam poder barrar decisões de um governo eleito.",
+        "en": "Courts and oversight bodies should be able to block decisions of an elected government."
+      }
+    },
+    {
+      "id": "povo-politicos-distantes",
+      "eixo": "povo",
+      "peso": 0.7,
+      "par": "povo-d",
+      "derivacao": "adaptado",
+      "fonte": { "instrumento": "World Values Survey", "onda": 8, "item": "Q209" },
+      "texto": {
+        "pt": "Os políticos estão distantes da vida das pessoas comuns.",
+        "en": "Politicians are out of touch with ordinary people."
+      }
+    }
+  ]
+}
