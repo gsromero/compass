@@ -102,6 +102,9 @@ const dict = {
     res_link_copiado: "Link copiado",
     res_refazer: "Refazer o teste",
     res_layout: "Modelo do card",
+    res_layout_classico: "Clássico",
+    res_layout_cartaz: "Cartaz",
+    res_layout_minimo: "Mínimo",
     res_ver_metodologia: "Ver como a conta é feita",
 
     // populacao
@@ -247,6 +250,9 @@ const dict = {
     res_link_copiado: "Link copied",
     res_refazer: "Take it again",
     res_layout: "Card style",
+    res_layout_classico: "Classic",
+    res_layout_cartaz: "Poster",
+    res_layout_minimo: "Minimal",
     res_ver_metodologia: "See how the scoring works",
 
     pop_titulo: "Compared with everyone who answered",

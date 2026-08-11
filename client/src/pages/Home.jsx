@@ -92,9 +92,6 @@ export default function Home() {
         </div>
       )}
 
-      <p className="apoio" style={{ fontSize: "13.5px" }}>
-        {t("rodape_privacidade")}
-      </p>
     </main>
   );
 }

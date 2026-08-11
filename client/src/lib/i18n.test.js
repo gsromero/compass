@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 import { LANGS, t } from "./i18n.js";
 import { EIXOS_META } from "./questions.js";
 import { EIXOS, MODOS, RESPOSTAS } from "./scoring.js";
+import { LAYOUTS } from "./shareCard.js";
 
 /** Uma chave que nao existe volta como ela mesma: e assim que se detecta. */
 function falta(lang, chave) {
@@ -28,6 +29,7 @@ const CHAVES_DINAMICAS = [
   ...Object.keys(MODOS).flatMap((modo) => [`modo_${modo}`, `modo_${modo}_desc`]),
   ...["baixa", "normal", "alta"].map((i) => `teste_importancia_${i}`),
   ...[1, 2, 3].flatMap((n) => [`home_diferenca_${n}`, `home_diferenca_${n}_titulo`]),
+  ...LAYOUTS.map((nome) => `res_layout_${nome}`),
   "fonte_adaptado",
   "fonte_construto",
 ];

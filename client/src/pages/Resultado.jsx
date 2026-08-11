@@ -246,19 +246,21 @@ export default function Resultado() {
 
       <section className="pilha">
         <h2 style={{ fontSize: "20px" }}>{t("res_compartilhar")}</h2>
-        <div className="linha">
+        <div className="pilha" style={{ gap: "8px" }}>
           <span className="rotulo">{t("res_layout")}</span>
-          {LAYOUTS.map((nome) => (
-            <button
-              key={nome}
-              type="button"
-              className="chip"
-              aria-pressed={layout === nome}
-              onClick={() => setLayout(nome)}
-            >
-              {nome}
-            </button>
-          ))}
+          <div className="linha">
+            {LAYOUTS.map((nome) => (
+              <button
+                key={nome}
+                type="button"
+                className="chip"
+                aria-pressed={layout === nome}
+                onClick={() => setLayout(nome)}
+              >
+                {t(`res_layout_${nome}`)}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="linha">
           <button

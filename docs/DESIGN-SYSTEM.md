@@ -31,6 +31,7 @@ justamente não torcer. Com a interface monocromática o problema deixa de exist
 | `--voce` | Seu ponto e sua elipse |
 | `--populacao` | A mancha de quem já respondeu |
 | `--erro` / `--ok` | Só estado, nunca decoração |
+| `--sombra` / `--sombra-rolagem` | Elevação do cartão e a borda que avisa que a tabela continua |
 
 **Nunca escrever cor à mão fora do `index.css`.** A única exceção é `lib/shareCard.js`, e ela é
 justificada no próprio arquivo: o card é uma imagem que sai do site e não herda o tema de ninguém,
@@ -94,7 +95,28 @@ da tela mais vista do site.
 | `.apoio` | Texto secundário |
 | `.aviso` | Caixa tracejada de "ainda coletando respostas" |
 | `.rolagem` | Envolve tabela larga. **Tabela nunca faz a página rolar de lado** |
+| `.link-alvo` | Link solto que também é alvo de dedo: ganha 10px acima e abaixo no toque |
 | `.pilha` / `.pilha-larga` / `.linha` / `.grade` | Layout |
+
+## Celular
+
+O site é lido no celular antes de qualquer outro lugar, e três decisões vêm daí.
+
+**O topo tem duas linhas abaixo de 30rem.** Marca em cima, menu embaixo ocupando a largura toda
+com `space-between`. Em uma linha só o menu quebrava e o botão de tema ficava órfão numa terceira,
+com 114px de altura. Hoje são 96px, e os itens do menu passaram de 34px para 44px de área de
+toque. A marca ganha os 44px por `padding-block`, e o topo devolve esse espaço tirando o próprio
+padding: o cabeçalho cresce 9px e não 18px.
+
+**Alvo de dedo tem no mínimo 44px, e isso mora num só bloco `@media (pointer: coarse)`.** Chip 40,
+`.opcao` 48, link do rodapé e `.link-alvo` com 10px de folga em cima e embaixo. A folga vem de
+`padding`, nunca de `min-height`: o texto continua do tamanho que era e só a área cresce.
+
+**Tabela larga rola dentro da própria caixa, e avisa que rola.** `.rolagem` pinta quatro camadas
+de fundo: duas presas na caixa (`scroll`) desenham a sombra nas bordas, e duas que andam com o
+conteúdo (`local`) tapam a sombra do lado que já chegou ao fim. Sem JavaScript e sem medir nada, a
+sombra aparece só onde ainda há coisa escondida. A cor sai de `--sombra-rolagem`, que é tinta no
+tema claro e luz no escuro, senão ela some no fundo escuro.
 
 ## Animação
 

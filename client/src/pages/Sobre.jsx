@@ -168,7 +168,7 @@ export default function Sobre() {
           {REFERENCIAS.map((ref) => (
             <div key={ref.id} className="cartao pilha" style={{ gap: "6px" }}>
               <div className="linha" style={{ justifyContent: "space-between" }}>
-                <a href={ref.url} target="_blank" rel="noreferrer">
+                <a className="link-alvo" href={ref.url} target="_blank" rel="noreferrer">
                   <strong style={{ fontSize: "16px" }}>{ref.nome}</strong>
                 </a>
                 <span className="fonte-tag">

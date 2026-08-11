@@ -53,6 +53,9 @@
   --coluna: 42rem;
 
   --sombra: 0 1px 2px oklch(0.22 0.008 260 / 0.05), 0 8px 24px oklch(0.22 0.008 260 / 0.06);
+  /* A sombra que avisa que a tabela continua para o lado. Precisa de token
+     proprio: no claro ela e tinta, no escuro tinta some e ela vira luz. */
+  --sombra-rolagem: oklch(0.22 0.008 260 / 0.16);
 
   --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
 }
@@ -85,6 +88,7 @@
     --ok: oklch(0.7 0.11 150);
 
     --sombra: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
+    --sombra-rolagem: oklch(0.94 0.005 260 / 0.16);
 }
 
 *,
@@ -162,6 +166,37 @@ button {
   border-bottom: 1px solid var(--line);
 }
 
+/* No celular a barra do topo nao cabe em uma linha: o menu quebrava e o botao
+   de tema ficava orfao numa terceira. Duas linhas de proposito, com a marca em
+   cima e o menu embaixo ocupando a largura toda, o que tambem da area de toque
+   de verdade em vez dos 34px de antes. */
+@media (max-width: 30rem) {
+  .topo {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    /* Quase nada em cima: o espaco que faltava virou area de toque da marca
+       logo abaixo, em vez de padding do cabecalho. Custa 9px de altura e
+       transforma um alvo de 26px num de 44px. */
+    padding-block: 1px 4px;
+  }
+
+  .topo .marca {
+    align-self: flex-start;
+    padding-block: 9px;
+  }
+
+  .topo nav {
+    justify-content: space-between;
+    gap: 2px;
+    flex-wrap: nowrap;
+  }
+
+  .topo .botao-discreto {
+    padding-inline: 6px;
+  }
+}
+
 .marca {
   font-weight: 640;
   letter-spacing: -0.02em;
@@ -171,13 +206,14 @@ button {
 
 .rodape {
   margin-top: auto;
-  padding-block: 28px;
+  padding-block: 22px 28px;
   border-top: 1px solid var(--line);
   color: var(--ink-dim);
   font-size: 13.5px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
+  align-items: center;
+  gap: 6px 18px;
 }
 
 .rotulo {
@@ -195,10 +231,13 @@ button {
 
 /* --- botoes -------------------------------------------------------------- */
 
+/* Serve tanto para <button> quanto para <Link>: quando e link, o sublinhado
+   padrao dos links vaza para dentro e o botao fica com cara de texto. */
 .botao {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
   gap: 8px;
   padding: 11px 18px;
   border-radius: var(--raio-pequeno);
@@ -230,7 +269,12 @@ button {
   opacity: 1;
 }
 
+/* No menu do topo convivem <Link> ("Sobre", "Metodologia") e <button>
+   ("English", tema). Sem esta linha os dois primeiros vinham sublinhados e os
+   outros nao, e a barra parecia meio link e meio botao. */
 .botao-discreto {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: none;
   padding: 6px 8px;
@@ -238,6 +282,35 @@ button {
   font-size: 14px;
   cursor: pointer;
   border-radius: var(--raio-pequeno);
+  text-decoration: none;
+}
+
+/* Dedo pede area maior que cursor. Sem isto os itens do menu tinham 34px e os
+   chips 32px, abaixo do que se acerta sem mirar. */
+@media (pointer: coarse) {
+  .botao-discreto {
+    min-height: 44px;
+  }
+
+  .chip {
+    min-height: 40px;
+    padding-inline: 14px;
+  }
+
+  .opcao {
+    min-height: 48px;
+  }
+
+  /* Link solto no meio do texto herda a altura da linha, e dedo nao acerta
+     21px. Estes dois casos sao os unicos links que existem fora de botao: o do
+     rodape e o titulo de cada referencia no Sobre. A folga vai por padding, e
+     nao por `min-height`, para o link continuar do tamanho do texto e so a
+     area de toque crescer. */
+  .rodape a,
+  .link-alvo {
+    display: inline-block;
+    padding-block: 10px;
+  }
 }
 
 .botao-discreto:hover {
@@ -722,6 +795,23 @@ button {
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: var(--raio);
+  /* Tabela de seis colunas nao cabe em 375px, e rolar de lado dentro da caixa
+     e a saida certa. O problema e que sem aviso o texto cortado na borda
+     parece defeito, e nao continuacao.
+
+     As quatro camadas abaixo sao o truque das sombras de rolagem: as duas
+     primeiras andam com o conteudo (`local`) e tapam a sombra quando a rolagem
+     chega no fim; as duas de baixo ficam presas na caixa (`scroll`). Resultado:
+     a sombra aparece so no lado que ainda tem coisa escondida, e some sozinha
+     quando nao ha o que rolar. Sem JavaScript e sem medir nada. */
+  background:
+    linear-gradient(to right, var(--bg) 40%, transparent) left center / 26px 100% no-repeat local,
+    linear-gradient(to left, var(--bg) 40%, transparent) right center / 26px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--sombra-rolagem), transparent) left center /
+      13px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--sombra-rolagem), transparent) right
+      center / 13px 100% no-repeat scroll;
+  background-color: var(--bg);
 }
 
 table {
@@ -753,6 +843,21 @@ tbody tr:last-child td {
 td.texto-longo {
   white-space: normal;
   min-width: 22rem;
+}
+
+/* No celular a afirmacao ocupa quase a tela inteira e sobra rolagem demais
+   para as outras colunas. Encolher a coluna do texto deixa a tabela com uma
+   proporcao andavel: da para ler a afirmacao inteira e ainda perceber que ha
+   colunas a direita. */
+@media (max-width: 30rem) {
+  th,
+  td {
+    padding: 9px 11px;
+  }
+
+  td.texto-longo {
+    min-width: 15rem;
+  }
 }
 
 /* --- utilidades ---------------------------------------------------------- */
