@@ -386,11 +386,12 @@ button {
   transition: none;
 }
 
-/* A demonstracao que ensina o gesto ao entrar no modo cartao. A ida e a volta
-   usam a mesma duracao de proposito: com a volta mais rapida, o movimento
-   parecia um erro em vez de uma demonstracao. */
+/* A demonstracao e animada quadro a quadro no JS, e nao por transicao de CSS:
+   a posicao precisa passar pela mesma funcao que decide a resposta de um
+   arrasto de verdade, para os rotulos aparecerem sozinhos e na ordem certa.
+   Por isso a transicao sai do caminho aqui. */
 .cartao-pergunta.demonstrando {
-  transition: transform 460ms cubic-bezier(0.32, 0, 0.24, 1);
+  transition: none;
 }
 
 /* Enquanto o cartao voa para fora, a transicao volta a valer. */

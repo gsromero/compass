@@ -20,25 +20,20 @@ const SEM_ARRASTO = { dx: 0, dy: 0, alcance: 0, ativo: false };
 // Tempo do cartao voar para fora antes da proxima pergunta entrar.
 const VOO = 170;
 
-// A demonstracao que ensina o gesto ao entrar no modo cartao: vai ate onde a
-// resposta vira "concordo muito", segura, faz o mesmo do outro lado e volta ao
-// centro. Para exatamente no limiar de proposito, para ensinar a distancia de
-// verdade em vez de um movimento decorativo.
-const DEMO_DESLIZE = 460;
-const DEMO_PAUSA = 500;
-// Espera antes do primeiro movimento. Sem ela o primeiro passo dispara em tempo
-// zero, o navegador pinta o cartao ja deslocado, e ele parece nascer no canto
-// em vez de sair do meio. Tambem da tempo da animacao de entrada terminar.
-const DEMO_INICIO = 700;
-// `null` no fim encerra a demonstracao. O passo 0 (voltar ao centro) e um
-// estado da demonstracao, e nao a ausencia dela: se fosse null ali, a volta
-// perderia a transicao longa e voltaria mais rapido do que foi.
-const DEMO_PASSOS = [
-  { lado: 1, espera: DEMO_DESLIZE + DEMO_PAUSA },
-  { lado: -1, espera: DEMO_DESLIZE + DEMO_PAUSA },
-  { lado: 0, espera: DEMO_DESLIZE },
-  { lado: null, espera: 0 },
-];
+// A demonstracao que ensina o gesto ao entrar no modo cartao.
+//
+// Ela e animada quadro a quadro, e nao por transicao de CSS, porque a posicao
+// precisa passar pela MESMA funcao que decide a resposta de um arrasto de
+// verdade. Assim os rotulos aparecem sozinhos e na ordem certa: "concordo"
+// enquanto atravessa a faixa leve, "concordo muito" ao chegar no limiar. Com
+// transicao de CSS o rotulo ficava preso no destino e o "concordo" so piscava.
+const DEMO_INICIO = 600;
+// A pausa no limiar segura o "muito" na tela. Sem ela o rotulo do ponto de
+// chegada aparecia menos tempo que o do meio do caminho.
+const DEMO_PAUSA = 650;
+const DEMO_IDA = 850;
+// A travessia cruza o dobro da distancia, entao leva proporcionalmente mais.
+const DEMO_TRAVESSIA = 1300;
 const KEY_MODO = "compass.modoResposta";
 
 function prefereMenosMovimento() {
@@ -79,23 +74,29 @@ export default function Teste() {
   const [pronto, setPronto] = useState(false);
   const [arrasto, setArrasto] = useState(SEM_ARRASTO);
   const [saindoPara, setSaindoPara] = useState(0);
-  const [demo, setDemo] = useState(null);
+  // Deslocamento da demonstracao, em pixels. null quando ela nao esta rodando.
+  const [demoX, setDemoX] = useState(null);
   const [comoResponder, setComoResponder] = useState(modoInicial);
 
   const cartao = useRef(null);
   const inicio = useRef(null);
   const relogio = useRef(null);
-  const relogiosDemo = useRef([]);
+  const quadroDemo = useRef(null);
+  const pausaDemo = useRef(null);
+  const alcanceDemo = useRef(0);
 
   /** Corta a demonstracao na hora: quem encostou no cartao ja entendeu. */
   const pararDemo = useCallback(() => {
-    relogiosDemo.current.forEach(clearTimeout);
-    relogiosDemo.current = [];
-    setDemo(null);
+    cancelAnimationFrame(quadroDemo.current);
+    clearTimeout(pausaDemo.current);
+    setDemoX(null);
   }, []);
 
   useEffect(() => () => clearTimeout(relogio.current), []);
-  useEffect(() => () => relogiosDemo.current.forEach(clearTimeout), []);
+  useEffect(() => () => {
+    cancelAnimationFrame(quadroDemo.current);
+    clearTimeout(pausaDemo.current);
+  }, []);
 
   useEffect(() => {
     try {
@@ -219,13 +220,56 @@ export default function Teste() {
   useEffect(() => {
     if (!pronto || comoResponder !== "cartao" || prefereMenosMovimento()) return;
 
-    let atraso = DEMO_INICIO;
-    relogiosDemo.current = DEMO_PASSOS.map(({ lado, espera }) => {
-      const id = setTimeout(() => setDemo(lado), atraso);
-      atraso += espera;
-      return id;
-    });
-    return () => relogiosDemo.current.forEach(clearTimeout);
+    let cancelado = false;
+    pausaDemo.current = setTimeout(() => {
+      const alcance = medirAlcance();
+      if (!alcance || cancelado) return;
+      alcanceDemo.current = alcance;
+
+      // Vai ate o limiar do "muito", atravessa para o outro limiar e volta.
+      // Atravessar de um lado ao outro passa pelas duas faixas leves, entao
+      // "concordo" e "discordo" aparecem no caminho sem precisar de parada.
+      const forte = alcance * LIMIARES.forte;
+      const trechos = [
+        { de: 0, para: forte, duracao: DEMO_IDA, pausa: DEMO_PAUSA },
+        { de: forte, para: -forte, duracao: DEMO_TRAVESSIA, pausa: DEMO_PAUSA },
+        { de: -forte, para: 0, duracao: DEMO_IDA, pausa: 0 },
+      ];
+
+      // Acelera e desacelera; sem isso o movimento parece de robo.
+      const suave = (fracao) => 0.5 - Math.cos(fracao * Math.PI) / 2;
+      let indice = 0;
+      let comeco = null;
+
+      function quadro(agora) {
+        if (cancelado) return;
+        const trecho = trechos[indice];
+        if (comeco === null) comeco = agora;
+        const fracao = Math.min(1, (agora - comeco) / trecho.duracao);
+        setDemoX(trecho.de + (trecho.para - trecho.de) * suave(fracao));
+
+        if (fracao < 1) {
+          quadroDemo.current = requestAnimationFrame(quadro);
+          return;
+        }
+        indice += 1;
+        if (indice >= trechos.length) {
+          setDemoX(null);
+          return;
+        }
+        comeco = null;
+        pausaDemo.current = setTimeout(() => {
+          quadroDemo.current = requestAnimationFrame(quadro);
+        }, trecho.pausa);
+      }
+      quadroDemo.current = requestAnimationFrame(quadro);
+    }, DEMO_INICIO);
+
+    return () => {
+      cancelado = true;
+      cancelAnimationFrame(quadroDemo.current);
+      clearTimeout(pausaDemo.current);
+    };
   }, [pronto, comoResponder]);
 
   // Teclado: 1 a 4 respondem, 0 e "nao sei", Backspace volta. Funciona nos DOIS
@@ -321,12 +365,12 @@ export default function Teste() {
   const noCartao = comoResponder === "cartao";
   const respostaAtual = respostas[idAtual];
   const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.alcance) : 0;
+  const demonstrando = demoX !== null;
   const previa = arrasto.ativo
     ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.alcance)
-    : demo
-      ? demo * 2
+    : demonstrando
+      ? intencaoDoArrasto(demoX, 0, alcanceDemo.current)
       : null;
-  const demonstrando = demo !== null;
 
   const estiloCartao = saindoPara
     ? { transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * 12}deg)`, opacity: 0 }
@@ -334,9 +378,9 @@ export default function Teste() {
       ? { transform: `translateX(${arrasto.dx}px) rotate(${progresso * 5}deg)` }
       : demonstrando
         ? {
-            // Para exatamente onde a resposta vira "muito": a demonstracao
-            // ensina a distancia de verdade, e nao um movimento decorativo.
-            transform: `translateX(${demo * medirAlcance() * LIMIARES.forte}px) rotate(${demo * 5}deg)`,
+            transform: `translateX(${demoX}px) rotate(${
+              progressoDoArrasto(demoX, alcanceDemo.current) * 5
+            }deg)`,
           }
         : undefined;
 

@@ -161,9 +161,14 @@ Ao **entrar no modo cartão**, o cartão anda sozinho até onde a resposta vira 
 segura meio segundo, faz o mesmo do outro lado e volta ao centro. Nada na tela diz que dá para
 arrastar, e ninguém descobre um gesto lendo sobre ele.
 
+- **É animada quadro a quadro no JS, e não por transição de CSS.** A posição passa pela mesma
+  função que decide a resposta de um arrasto de verdade, então os rótulos aparecem sozinhos e na
+  ordem certa: "concordo" enquanto atravessa a faixa leve, "concordo muito" ao chegar no limiar.
+  Com transição de CSS o rótulo ficava preso no destino e o "concordo" só piscava.
 - **Para exatamente no limiar do "muito"**, e não numa distância bonita qualquer: assim ela ensina
   a distância de verdade em vez de ser enfeite.
-- **A etiqueta acompanha**, então a pessoa vê o gesto e o resultado dele ao mesmo tempo.
+- **Atravessa de um limiar ao outro sem passar por uma parada no centro.** É essa travessia que faz
+  as duas faixas leves aparecerem. Cada rótulo fica cerca de 0,9s, e os do limiar 0,65s.
 - **Começa parada no centro por 0,7s.** Sem essa pausa o primeiro passo dispara em tempo zero, o
   navegador pinta o cartão já deslocado, e ele parece nascer no canto em vez de sair do meio.
 - **Encostar no cartão corta a demonstração na hora.** Quem já entendeu não precisa esperar.
