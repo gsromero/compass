@@ -77,7 +77,7 @@ function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante, lang }) {
     { id: "mercado-liberdade", cx: meio, cy: meio },
   ];
   for (const canto of cantos) {
-    ctx.globalAlpha = canto.id === quadrante ? 0.42 : 0.16;
+    ctx.globalAlpha = canto.id === quadrante ? 0.4 : 0.28;
     ctx.fillStyle = TEMA.quadrantes[canto.id];
     ctx.fillRect(canto.cx, canto.cy, meio - borda, meio - borda);
   }

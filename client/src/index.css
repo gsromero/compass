@@ -30,14 +30,14 @@
   --acao-tinta: var(--bg);
 
   /* Os quatro quadrantes. Mesmo L, mesmo C, tons a 90 graus de distancia. */
-  --q-igualdade-liberdade: oklch(0.68 0.075 155);
-  --q-igualdade-autoridade: oklch(0.68 0.075 65);
-  --q-mercado-liberdade: oklch(0.68 0.075 245);
-  --q-mercado-autoridade: oklch(0.68 0.075 335);
+  --q-igualdade-liberdade: oklch(0.7 0.145 155);
+  --q-igualdade-autoridade: oklch(0.7 0.145 65);
+  --q-mercado-liberdade: oklch(0.7 0.145 245);
+  --q-mercado-autoridade: oklch(0.7 0.145 335);
 
   /* Dados: o ponto da pessoa e a mancha de quem ja respondeu */
   --voce: var(--ink);
-  --populacao: oklch(0.56 0.045 260);
+  --populacao: oklch(0.38 0.008 260);
 
   --erro: oklch(0.55 0.14 25);
   --ok: oklch(0.55 0.1 150);
@@ -75,12 +75,12 @@
 
     /* No escuro os quadrantes precisam de mais leveza para nao sumirem no
        fundo, mas continuam iguais entre si, que e o que importa. */
-    --q-igualdade-liberdade: oklch(0.72 0.08 155);
-    --q-igualdade-autoridade: oklch(0.72 0.08 65);
-    --q-mercado-liberdade: oklch(0.72 0.08 245);
-    --q-mercado-autoridade: oklch(0.72 0.08 335);
+    --q-igualdade-liberdade: oklch(0.72 0.15 155);
+    --q-igualdade-autoridade: oklch(0.72 0.15 65);
+    --q-mercado-liberdade: oklch(0.72 0.15 245);
+    --q-mercado-autoridade: oklch(0.72 0.15 335);
 
-    --populacao: oklch(0.72 0.05 260);
+    --populacao: oklch(0.92 0.006 260);
     --erro: oklch(0.68 0.14 25);
     --ok: oklch(0.7 0.11 150);
 

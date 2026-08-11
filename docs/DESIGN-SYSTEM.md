@@ -43,7 +43,14 @@ As quatro cores têm **a mesma leveza e o mesmo croma**, variando só o tom, em 
 mais desejável que outro. Em RGB isso seria impossível de acertar no olho: um azul e um amarelo de
 mesmo valor numérico têm pesos visuais muito diferentes.
 
-O croma é baixo de propósito. Elas são rótulo, não torcida.
+**Peso igual não quer dizer apagado.** A primeira versão usava croma 0,075 e o gráfico ficava
+lavado; hoje é 0,145, quase o dobro, e a igualdade entre os quatro continua intacta porque o que
+importa é serem idênticos em leveza e croma, não serem fracos.
+
+**O quadrante onde a pessoa caiu é só um pouco mais forte que os outros** (0,34 contra 0,24). Com
+uma diferença grande, o gráfico passa a dizer "este lado é o certo", que é justamente o que a
+paleta de peso igual existe para não dizer. Quem mostra onde a pessoa está é o ponto, não a cor de
+fundo.
 
 ## Tema claro e escuro
 
@@ -111,6 +118,10 @@ Três camadas, nesta ordem de importância visual:
    retângulos e passadas por um `feGaussianBlur`. **Não usar um ponto por célula.** A primeira
    versão fazia isso e o gráfico parecia ter defeito: bolinha espalhada não se lê como densidade,
    se lê como sujeira. Borrada, a mesma informação vira uma nuvem, que é o que ela é.
+
+   **`--populacao` é neutra de propósito.** Ela já foi azulada, e com os quadrantes coloridos isso
+   fazia a mesma cor significar duas coisas: região e quantidade. Neutra, as funções ficam
+   separadas: a cor identifica o quadrante, a sombra indica quanta gente.
 2. **A elipse da margem de erro** é **só contorno tracejado**, sem preenchimento. Com preenchimento
    ela virava um disco cinza que competia com a mancha e escondia justamente o que a mancha tem a
    dizer.

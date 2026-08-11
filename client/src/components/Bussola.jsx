@@ -77,7 +77,7 @@ export default function Bussola({ resultado, quadrante, populacao = null }) {
               width={metade}
               height={metade}
               fill={`var(--q-${q.id})`}
-              opacity={quadrante === q.id ? 0.16 : 0.055}
+              opacity={quadrante === q.id ? 0.34 : 0.24}
             />
           ))}
 
@@ -93,7 +93,7 @@ export default function Bussola({ resultado, quadrante, populacao = null }) {
                     width={lado}
                     height={lado}
                     fill="var(--populacao)"
-                    opacity={0.16 + celula.densidade * 0.6}
+                    opacity={0.12 + celula.densidade * 0.42}
                   />
                 );
               })}
