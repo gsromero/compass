@@ -9,28 +9,58 @@
 // se concorda ou discorda; o quanto voce arrastou diz o quanto. Nada de decorar
 // quatro sentidos, e o polegar faz tudo sozinho.
 //
-// O "nao sei" NAO e um gesto: e um botao discreto embaixo do cartao. Foi
-// decisao de produto, e ela tem razao de ser: o defeito do neutro nunca foi
-// existir, foi ser o caminho mais facil.
+// O "nao sei" NAO e um gesto: e um botao discreto embaixo do cartao. O defeito
+// da resposta do meio nunca foi existir, foi ser o caminho mais facil.
 
-// Limiares em FRACAO DA LARGURA do cartao, nunca em pixels. O mesmo gesto
-// precisa significar a mesma coisa num celular pequeno e num monitor grande.
-const ZONA_MORTA = 0.06;
-const LIMIAR_FORTE = 0.3;
+// Limiares em fracao do ALCANCE, que e o quanto o dedo consegue arrastar nesta
+// tela, e nao em fracao da largura do cartao.
+//
+// A diferenca importa e ja causou um defeito real. Medindo com os limiares
+// presos ao cartao, as faixas ficavam assim:
+//
+//   iPhone SE       "concordo" 80px   vs "concordo muito" 87px    (1,1x)
+//   desktop         "concordo" 152px  vs "concordo muito" 360px   (2,4x)
+//   desktop grande  "concordo" 152px  vs "concordo muito" 610px   (4,0x)
+//
+// No celular o cartao quase preenche a tela e as duas medidas coincidem; no
+// desktop o cartao para em 42rem e a janela continua crescendo, entao a faixa
+// do "muito", que nao tem fim, inchava. Medindo pelo alcance, as duas faixas
+// ficam iguais em qualquer tela.
+const ZONA_MORTA = 0.14;
+// Escolhido para as duas faixas terem o MESMO tamanho: com a zona morta em m,
+// a faixa leve vale (f - m) e a forte vale (1 - f); igualando, f = (1 + m) / 2.
+const LIMIAR_FORTE = 0.57;
+// Teto do alcance, em fracao da largura do cartao. Sem ele, uma tela muito
+// larga exigiria um arrasto absurdo para dizer "muito".
+const TETO_ALCANCE = 0.6;
 // Acima desta razao entre o movimento vertical e o horizontal, a pessoa esta
-// rolando a pagina e nao respondendo. A tela do teste rola 57px num iPhone SE,
-// entao sem isto rolar responderia sem querer.
+// rolando a pagina e nao respondendo.
 const RAZAO_VERTICAL = 1.2;
+
+/**
+ * O quanto o dedo consegue arrastar nesta tela, em pixels: a distancia do
+ * centro do cartao ate a borda mais proxima da janela, limitada pelo teto.
+ *
+ * @param {{left: number, width: number}} caixa posicao e largura do cartao
+ * @param {number} larguraJanela
+ */
+export function alcanceDoArrasto(caixa, larguraJanela) {
+  const largura = caixa?.width ?? 0;
+  if (!(largura > 0) || !(larguraJanela > 0)) return 0;
+
+  const centro = caixa.left + largura / 2;
+  const ateBorda = Math.min(centro, larguraJanela - centro);
+  return Math.max(1, Math.min(ateBorda, largura * TETO_ALCANCE));
+}
 
 /**
  * O quanto o arrasto avancou, de -1 a +1, para o retorno visual do cartao
  * (inclinacao, cor e o rotulo da resposta que seria dada).
  * O sinal e a direcao; 1 em modulo e o ponto onde a resposta vira "muito".
  */
-export function progressoDoArrasto(dx, largura) {
-  if (!(largura > 0) || !Number.isFinite(dx)) return 0;
-  const fracao = dx / largura / LIMIAR_FORTE;
-  return Math.max(-1, Math.min(1, fracao));
+export function progressoDoArrasto(dx, alcance) {
+  if (!(alcance > 0) || !Number.isFinite(dx)) return 0;
+  return Math.max(-1, Math.min(1, dx / alcance / LIMIAR_FORTE));
 }
 
 /**
@@ -38,16 +68,16 @@ export function progressoDoArrasto(dx, largura) {
  *
  * @param {number} dx deslocamento horizontal, em pixels
  * @param {number} dy deslocamento vertical, em pixels
- * @param {number} largura largura do cartao, em pixels
+ * @param {number} alcance o que `alcanceDoArrasto` devolveu, em pixels
  * @returns {-2|-1|1|2|null} null quando o arrasto nao deve responder nada
  */
-export function intencaoDoArrasto(dx, dy, largura) {
-  if (!(largura > 0) || !Number.isFinite(dx) || !Number.isFinite(dy)) return null;
+export function intencaoDoArrasto(dx, dy, alcance) {
+  if (!(alcance > 0) || !Number.isFinite(dx) || !Number.isFinite(dy)) return null;
 
   // Rolagem da pagina, nao resposta.
   if (Math.abs(dy) > Math.abs(dx) * RAZAO_VERTICAL) return null;
 
-  const fracao = dx / largura;
+  const fracao = dx / alcance;
   const distancia = Math.abs(fracao);
   // Perto do centro o cartao so volta para o lugar: e como se desiste.
   if (distancia < ZONA_MORTA) return null;
@@ -57,5 +87,5 @@ export function intencaoDoArrasto(dx, dy, largura) {
   return sentido * (forte ? 2 : 1);
 }
 
-/** Para a interface saber onde desenhar as marcas das duas zonas. */
-export const LIMIARES = { zonaMorta: ZONA_MORTA, forte: LIMIAR_FORTE };
+/** Para a interface saber onde ficam as fronteiras das duas zonas. */
+export const LIMIARES = { zonaMorta: ZONA_MORTA, forte: LIMIAR_FORTE, teto: TETO_ALCANCE };

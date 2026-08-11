@@ -162,8 +162,16 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
 
 - **A decisão mora em `lib/gesto.js`**, não no componente. Gesto é a parte que quebra em silêncio
   porque ninguém escreve teste de arrastar; isolada, ela é testável e o componente só aplica.
-- **Os limiares são fração da largura do cartão, nunca pixels.** O mesmo gesto tem que significar
-  a mesma coisa num celular pequeno e num monitor.
+- **Os limiares são fração do ALCANCE, e não da largura do cartão.** Alcance é o quanto o dedo
+  consegue arrastar naquela tela: do centro do cartão até a borda mais próxima da janela, com teto
+  de 60% da largura do cartão para uma tela enorme não exigir um arrasto absurdo.
+
+  A diferença já causou defeito. Com os limiares presos ao cartão, as faixas ficavam assim:
+  iPhone SE 80px contra 87px (equilibrado), mas desktop 152px contra 360px e tela grande 152px
+  contra 610px. No celular o cartão quase preenche a tela e as duas medidas coincidem; no desktop
+  o cartão para em 42rem e a janela continua crescendo, então a faixa do "muito", que não tem fim,
+  inchava. Medindo pelo alcance, as duas faixas ficam **iguais em qualquer tela**, e há teste que
+  varre pixel a pixel para garantir.
 - **`touch-action: pan-y` no cartão.** Deixa a página rolar no vertical e entrega o horizontal ao
   gesto. Sem isso, arrastar de lado rolaria a página junto.
 - **Os rótulos dos dois lados ficam numa linha ACIMA do cartão.** Já estiveram sobrepostos a ele,

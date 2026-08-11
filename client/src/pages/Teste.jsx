@@ -3,14 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLang } from "../lib/lang.jsx";
 import { enunciado, perguntasDoIdioma, VERSAO_BANCO } from "../lib/questions.js";
 import { IMPORTANCIAS, NAO_SEI, RESPOSTAS, proximoPar, totalPrevisto } from "../lib/scoring.js";
-import { intencaoDoArrasto, progressoDoArrasto } from "../lib/gesto.js";
+import { alcanceDoArrasto, intencaoDoArrasto, progressoDoArrasto } from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
 
 // A escala vem de scoring.js. Nunca escrever a mao aqui.
 const NOTAS = RESPOSTAS;
 const IMPORTANCIA_ORDEM = ["baixa", "normal", "alta"];
-const SEM_ARRASTO = { dx: 0, dy: 0, largura: 0, ativo: false };
+const SEM_ARRASTO = { dx: 0, dy: 0, alcance: 0, ativo: false };
 // Tempo do cartao voar para fora antes da proxima pergunta entrar.
 const VOO = 170;
 const KEY_MODO = "compass.modoResposta";
@@ -205,10 +205,16 @@ export default function Teste() {
   // A decisao de qual resposta um arrasto virou mora em lib/gesto.js. Aqui so
   // se mede o dedo e se aplica o que aquela funcao disse.
 
+  /** O quanto o dedo consegue arrastar daqui, medido na hora. */
+  function medirAlcance() {
+    const caixa = cartao.current?.getBoundingClientRect();
+    return caixa ? alcanceDoArrasto(caixa, window.innerWidth) : 0;
+  }
+
   function aoPressionar(evento) {
     if (evento.pointerType === "mouse" && evento.button !== 0) return;
     inicio.current = { x: evento.clientX, y: evento.clientY };
-    setArrasto({ dx: 0, dy: 0, largura: cartao.current?.offsetWidth ?? 0, ativo: true });
+    setArrasto({ dx: 0, dy: 0, alcance: medirAlcance(), ativo: true });
     evento.currentTarget.setPointerCapture?.(evento.pointerId);
   }
 
@@ -227,10 +233,10 @@ export default function Teste() {
     // ao React ainda, e responder com a posicao errada seria pior que nada.
     const dx = evento.clientX - inicio.current.x;
     const dy = evento.clientY - inicio.current.y;
-    const largura = arrasto.largura || cartao.current?.offsetWidth || 0;
+    const alcance = arrasto.alcance || medirAlcance();
     inicio.current = null;
 
-    const intencao = intencaoDoArrasto(dx, dy, largura);
+    const intencao = intencaoDoArrasto(dx, dy, alcance);
     if (intencao === null) {
       setArrasto(SEM_ARRASTO);
       return;
@@ -248,8 +254,10 @@ export default function Teste() {
 
   const noCartao = comoResponder === "cartao";
   const respostaAtual = respostas[idAtual];
-  const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.largura) : 0;
-  const previa = arrasto.ativo ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.largura) : null;
+  const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.alcance) : 0;
+  const previa = arrasto.ativo
+    ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.alcance)
+    : null;
 
   const estiloCartao = saindoPara
     ? { transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * 12}deg)`, opacity: 0 }
