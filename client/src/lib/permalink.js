@@ -10,9 +10,12 @@
 // um byte de versao do banco. 48 perguntas viram 25 bytes, ou cerca de 34
 // caracteres na URL.
 
-import { IMPORTANCIAS } from "./scoring.js";
+import { IMPORTANCIAS, VALORES } from "./scoring.js";
 
-const NOTAS = [-2, -1, 0, 1, 2];
+// A escala vem de scoring.js, e nunca escrita a mao aqui. Ja esteve duplicada,
+// e uma copia fora de sincronia faria o MESMO codigo decodificar para respostas
+// diferentes, sem erro nenhum: o link abriria mostrando outro resultado.
+const NOTAS = VALORES;
 const IMPS = [IMPORTANCIAS.baixa, IMPORTANCIAS.normal, IMPORTANCIAS.alta];
 
 function paraNibble(resposta) {

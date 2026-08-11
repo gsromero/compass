@@ -85,6 +85,16 @@
 - O modo adaptativo pode reintroduzir viés se escolher só pela informação. Ele tem que manter o
   balanço de codificação, e existe teste simulando 10 mil sessões para provar.
 
+## Questionário por arrasto (feito em 2026-08-11)
+
+- [x] Escala de 4 pontos, com "não sei dizer" separado e fora da conta
+- [x] Pontuação por pares completos: par com "não sei" cai inteiro
+- [x] `lib/gesto.js` com testes: arrasto vira resposta, distância é intensidade
+- [x] Cartão arrastável, mantendo lista de botões e teclado
+- [x] Agregados filtrando por versão do banco
+- [ ] **Se o piloto mostrar que muita gente usa "não sei"**, avaliar avisar na hora ("essa e a
+      afirmação oposta vão sair da sua conta") em vez de só explicar depois
+
 ## Depois do lançamento
 
 - [ ] Análise fatorial com dados reais: as perguntas medem mesmo o eixo declarado?

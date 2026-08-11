@@ -18,6 +18,9 @@ function falta(lang, chave) {
 
 const CHAVES_DINAMICAS = [
   ...RESPOSTAS.map((nota) => `resposta${nota}`),
+  "teste_nao_sei",
+  "teste_dica_arrasto",
+  "teste_nao_sei_ajuda",
   ...EIXOS.map((eixo) => `eixo_${eixo}`),
   ...Object.values(EIXOS_META).flatMap((meta) => [`polo_${meta.neg}`, `polo_${meta.pos}`]),
   ...Object.keys(MODOS).flatMap((modo) => [`modo_${modo}`, `modo_${modo}_desc`]),
@@ -33,7 +36,7 @@ describe("chaves montadas em tempo de execucao", () => {
     expect(faltando, `sem traducao em ${lang}`).toEqual([]);
   });
 
-  it("as cinco respostas da escala tem texto, inclusive as negativas", () => {
+  it("as quatro respostas da escala tem texto, inclusive as negativas", () => {
     // O bug original: as chaves negativas usavam sublinhado no lugar do sinal.
     for (const lang of LANGS) {
       for (const nota of RESPOSTAS) {

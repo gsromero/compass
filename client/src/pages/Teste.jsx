@@ -2,13 +2,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLang } from "../lib/lang.jsx";
 import { enunciado, perguntasDoIdioma, VERSAO_BANCO } from "../lib/questions.js";
-import { IMPORTANCIAS, proximoPar, totalPrevisto } from "../lib/scoring.js";
+import { IMPORTANCIAS, NAO_SEI, RESPOSTAS, proximoPar, totalPrevisto } from "../lib/scoring.js";
+import { intencaoDoArrasto, progressoDoArrasto } from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
 
-const NOTAS = [-2, -1, 0, 1, 2];
+// A escala vem de scoring.js. Nunca escrever a mao aqui.
+const NOTAS = RESPOSTAS;
 const IMPORTANCIA_ORDEM = ["baixa", "normal", "alta"];
-const DISTANCIA_SWIPE = 60;
+const SEM_ARRASTO = { dx: 0, dy: 0, largura: 0, ativo: false };
+// Tempo do cartao voar para fora antes da proxima pergunta entrar.
+const VOO = 170;
+
+function prefereMenosMovimento() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
 
 export default function Teste() {
   const { t, lang } = useLang();
@@ -23,6 +31,14 @@ export default function Teste() {
   const [posicao, setPosicao] = useState(0);
   const [importancia, setImportancia] = useState("normal");
   const [pronto, setPronto] = useState(false);
+  const [arrasto, setArrasto] = useState(SEM_ARRASTO);
+  const [saindoPara, setSaindoPara] = useState(0);
+
+  const cartao = useRef(null);
+  const inicio = useRef(null);
+  const relogio = useRef(null);
+
+  useEffect(() => () => clearTimeout(relogio.current), []);
 
   // Retoma o teste guardado ou comeca um novo. Roda uma vez.
   useEffect(() => {
@@ -102,6 +118,25 @@ export default function Teste() {
     [idAtual, respostas, importancia, posicao, historico, perguntas, modo, terminar],
   );
 
+  /** Responde deixando o cartao voar para o lado escolhido antes de trocar. */
+  const responderComVoo = useCallback(
+    (nota, direcao) => {
+      if (prefereMenosMovimento()) {
+        setArrasto(SEM_ARRASTO);
+        responder(nota);
+        return;
+      }
+      setArrasto(SEM_ARRASTO);
+      setSaindoPara(direcao);
+      clearTimeout(relogio.current);
+      relogio.current = setTimeout(() => {
+        setSaindoPara(0);
+        responder(nota);
+      }, VOO);
+    },
+    [responder],
+  );
+
   const voltar = useCallback(() => {
     if (posicao === 0) return;
     const anterior = historico[posicao - 1];
@@ -113,13 +148,17 @@ export default function Teste() {
     if (posicao + 1 < historico.length && respostas[idAtual]) setPosicao(posicao + 1);
   }, [posicao, historico, respostas, idAtual]);
 
-  // Teclado: responder com 1 a 5, voltar com Backspace ou seta.
+  // Teclado: 1 a 4 respondem, 0 e "nao sei", Backspace volta.
   useEffect(() => {
     function aoTeclar(evento) {
       if (evento.metaKey || evento.ctrlKey || evento.altKey) return;
-      if (evento.key >= "1" && evento.key <= "5") {
+      const indice = Number(evento.key) - 1;
+      if (indice >= 0 && indice < NOTAS.length) {
         evento.preventDefault();
-        responder(NOTAS[Number(evento.key) - 1]);
+        responder(NOTAS[indice]);
+      } else if (evento.key === "0") {
+        evento.preventDefault();
+        responder(NAO_SEI);
       } else if (evento.key === "Backspace" || evento.key === "ArrowLeft") {
         evento.preventDefault();
         voltar();
@@ -132,18 +171,41 @@ export default function Teste() {
     return () => window.removeEventListener("keydown", aoTeclar);
   }, [responder, voltar, avancar]);
 
-  // Swipe no celular navega entre perguntas. Nao responde: arrastar para
-  // escolher uma nota de cinco pontos seria adivinhacao.
-  const toqueX = useRef(null);
-  function aoTocar(evento) {
-    toqueX.current = evento.changedTouches[0].clientX;
+  // --- arrasto ------------------------------------------------------------
+  // A decisao de qual resposta um arrasto virou mora em lib/gesto.js. Aqui so
+  // se mede o dedo e se aplica o que aquela funcao disse.
+
+  function aoPressionar(evento) {
+    if (evento.pointerType === "mouse" && evento.button !== 0) return;
+    inicio.current = { x: evento.clientX, y: evento.clientY };
+    setArrasto({ dx: 0, dy: 0, largura: cartao.current?.offsetWidth ?? 0, ativo: true });
+    evento.currentTarget.setPointerCapture?.(evento.pointerId);
   }
+
+  function aoMover(evento) {
+    if (!inicio.current) return;
+    setArrasto((atual) => ({
+      ...atual,
+      dx: evento.clientX - inicio.current.x,
+      dy: evento.clientY - inicio.current.y,
+    }));
+  }
+
   function aoSoltar(evento) {
-    if (toqueX.current === null) return;
-    const delta = evento.changedTouches[0].clientX - toqueX.current;
-    if (delta > DISTANCIA_SWIPE) voltar();
-    else if (delta < -DISTANCIA_SWIPE) avancar();
-    toqueX.current = null;
+    if (!inicio.current) return;
+    // Vem do evento, e nao do estado: o ultimo movimento pode nao ter chegado
+    // ao React ainda, e responder com a posicao errada seria pior que nada.
+    const dx = evento.clientX - inicio.current.x;
+    const dy = evento.clientY - inicio.current.y;
+    const largura = arrasto.largura || cartao.current?.offsetWidth || 0;
+    inicio.current = null;
+
+    const intencao = intencaoDoArrasto(dx, dy, largura);
+    if (intencao === null) {
+      setArrasto(SEM_ARRASTO);
+      return;
+    }
+    responderComVoo(intencao, Math.sign(dx));
   }
 
   if (!pronto || !perguntaAtual) {
@@ -155,14 +217,17 @@ export default function Teste() {
   }
 
   const respostaAtual = respostas[idAtual];
+  const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.largura) : 0;
+  const previa = arrasto.ativo ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.largura) : null;
+
+  const estiloCartao = saindoPara
+    ? { transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * 12}deg)`, opacity: 0 }
+    : arrasto.ativo
+      ? { transform: `translateX(${arrasto.dx}px) rotate(${progresso * 5}deg)` }
+      : undefined;
 
   return (
-    <main
-      className="coluna pilha-larga"
-      style={{ paddingBlock: "20px 48px" }}
-      onTouchStart={aoTocar}
-      onTouchEnd={aoSoltar}
-    >
+    <main className="coluna pilha-larga" style={{ paddingBlock: "20px 48px" }}>
       <div className="pilha" style={{ gap: "10px" }}>
         <div className="linha" style={{ justifyContent: "space-between" }}>
           <button type="button" className="botao-discreto" onClick={() => navigate("/")}>
@@ -175,23 +240,34 @@ export default function Teste() {
         </div>
       </div>
 
-      <div key={idAtual} className="entrando pilha-larga">
-        <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+      <div className="pilha-larga">
+        <div className="palco">
+          <div className="palco-lados" aria-hidden="true">
+            <span>&larr; {t("resposta-1")}</span>
+            <span>{t("resposta1")} &rarr;</span>
+          </div>
 
-        <div className="escala">
-          {NOTAS.map((nota, i) => (
-            <button
-              key={nota}
-              type="button"
-              className="opcao"
-              aria-pressed={respostaAtual?.r === nota}
-              onClick={() => responder(nota)}
-            >
-              <kbd aria-hidden="true">{i + 1}</kbd>
-              <span>{t(`resposta${nota}`)}</span>
-            </button>
-          ))}
+          <div
+            key={idAtual}
+            ref={cartao}
+            className={`cartao-pergunta ${arrasto.ativo || saindoPara ? "arrastando" : "entrando"}`}
+            style={estiloCartao}
+            onPointerDown={aoPressionar}
+            onPointerMove={aoMover}
+            onPointerUp={aoSoltar}
+            onPointerCancel={() => {
+              inicio.current = null;
+              setArrasto(SEM_ARRASTO);
+            }}
+          >
+            <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+            <span className="previa" data-visivel={previa !== null}>
+              {previa !== null ? t(`resposta${previa}`) : ""}
+            </span>
+          </div>
         </div>
+
+        <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
 
         <div className="pilha" style={{ gap: "8px" }}>
           <span className="rotulo">{t("teste_importancia")}</span>
@@ -217,6 +293,36 @@ export default function Teste() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* "Nao sei" e discreto de proposito. O defeito da resposta do meio
+            nunca foi ela existir, foi ser o botao mais facil de apertar. */}
+        <button
+          type="button"
+          className="botao-discreto nao-sei"
+          aria-pressed={respostaAtual?.r === NAO_SEI}
+          title={t("teste_nao_sei_ajuda")}
+          onClick={() => responder(NAO_SEI)}
+        >
+          {t("teste_nao_sei")}
+        </button>
+
+        {/* A lista fica por ultimo: no celular ela e a alternativa, e no
+            desktop e o teclado e o mouse que mandam. Ela NAO pode sumir: e o
+            unico caminho para quem usa leitor de tela ou so o teclado. */}
+        <div className="escala">
+          {NOTAS.map((nota, i) => (
+            <button
+              key={nota}
+              type="button"
+              className="opcao"
+              aria-pressed={respostaAtual?.r === nota}
+              onClick={() => responder(nota)}
+            >
+              <kbd aria-hidden="true">{i + 1}</kbd>
+              <span>{t(`resposta${nota}`)}</span>
+            </button>
+          ))}
         </div>
       </div>
 

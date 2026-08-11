@@ -19,9 +19,20 @@ export const EIXOS = ["economico", "autoridade", "fronteiras", "costumes", "ecol
 // Os dois que viram o grafico. Os outros quatro viram barras.
 export const EIXOS_PRINCIPAIS = ["economico", "autoridade"];
 
-// Resposta: de discordo muito a concordo muito. O zero e neutro de verdade e
-// nao entra na conta de lado nenhum.
-export const RESPOSTAS = [-2, -1, 0, 1, 2];
+// As quatro respostas que a pessoa pode dar, de discordo muito a concordo
+// muito. NAO existe ponto do meio: "sou moderado" e "nao sei" sao coisas
+// diferentes, e misturar as duas num valor so era o que fazia quem nao opinava
+// aparecer como centrista confiante.
+export const RESPOSTAS = [-2, -1, 1, 2];
+
+// "Esta pergunta nao diz nada sobre mim". NAO entra na conta: nem na media,
+// nem na variancia. Quem nao opina fica com margem larga, que e o diagnostico
+// certo, em vez de ser colocado no centro com confianca.
+export const NAO_SEI = 0;
+
+// Tudo que pode ficar guardado numa resposta, incluindo o "nao sei". E o que o
+// link do resultado precisa saber codificar.
+export const VALORES = [-2, -1, 0, 1, 2];
 
 // Peso opcional que a pessoa da para a propria resposta.
 export const IMPORTANCIAS = { baixa: 0.5, normal: 1, alta: 1.5 };
@@ -50,22 +61,47 @@ function importanciaDe(resposta) {
   return typeof m === "number" && m > 0 ? m : IMPORTANCIAS.normal;
 }
 
+/** Uma resposta que da informacao: existe, e nota, e nao e "nao sei". */
+function respondeuDeVerdade(respostas, pergunta) {
+  const resposta = respostas[pergunta.id];
+  return Boolean(resposta) && typeof resposta.r === "number" && resposta.r !== NAO_SEI;
+}
+
 /**
  * Posicao e margem de erro de UM eixo.
+ *
+ * A conta e feita POR PAR, e nao por pergunta solta. Um par so entra se as
+ * DUAS afirmacoes dele foram respondidas de verdade; basta um "nao sei" para o
+ * par inteiro ser descartado.
+ *
+ * Isso nao e zelo: e o que impede o vies de aquiescencia de voltar. Chamando de
+ * `a` a tendencia da pessoa a concordar com qualquer coisa, num par de pesos
+ * -w e +w:
+ *
+ *   par inteiro:      (t1+a)(-w) + (t2+a)(+w) = -w*t1 + w*t2   → o `a` se anula
+ *   metade em nao sei: (t1+a)(-w)             = -w*t1 - w*a    → sobra -w*a
+ *
+ * Ou seja, meio par respondido carrega o vies para dentro do resultado. Aqui a
+ * conta se defende sozinha, em vez de depender de a interface nunca deixar um
+ * par pela metade.
+ *
  * @returns {{posicao: number, margem: number, n: number}} posicao e margem na escala de -10 a +10
  */
 export function pontuarEixo(perguntas, respostas, eixo) {
   const itens = [];
-  for (const p of perguntas) {
-    if (p.eixo !== eixo) continue;
-    const resposta = respostas[p.id];
-    if (!resposta || typeof resposta.r !== "number") continue;
+  for (const [, par] of agruparPares(perguntas.filter((p) => p.eixo === eixo))) {
+    // Par tem que estar inteiro: dois itens, os dois respondidos de verdade.
+    if (par.length !== 2) continue;
+    if (!par.every((p) => respondeuDeVerdade(respostas, p))) continue;
 
-    const peso = Math.abs(p.peso) * importanciaDe(resposta);
-    if (peso <= 0) continue;
-    // Onde ESTA resposta, sozinha, colocaria a pessoa no eixo (-1 a +1).
-    const palpite = (resposta.r * Math.sign(p.peso)) / 2;
-    itens.push({ peso, palpite });
+    for (const p of par) {
+      const resposta = respostas[p.id];
+      const peso = Math.abs(p.peso) * importanciaDe(resposta);
+      if (peso <= 0) continue;
+      // Onde ESTA resposta, sozinha, colocaria a pessoa no eixo (-1 a +1).
+      const palpite = (resposta.r * Math.sign(p.peso)) / 2;
+      itens.push({ peso, palpite });
+    }
   }
 
   // Ninguem respondeu nada deste eixo: centro, e incerteza total.
@@ -236,8 +272,18 @@ export function respondeuTudoIgual(respostas) {
  * E o que alimenta o "por que voce caiu aqui" na tela de resultado.
  */
 export function contribuicoes(perguntas, respostas, eixo) {
+  // So aparecem afirmacoes de pares que ENTRARAM na conta. Mostrar a resposta
+  // de um par descartado seria dizer que ela puxou o resultado, quando ela nao
+  // puxou nada.
+  const contadas = new Set();
+  for (const [, par] of agruparPares(perguntas.filter((p) => p.eixo === eixo))) {
+    if (par.length !== 2) continue;
+    if (!par.every((p) => respondeuDeVerdade(respostas, p))) continue;
+    for (const p of par) contadas.add(p.id);
+  }
+
   return perguntas
-    .filter((p) => p.eixo === eixo && respostas[p.id])
+    .filter((p) => p.eixo === eixo && contadas.has(p.id))
     .map((p) => {
       const resposta = respostas[p.id];
       const empurrao = resposta.r * p.peso * importanciaDe(resposta);

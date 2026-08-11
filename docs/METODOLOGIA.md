@@ -44,9 +44,36 @@ eixo informativo justamente por ser independente dos outros.
 
 ## A conta
 
-Cada resposta vai de **-2** (discordo muito) a **+2** (concordo muito), com **0** neutro de
-verdade, que não entra na conta de lado nenhum. Cada resposta pode receber um peso opcional de
-importância: **0,5** (baixa), **1** (normal, padrão) ou **1,5** (alta).
+Cada resposta vai de **-2** (discordo muito) a **+2** (concordo muito). **Não existe ponto do
+meio**, e existe uma opção separada, **"não sei dizer"**, que não entra na conta.
+
+Isso conserta um defeito real. Enquanto "sou moderado" e "não sei" dividiam o mesmo valor, a conta
+tratava quem não opinava como quem se posicionava no centro: puxava a média para zero **e**
+reduzia a variância. O resultado era absurdo e mensurável: quem respondia "não sei" nas 8
+afirmações de um eixo saía com margem 0,65, exatamente a mesma de quem respondia tudo de forma
+coerente e convicta. O site dizia "você está no centro, e temos certeza" para quem não tinha dito
+nada.
+
+Cada resposta pode receber um peso opcional de importância: **0,5** (baixa), **1** (normal,
+padrão) ou **1,5** (alta).
+
+### A conta é feita por PAR, e não por afirmação solta
+
+Um par só entra se as **duas** afirmações dele foram respondidas de verdade. Basta um "não sei"
+para o par inteiro ser descartado.
+
+Não é zelo, é o que impede o viés de aquiescência de voltar. Chamando de `a` a tendência da pessoa
+a concordar com qualquer coisa, num par de pesos `−w` e `+w`:
+
+- Par inteiro: `(t₁+a)(−w) + (t₂+a)(+w)` = `−w·t₁ + w·t₂`. O `a` **se anula**.
+- Metade em "não sei": `(t₁+a)(−w)` = `−w·t₁ − w·a`. Sobra `−w·a`: **o viés entra**.
+
+Medido no banco real: alguém que diz "não sei" em toda afirmação de um lado e "concordo" em toda a
+do outro sairia, pela regra antiga, deslocado para o polo das que respondeu. Com pares completos,
+tudo cai e o resultado admite que não mediu nada.
+
+Isso deixa a garantia **mais forte do que antes**: o equilíbrio dependia de a interface nunca
+deixar um par pela metade; agora a conta se defende sozinha.
 
 A posição em cada eixo:
 

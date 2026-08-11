@@ -1,6 +1,6 @@
 {
-  "versao": 1,
-  "atualizado": "2026-08-10",
+  "versao": 2,
+  "atualizado": "2026-08-11",
   "nota": "Cada pergunta carrega o instrumento de origem e como foi derivada. 'adaptado' = redacao adaptada de um item que foi conferido palavra por palavra no questionario publico da fonte. 'construto' = redacao propria, baseada num construto documentado, usada quando a escala original tem direitos ou quando o item nao pode ser conferido na fonte primaria. Ver docs/FONTES.md.",
   "eixos": {
     "economico": { "neg": "igualdade", "pos": "mercado" },

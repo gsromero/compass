@@ -49,7 +49,11 @@ const dict = {
     teste_progresso: (feitas, total) => `${feitas} de ${total}`,
     teste_voltar: "Voltar",
     teste_sair: "Sair do teste",
-    teste_dica_teclado: "Use as teclas de 1 a 5 para responder e Backspace para voltar",
+    teste_dica_teclado: "Use as teclas de 1 a 4 para responder e Backspace para voltar",
+    teste_dica_arrasto: "Arraste o cartão para o lado. Quanto mais longe, mais forte a resposta.",
+    teste_nao_sei: "Não sei dizer",
+    teste_nao_sei_ajuda:
+      "Esta afirmação não entra na sua conta. Nem ela, nem a afirmação oposta que faz par com ela.",
     teste_importancia: "Isso é importante para você?",
     teste_importancia_baixa: "Pouco",
     teste_importancia_normal: "Normal",
@@ -59,7 +63,6 @@ const dict = {
     // A chave inclui o sinal da nota (-2 a 2), porque e assim que a tela pede.
     "resposta-2": "Discordo muito",
     "resposta-1": "Discordo",
-    resposta0: "Neutro ou não sei",
     resposta1: "Concordo",
     resposta2: "Concordo muito",
 
@@ -191,7 +194,11 @@ const dict = {
     teste_progresso: (feitas, total) => `${feitas} of ${total}`,
     teste_voltar: "Back",
     teste_sair: "Leave the test",
-    teste_dica_teclado: "Press 1 to 5 to answer, Backspace to go back",
+    teste_dica_teclado: "Press 1 to 4 to answer, Backspace to go back",
+    teste_dica_arrasto: "Drag the card sideways. The further you go, the stronger the answer.",
+    teste_nao_sei: "I could not say",
+    teste_nao_sei_ajuda:
+      "This statement is left out of your score, and so is the opposite statement paired with it.",
     teste_importancia: "Does this matter to you?",
     teste_importancia_baixa: "A little",
     teste_importancia_normal: "Normal",
@@ -200,7 +207,6 @@ const dict = {
 
     "resposta-2": "Strongly disagree",
     "resposta-1": "Disagree",
-    resposta0: "Neutral or unsure",
     resposta1: "Agree",
     resposta2: "Strongly agree",
 

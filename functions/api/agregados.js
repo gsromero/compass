@@ -10,6 +10,8 @@
 // secoes de comparacao em vez de mostrar grafico vazio. Numero de percentil
 // tirado de 6 pessoas nao e informacao, e ruido com cara de informacao.
 
+import { VERSAO } from "./_versao.js";
+
 const EIXOS = ["economico", "autoridade", "fronteiras", "costumes", "ecologia", "povo"];
 const MINIMO = 50;
 const CACHE_SEGUNDOS = 600;
@@ -39,7 +41,11 @@ async function calcular(env) {
 
   let total;
   try {
-    const contagem = await env.DB.prepare("SELECT COUNT(*) AS n FROM respostas").first();
+    const contagem = await env.DB.prepare(
+      "SELECT COUNT(*) AS n FROM respostas WHERE versao = ?",
+    )
+      .bind(VERSAO)
+      .first();
     total = contagem?.n ?? 0;
   } catch {
     // Banco fora do ar nao pode derrubar a tela de resultado.
@@ -54,8 +60,10 @@ async function calcular(env) {
     // A faixa vai de -10 a +10 em passos de 2. O CAST trunca para o indice.
     const linhas = await env.DB.prepare(
       `SELECT MIN(9, MAX(0, CAST((${eixo} + 10) / 2 AS INTEGER))) AS faixa, COUNT(*) AS n
-         FROM respostas GROUP BY faixa`,
-    ).all();
+         FROM respostas WHERE versao = ? GROUP BY faixa`,
+    )
+      .bind(VERSAO)
+      .all();
     for (const linha of linhas.results ?? []) {
       if (distribuicao[linha.faixa]) distribuicao[linha.faixa].n = linha.n;
     }
@@ -68,8 +76,10 @@ async function calcular(env) {
     `SELECT CAST(economico / 2 AS INTEGER) AS gx,
             CAST(autoridade / 2 AS INTEGER) AS gy,
             COUNT(*) AS n
-       FROM respostas GROUP BY gx, gy`,
-  ).all();
+       FROM respostas WHERE versao = ? GROUP BY gx, gy`,
+  )
+    .bind(VERSAO)
+    .all();
   const celulas = grade.results ?? [];
   const maior = celulas.reduce((m, c) => Math.max(m, c.n), 1);
   const mapa = {
@@ -82,10 +92,16 @@ async function calcular(env) {
 
   // Media por pergunta dentro de cada quadrante: alimenta o "onde voce destoa".
   const porPergunta = {};
+  // O "nao sei" (r = 0) fica de fora: ele nao e uma opiniao central, e entrar
+  // na media puxaria a media do quadrante para o meio sem que ninguem tenha
+  // dito nada. Mesma regra da conta individual, em lib/scoring.js.
   const medias = await env.DB.prepare(
     `SELECT quadrante, pergunta, AVG(r) AS media, COUNT(*) AS n
-       FROM itens GROUP BY quadrante, pergunta HAVING n >= 10`,
-  ).all();
+       FROM itens WHERE versao = ? AND r != 0
+       GROUP BY quadrante, pergunta HAVING n >= 10`,
+  )
+    .bind(VERSAO)
+    .all();
   for (const linha of medias.results ?? []) {
     porPergunta[linha.quadrante] ??= {};
     porPergunta[linha.quadrante][linha.pergunta] = {

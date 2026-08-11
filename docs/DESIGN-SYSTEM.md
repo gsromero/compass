@@ -140,6 +140,29 @@ valores gravados no banco e na validação da API. Renomear a chave quebra os da
 legenda é neutro entre os temas ("quanto mais forte"), porque no claro a mancha escurece e no
 escuro ela clareia.
 
+## O cartão do questionário
+
+Arrasta-se para o lado para responder: a direção diz se concorda, **a distância diz o quanto**.
+Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para decorar.
+
+- **A decisão mora em `lib/gesto.js`**, não no componente. Gesto é a parte que quebra em silêncio
+  porque ninguém escreve teste de arrastar; isolada, ela é testável e o componente só aplica.
+- **Os limiares são fração da largura do cartão, nunca pixels.** O mesmo gesto tem que significar
+  a mesma coisa num celular pequeno e num monitor.
+- **`touch-action: pan-y` no cartão.** Deixa a página rolar no vertical e entrega o horizontal ao
+  gesto. Sem isso, arrastar de lado rolaria a página junto.
+- **Os rótulos dos dois lados ficam numa linha ACIMA do cartão.** Já estiveram sobrepostos a ele,
+  onde ficavam escondidos atrás da própria coisa que explicavam.
+- **A ordem da tela é por frequência de uso:** cartão, dica, importância, "não sei", e por último a
+  lista de botões. No celular a lista é a alternativa; no desktop mandam o mouse e o teclado.
+- **A lista de botões e o teclado nunca podem sumir.** São o único caminho para quem usa leitor de
+  tela ou só o teclado, e arrastar com mouse é pior que clicar.
+- Sob `prefers-reduced-motion`, o cartão troca na hora, sem voar.
+
+**"Não sei dizer" é discreto de propósito.** O defeito da resposta do meio nunca foi ela existir,
+foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar. Lados sem esforço,
+"não sei" deliberado.
+
 ## O radar de perfil
 
 Uma petala por eixo, apontando para o polo em que a pessoa pende, do tamanho da conviccao. Fica ao

@@ -1,5 +1,29 @@
 [
   {
+    "version": "2.0",
+    "date": "2026-08-11T01:00:00",
+    "author": "claude",
+    "summary": "Responder agora e arrastar o cartao para o lado, e o 'nao sei' parou de virar confianca falsa.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/gesto.js",
+        "client/src/lib/gesto.test.js",
+        "client/src/lib/scoring.js",
+        "client/src/pages/Teste.jsx",
+        "client/src/index.css",
+        "functions/api/_versao.js",
+        "client/src/data/questions.json"
+      ],
+      "technical": "Escala de 4 pontos (RESPOSTAS) mais NAO_SEI separado, e VALORES para o link. pontuarEixo passou a montar itens POR PAR: par com 'nao sei' ou pela metade e descartado inteiro, porque meio par nao cancela o termo de aquiescencia. Antes, quem dizia 'nao sei' de um lado do par e 'concordo' do outro ia para +2,5; agora vai para 0 com margem 10. A escala estava copiada em tres arquivos e foi colapsada em scoring.js. versao do banco subiu para 2, entao link antigo e recusado em vez de decodificar errado. Agregados filtram por versao (os indices ja tinham versao na frente desde o inicio, para um filtro que nunca fora escrito) e ignoram r=0 na media por quadrante. Gesto: decisao pura em lib/gesto.js, limiares em fracao da largura e nao em pixels, movimento vertical ignorado porque e rolagem, touch-action pan-y no cartao.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono",
+        "og:image por quadrante",
+        "criar o projeto no Pages e apontar o dominio"
+      ]
+    }
+  },
+  {
     "version": "1.1",
     "date": "2026-08-10T23:05:00",
     "author": "claude",

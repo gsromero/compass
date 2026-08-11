@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from "vitest";
 import { TODAS, perguntasDoIdioma } from "./questions.js";
-import { EIXOS, MODOS, agruparPares, pontuar, proximoPar } from "./scoring.js";
+import { EIXOS, MODOS, NAO_SEI, agruparPares, pontuar, proximoPar } from "./scoring.js";
 
 const IDIOMAS = ["pt", "en"];
 
@@ -77,11 +77,30 @@ describe("2. quem concorda com tudo cai no centro", () => {
   });
 });
 
-describe("3. neutro e neutro", () => {
-  it("responder neutro em tudo da exatamente zero em todos os eixos", () => {
-    const resultado = pontuar(TODAS, responderTudo(TODAS, 0));
+describe('3. "nao sei" nao e uma posicao', () => {
+  it("dizer 'nao sei' em tudo da o centro COM incerteza total", () => {
+    // "Nao sei" significa que a afirmacao nao diz nada sobre a pessoa, e nao
+    // que ela esta no meio. Antes desta regra o site respondia "voce esta no
+    // centro, e temos certeza" para quem nao opinou sobre nada.
+    const resultado = pontuar(TODAS, responderTudo(TODAS, NAO_SEI));
     for (const eixo of EIXOS) {
       expect(resultado[eixo].posicao).toBe(0);
+      expect(resultado[eixo].margem).toBe(10);
+      expect(resultado[eixo].n).toBe(0);
+    }
+  });
+
+  it("no banco real, 'nao sei' de um lado do par nao empurra para o outro", () => {
+    // O mesmo teste do scoring.test.js, agora contra as 48 afirmacoes de
+    // verdade: alguem que so responde as afirmacoes de um dos lados e diz
+    // "nao sei" nas opostas nao pode ser empurrado para o lado que respondeu.
+    const respostas = {};
+    for (const p of TODAS) respostas[p.id] = { r: p.peso < 0 ? NAO_SEI : 1, m: 1 };
+
+    const resultado = pontuar(TODAS, respostas);
+    for (const eixo of EIXOS) {
+      expect(Math.abs(resultado[eixo].posicao), `eixo ${eixo}`).toBeLessThan(0.001);
+      expect(resultado[eixo].margem).toBe(10);
     }
   });
 });

@@ -147,3 +147,11 @@ Ler o handoff recente **antes de começar**.
   resposta.
 - **Abaixo de 50 respostas** as seções de percentil, mapa de calor e "onde você destoa" não
   aparecem. É de propósito, não é bug.
+- **`VERSAO` em `functions/api/_versao.js` tem que ser igual ao `versao` do `questions.json`.**
+  Não dá para importar o JSON do client dentro das Functions sem arrastar o bundle do front junto,
+  então a sincronia é manual. Mudou lá, muda aqui, senão os agregados param de contar as respostas
+  novas em silêncio.
+- **A escala de resposta mora só em `lib/scoring.js`.** Já esteve copiada em `permalink.js` e em
+  `Teste.jsx`, e uma cópia fora de sincronia faria o mesmo link decodificar respostas diferentes,
+  sem erro nenhum.
+- **`r: 0` é "não sei", e não "sou moderado".** Não entra na conta, e derruba o par inteiro junto.

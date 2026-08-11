@@ -1,6 +1,35 @@
-# Handoff — Compass
+## 2026-08-11 — claude
 
-> Entrada nova sempre no TOPO. Máximo 3 aqui; excedentes vão para `handoff_compass_archive.md`.
+**O que foi feito:** O questionário virou um cartão que se arrasta, e no caminho apareceu um bug
+mais importante que a mudança de interface.
+
+**O bug:** "não sei" e "sou moderado" dividiam o mesmo valor (`r: 0`), e a conta tratava os dois
+como "minha posição é o centro". Resultado mensurável: quem respondia "não sei" nas 8 afirmações
+de um eixo saía com margem 0,65, a MESMA de quem respondia tudo de forma coerente e convicta.
+
+**O conserto, em duas partes.** A escala virou 4 pontos e "não sei" virou uma opção separada que
+não entra na conta. E a pontuação passou a ser feita por PAR: um par com um "não sei" é descartado
+inteiro. Essa segunda parte não é zelo, é necessária: "não sei" fora da conta vira um "pular", e
+pular metade de um par deixa o viés de aquiescência entrar (`(t+a)(-w)` não cancela o `a`).
+Medido: pela regra antiga, quem dizia "não sei" de um lado do par e "concordo" do outro era
+empurrado para +2,5; agora cai para 0 com margem máxima.
+
+**Estado atual:** 363 testes. Arrasto verificado no navegador nos quatro sentidos de intensidade,
+mais os casos de cancelar e de rolagem. Teclado sozinho leva ao resultado. Link da versão 1 é
+recusado em vez de abrir com respostas trocadas. Agregados contam só a versão 2 (o banco de dev
+tem 174 linhas da 1 e 130 da 2, e o total reportado é 130).
+
+**Para o próximo agente:** três coisas que quebram em silêncio se ignoradas.
+
+1. **`VERSAO` em `functions/api/_versao.js` tem que bater com o `versao` do `questions.json`.** Não
+   dá para importar o JSON do client dentro das Functions; a sincronia é manual. Fora de sincronia,
+   os agregados param de contar as respostas novas sem erro nenhum.
+2. **A escala mora só em `scoring.js`.** Já esteve copiada em `permalink.js` e `Teste.jsx`, e uma
+   cópia defasada faria o mesmo link decodificar para outras respostas.
+3. **A decisão do gesto mora em `lib/gesto.js`, não no componente.** Se alguém mover a lógica para
+   dentro do JSX, ela deixa de ser testada e passa a quebrar sem ninguém ver.
+
+A lista de botões e o teclado NÃO podem sumir: são o único caminho para leitor de tela e teclado.
 
 ## 2026-08-10 — claude
 
