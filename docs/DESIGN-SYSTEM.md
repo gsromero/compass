@@ -165,10 +165,11 @@ arrastar, e ninguém descobre um gesto lendo sobre ele.
   função que decide a resposta de um arrasto de verdade, então os rótulos aparecem sozinhos e na
   ordem certa: "concordo" enquanto atravessa a faixa leve, "concordo muito" ao chegar no limiar.
   Com transição de CSS o rótulo ficava preso no destino e o "concordo" só piscava.
-- **Para exatamente no limiar do "muito"**, e não numa distância bonita qualquer: assim ela ensina
-  a distância de verdade em vez de ser enfeite.
-- **Atravessa de um limiar ao outro sem passar por uma parada no centro.** É essa travessia que faz
-  as duas faixas leves aparecerem. Cada rótulo fica cerca de 0,9s, e os do limiar 0,65s.
+- **Passa do limiar do "muito", em vez de parar em cima dele.** Já parou exatamente na fronteira, e
+  o movimento lia como "quase lá": a lição útil não é acertar o limiar, é ultrapassá-lo.
+- **Para na faixa leve antes de avançar, dos dois lados.** Sem essa parada a faixa leve cai no meio
+  do percurso, onde o movimento é mais rápido, e "concordo" só piscava. As paradas garantem que os
+  quatro rótulos apareçam cerca de um segundo cada, em vez de depender do acaso da aceleração.
 - **Começa parada no centro por 0,7s.** Sem essa pausa o primeiro passo dispara em tempo zero, o
   navegador pinta o cartão já deslocado, e ele parece nascer no canto em vez de sair do meio.
 - **Encostar no cartão corta a demonstração na hora.** Quem já entendeu não precisa esperar.

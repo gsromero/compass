@@ -28,12 +28,18 @@ const VOO = 170;
 // enquanto atravessa a faixa leve, "concordo muito" ao chegar no limiar. Com
 // transicao de CSS o rotulo ficava preso no destino e o "concordo" so piscava.
 const DEMO_INICIO = 600;
-// A pausa no limiar segura o "muito" na tela. Sem ela o rotulo do ponto de
-// chegada aparecia menos tempo que o do meio do caminho.
-const DEMO_PAUSA = 650;
-const DEMO_IDA = 850;
-// A travessia cruza o dobro da distancia, entao leva proporcionalmente mais.
-const DEMO_TRAVESSIA = 1300;
+// Cada parada segura um rotulo na tela. Sem elas, a faixa leve cai no meio do
+// percurso, onde o movimento e mais rapido, e "concordo" so pisca.
+const DEMO_PAUSA = 550;
+const DEMO_IDA = 520;      // do centro ate a faixa leve
+const DEMO_AVANCO = 380;   // da faixa leve ate passar do limiar do "muito"
+const DEMO_TRAVESSIA = 820; // de um lado ao outro
+const DEMO_VOLTA = 620;
+// O quanto a demonstracao passa do limiar do "muito". Parando exatamente em
+// cima dele o movimento lia como "quase la", e a licao util nao e acertar a
+// fronteira: e ultrapassar. Fica bem dentro do alcance, entao o cartao nao
+// some da tela.
+const DEMO_EXCEDE = 1.35;
 const KEY_MODO = "compass.modoResposta";
 
 function prefereMenosMovimento() {
@@ -226,14 +232,18 @@ export default function Teste() {
       if (!alcance || cancelado) return;
       alcanceDemo.current = alcance;
 
-      // Vai ate o limiar do "muito", atravessa para o outro limiar e volta.
-      // Atravessar de um lado ao outro passa pelas duas faixas leves, entao
-      // "concordo" e "discordo" aparecem no caminho sem precisar de parada.
-      const forte = alcance * LIMIARES.forte;
+      // Para na faixa leve, segura, avanca para alem do limiar do "muito",
+      // segura, e faz o mesmo do outro lado. As paradas sao de proposito: sem
+      // elas a faixa leve fica no meio do percurso, onde o movimento e mais
+      // rapido, e "concordo" so piscava.
+      const leve = alcance * ((LIMIARES.zonaMorta + LIMIARES.forte) / 2);
+      const forte = alcance * LIMIARES.forte * DEMO_EXCEDE;
       const trechos = [
-        { de: 0, para: forte, duracao: DEMO_IDA, pausa: DEMO_PAUSA },
-        { de: forte, para: -forte, duracao: DEMO_TRAVESSIA, pausa: DEMO_PAUSA },
-        { de: -forte, para: 0, duracao: DEMO_IDA, pausa: 0 },
+        { de: 0, para: leve, duracao: DEMO_IDA, pausa: DEMO_PAUSA },
+        { de: leve, para: forte, duracao: DEMO_AVANCO, pausa: DEMO_PAUSA },
+        { de: forte, para: -leve, duracao: DEMO_TRAVESSIA, pausa: DEMO_PAUSA },
+        { de: -leve, para: -forte, duracao: DEMO_AVANCO, pausa: DEMO_PAUSA },
+        { de: -forte, para: 0, duracao: DEMO_VOLTA, pausa: 0 },
       ];
 
       // Acelera e desacelera; sem isso o movimento parece de robo.
