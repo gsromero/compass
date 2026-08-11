@@ -155,6 +155,25 @@ experiência pior do que qualquer um deles sozinho; foi assim na primeira versã
   cartões têm a mesma altura mesmo com afirmações curtas: num baralho que se arrasta, cartão que
   muda de tamanho a cada pergunta fica inquieto.
 
+### A demonstração que ensina o gesto
+
+Ao **entrar no modo cartão**, o cartão anda sozinho até onde a resposta vira "concordo muito",
+segura meio segundo, faz o mesmo do outro lado e volta ao centro. Nada na tela diz que dá para
+arrastar, e ninguém descobre um gesto lendo sobre ele.
+
+- **Para exatamente no limiar do "muito"**, e não numa distância bonita qualquer: assim ela ensina
+  a distância de verdade em vez de ser enfeite.
+- **A etiqueta acompanha**, então a pessoa vê o gesto e o resultado dele ao mesmo tempo.
+- **Encostar no cartão corta a demonstração na hora.** Quem já entendeu não precisa esperar.
+- **Ida e volta com a mesma duração.** Com a volta mais rápida, o movimento parecia erro.
+- Sob `prefers-reduced-motion`, não roda.
+- Roda uma vez por entrada no modo, e não a cada pergunta.
+
+**Armadilha que isso revelou:** o alcance do arrasto era medido pelo retângulo do cartão, e o
+cartão pode estar deslocado na hora da medida (durante a demonstração ou no meio de um arrasto).
+Com o centro fora do lugar, o alcance saía menor e um arrasto curto virava "concordo muito". A
+medida passou a sair do **pai**, que nunca é transformado, com `offsetWidth` no lugar do rect.
+
 ### O gesto
 
 Arrasta-se para o lado para responder: a direção diz se concorda, **a distância diz o quanto**.

@@ -3,7 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLang } from "../lib/lang.jsx";
 import { enunciado, perguntasDoIdioma, VERSAO_BANCO } from "../lib/questions.js";
 import { IMPORTANCIAS, NAO_SEI, RESPOSTAS, proximoPar, totalPrevisto } from "../lib/scoring.js";
-import { alcanceDoArrasto, intencaoDoArrasto, progressoDoArrasto } from "../lib/gesto.js";
+import {
+  LIMIARES,
+  alcanceDoArrasto,
+  intencaoDoArrasto,
+  progressoDoArrasto,
+} from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
 import Polegar from "../components/Polegar.jsx";
@@ -14,6 +19,22 @@ const IMPORTANCIA_ORDEM = ["baixa", "normal", "alta"];
 const SEM_ARRASTO = { dx: 0, dy: 0, alcance: 0, ativo: false };
 // Tempo do cartao voar para fora antes da proxima pergunta entrar.
 const VOO = 170;
+
+// A demonstracao que ensina o gesto ao entrar no modo cartao: vai ate onde a
+// resposta vira "concordo muito", segura, faz o mesmo do outro lado e volta ao
+// centro. Para exatamente no limiar de proposito, para ensinar a distancia de
+// verdade em vez de um movimento decorativo.
+const DEMO_DESLIZE = 460;
+const DEMO_PAUSA = 500;
+// `null` no fim encerra a demonstracao. O passo 0 (voltar ao centro) e um
+// estado da demonstracao, e nao a ausencia dela: se fosse null ali, a volta
+// perderia a transicao longa e voltaria mais rapido do que foi.
+const DEMO_PASSOS = [
+  { lado: 1, espera: DEMO_DESLIZE + DEMO_PAUSA },
+  { lado: -1, espera: DEMO_DESLIZE + DEMO_PAUSA },
+  { lado: 0, espera: DEMO_DESLIZE },
+  { lado: null, espera: 0 },
+];
 const KEY_MODO = "compass.modoResposta";
 
 function prefereMenosMovimento() {
@@ -54,13 +75,23 @@ export default function Teste() {
   const [pronto, setPronto] = useState(false);
   const [arrasto, setArrasto] = useState(SEM_ARRASTO);
   const [saindoPara, setSaindoPara] = useState(0);
+  const [demo, setDemo] = useState(null);
   const [comoResponder, setComoResponder] = useState(modoInicial);
 
   const cartao = useRef(null);
   const inicio = useRef(null);
   const relogio = useRef(null);
+  const relogiosDemo = useRef([]);
+
+  /** Corta a demonstracao na hora: quem encostou no cartao ja entendeu. */
+  const pararDemo = useCallback(() => {
+    relogiosDemo.current.forEach(clearTimeout);
+    relogiosDemo.current = [];
+    setDemo(null);
+  }, []);
 
   useEffect(() => () => clearTimeout(relogio.current), []);
+  useEffect(() => () => relogiosDemo.current.forEach(clearTimeout), []);
 
   useEffect(() => {
     try {
@@ -178,6 +209,21 @@ export default function Teste() {
     if (posicao + 1 < historico.length && respostas[idAtual]) setPosicao(posicao + 1);
   }, [posicao, historico, respostas, idAtual]);
 
+  // Ao entrar no modo cartao, o cartao demonstra o gesto sozinho: nada na tela
+  // diz que da para arrastar, e ninguem descobre um gesto lendo sobre ele.
+  // Roda uma vez por entrada no modo, e nao a cada pergunta.
+  useEffect(() => {
+    if (!pronto || comoResponder !== "cartao" || prefereMenosMovimento()) return;
+
+    let atraso = 0;
+    relogiosDemo.current = DEMO_PASSOS.map(({ lado, espera }) => {
+      const id = setTimeout(() => setDemo(lado), atraso);
+      atraso += espera;
+      return id;
+    });
+    return () => relogiosDemo.current.forEach(clearTimeout);
+  }, [pronto, comoResponder]);
+
   // Teclado: 1 a 4 respondem, 0 e "nao sei", Backspace volta. Funciona nos DOIS
   // modos: no cartao ele e o caminho de quem nao usa dedo nem mouse.
   useEffect(() => {
@@ -206,14 +252,29 @@ export default function Teste() {
   // A decisao de qual resposta um arrasto virou mora em lib/gesto.js. Aqui so
   // se mede o dedo e se aplica o que aquela funcao disse.
 
-  /** O quanto o dedo consegue arrastar daqui, medido na hora. */
+  /**
+   * O quanto o dedo consegue arrastar daqui, medido na hora.
+   *
+   * Mede pelo PAI, que nunca e transformado, e nao pelo retangulo do cartao.
+   * O cartao pode estar deslocado no momento da medida (durante a
+   * demonstracao, ou no meio de um arrasto), e ai o centro dele sai do lugar,
+   * o alcance sai menor e o mesmo gesto vira uma resposta mais forte do que a
+   * pessoa quis. Aconteceu: um arrasto curto virava "concordo muito".
+   */
   function medirAlcance() {
-    const caixa = cartao.current?.getBoundingClientRect();
-    return caixa ? alcanceDoArrasto(caixa, window.innerWidth) : 0;
+    const el = cartao.current;
+    const pai = el?.parentElement?.getBoundingClientRect();
+    if (!el || !pai) return 0;
+    const largura = el.offsetWidth; // ignora transform, ao contrario do rect
+    return alcanceDoArrasto(
+      { left: pai.left + (pai.width - largura) / 2, width: largura },
+      window.innerWidth,
+    );
   }
 
   function aoPressionar(evento) {
     if (evento.pointerType === "mouse" && evento.button !== 0) return;
+    pararDemo();
     inicio.current = { x: evento.clientX, y: evento.clientY };
     setArrasto({ dx: 0, dy: 0, alcance: medirAlcance(), ativo: true });
     evento.currentTarget.setPointerCapture?.(evento.pointerId);
@@ -258,13 +319,22 @@ export default function Teste() {
   const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.alcance) : 0;
   const previa = arrasto.ativo
     ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.alcance)
-    : null;
+    : demo
+      ? demo * 2
+      : null;
+  const demonstrando = demo !== null;
 
   const estiloCartao = saindoPara
     ? { transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * 12}deg)`, opacity: 0 }
     : arrasto.ativo
       ? { transform: `translateX(${arrasto.dx}px) rotate(${progresso * 5}deg)` }
-      : undefined;
+      : demonstrando
+        ? {
+            // Para exatamente onde a resposta vira "muito": a demonstracao
+            // ensina a distancia de verdade, e nao um movimento decorativo.
+            transform: `translateX(${demo * medirAlcance() * LIMIARES.forte}px) rotate(${demo * 5}deg)`,
+          }
+        : undefined;
 
   return (
     <main className="coluna tela-teste">
@@ -294,7 +364,13 @@ export default function Teste() {
           <div
             key={idAtual}
             ref={cartao}
-            className={`cartao-pergunta ${arrasto.ativo || saindoPara ? "arrastando" : "entrando"}`}
+            className={`cartao-pergunta ${
+              arrasto.ativo || saindoPara
+                ? "arrastando"
+                : demonstrando
+                  ? "demonstrando"
+                  : "entrando"
+            }`}
             style={estiloCartao}
             onPointerDown={aoPressionar}
             onPointerMove={aoMover}
