@@ -306,6 +306,54 @@ button {
   margin-top: auto;
 }
 
+/* Modo lista: o enunciado e as opcoes ficam no MEIO da tela, e nao colados no
+   topo. Duas margens automaticas (uma aqui e outra no rodape) dividem o espaco
+   livre em partes iguais, e o bloco do meio se centraliza sozinho. */
+.palco-lista {
+  display: grid;
+  gap: 26px;
+  margin-top: auto;
+}
+
+/* No cartao tudo e centralizado: a afirmacao, a previa e a dica. */
+.palco .cartao-pergunta,
+.palco .afirmacao,
+.palco .previa,
+.palco .dica-arrasto {
+  text-align: center;
+}
+
+.bloco-importancia {
+  justify-items: center;
+}
+
+.bloco-importancia .importancia {
+  justify-content: center;
+}
+
+/* Os polegares. Decorativos: quem carrega o sentido e o texto ao lado. */
+.polegares {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  flex: none;
+  color: var(--ink-mid);
+  vertical-align: -0.22em;
+}
+
+.opcao[aria-pressed="true"] .polegares,
+.previa .polegares {
+  color: inherit;
+}
+
+.previa .polegares {
+  margin-right: 7px;
+}
+
+.palco-lados .polegares {
+  vertical-align: -0.2em;
+}
+
 /* Os dois lados ficam numa linha ACIMA do cartao, sempre visiveis: e o que
    ensina o gesto sem precisar de tutorial. Ja estiveram sobrepostos ao cartao,
    onde ficavam escondidos atras da propria coisa que explicavam. */
@@ -356,7 +404,9 @@ button {
 }
 
 .previa {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 14px;
   min-height: 1.2em;
   font-size: 13px;
@@ -441,7 +491,7 @@ button {
   grid-template-columns: 1fr 1fr;
 }
 
-@media (max-width: 22rem) {
+@media (max-width: 20rem) {
   .escala {
     grid-template-columns: 1fr;
   }
@@ -450,9 +500,9 @@ button {
 .opcao {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 9px;
   width: 100%;
-  padding: 11px 14px;
+  padding: 11px 13px;
   border-radius: var(--raio-pequeno);
   border: 1px solid var(--line);
   background: var(--panel);
@@ -491,6 +541,52 @@ button {
   border-color: var(--ink);
   color: var(--ink);
 }
+
+/* Ajustes da lista de respostas, do mais amplo para o mais estreito. Manter
+   NESTA ORDEM e NESTE lugar: ja estiveram espalhados pelo arquivo, e o bloco
+   de baixo sobrescrevia o de cima sem ninguem perceber. */
+
+/* No toque nao existe teclado, entao o numero da tecla so ocupa espaco e faz o
+   rotulo quebrar em duas linhas. */
+@media (pointer: coarse) {
+  .opcao > kbd {
+    display: none;
+  }
+
+  .opcao {
+    font-size: 14.5px;
+    gap: 7px;
+    padding: 11px 11px;
+  }
+
+  .opcao .polegares svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* iPhone SE e menores: "Concordo muito" ao lado de dois polegares ainda nao
+   cabia em uma linha, e o botao dobrava de altura. */
+@media (max-width: 24.5rem) {
+  .opcao {
+    font-size: 13px;
+    gap: 5px;
+    padding: 11px 8px;
+  }
+
+  .opcao .polegares svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Abaixo disso nem apertando cabe: vira uma coluna. */
+@media (max-width: 20rem) {
+  .escala {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 .importancia {
   display: flex;

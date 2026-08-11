@@ -6,6 +6,7 @@ import { IMPORTANCIAS, NAO_SEI, RESPOSTAS, proximoPar, totalPrevisto } from "../
 import { alcanceDoArrasto, intencaoDoArrasto, progressoDoArrasto } from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
+import Polegar from "../components/Polegar.jsx";
 
 // A escala vem de scoring.js. Nunca escrever a mao aqui.
 const NOTAS = RESPOSTAS;
@@ -291,8 +292,12 @@ export default function Teste() {
       {noCartao ? (
         <div className="palco">
           <div className="palco-lados" aria-hidden="true">
-            <span>&larr; {t("resposta-1")}</span>
-            <span>{t("resposta1")} &rarr;</span>
+            <span>
+              &larr; <Polegar nota={-1} tamanho={14} /> {t("resposta-1")}
+            </span>
+            <span>
+              {t("resposta1")} <Polegar nota={1} tamanho={14} /> &rarr;
+            </span>
           </div>
 
           <div
@@ -310,14 +315,19 @@ export default function Teste() {
           >
             <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
             <span className="previa" data-visivel={previa !== null}>
-              {previa !== null ? t(`resposta${previa}`) : ""}
+              {previa !== null && (
+                <>
+                  <Polegar nota={previa} tamanho={19} />
+                  {t(`resposta${previa}`)}
+                </>
+              )}
             </span>
           </div>
 
           <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
         </div>
       ) : (
-        <div key={idAtual} className="entrando pilha-larga">
+        <div key={idAtual} className="entrando palco-lista">
           <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
         </div>
       )}
@@ -335,13 +345,14 @@ export default function Teste() {
             onClick={() => responder(nota)}
           >
             <kbd aria-hidden="true">{i + 1}</kbd>
+            <Polegar nota={nota} tamanho={16} />
             <span>{t(`resposta${nota}`)}</span>
           </button>
         ))}
       </div>
 
       <div className="rodape-teste">
-        <div className="pilha" style={{ gap: "8px" }}>
+        <div className="pilha bloco-importancia" style={{ gap: "8px" }}>
           <span className="rotulo">{t("teste_importancia")}</span>
           <div className="importancia">
             {IMPORTANCIA_ORDEM.map((chave) => (

@@ -178,9 +178,30 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
   onde ficavam escondidos atrás da própria coisa que explicavam.
 - **A ordem da tela é por frequência de uso:** cartão, dica, importância, "não sei", e por último a
   lista de botões. No celular a lista é a alternativa; no desktop mandam o mouse e o teclado.
+- **No modo cartão tudo é centralizado**, e no modo lista o conteúdo fica no meio vertical da tela
+  em vez de colado no topo. O bloco de importância é centralizado nos dois modos.
 - **A lista de botões e o teclado nunca podem sumir.** São o único caminho para quem usa leitor de
   tela ou só o teclado, e arrastar com mouse é pior que clicar.
 - Sob `prefers-reduced-motion`, o cartão troca na hora, sem voar.
+
+### Polegares
+
+Um polegar para "concordo", dois para "concordo muito", e virados para baixo do lado de discordar.
+Desenhados à mão em SVG, porque a regra é não trazer biblioteca de ícone para dois traços.
+
+**São decorativos, e por isso ficam com `aria-hidden`.** Quem carrega o sentido é o texto ao lado:
+ícone sozinho não é lido por leitor de tela e não é entendido do mesmo jeito por todo mundo.
+
+### Cascata das regras da lista de respostas
+
+As regras responsivas de `.opcao` ficam **todas juntas, em ordem do mais amplo para o mais
+estreito**, logo depois da regra base. Já estiveram espalhadas pelo arquivo, e o bloco que aparecia
+por último sobrescrevia o de cima sem ninguém perceber: o `display: none` do número da tecla ficou
+sem efeito, e depois o passo de tipografia da tela estreita também. Se for mexer, mexa ali e mantenha
+a ordem.
+
+No toque o número da tecla some, porque não existe teclado e ele só empurrava o rótulo para uma
+segunda linha.
 
 **"Não sei dizer" é discreto de propósito.** O defeito da resposta do meio nunca foi ela existir,
 foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar. Lados sem esforço,
