@@ -1,31 +1,83 @@
 [
   {
+    "version": "1.0",
+    "date": "2026-08-10T22:30:00",
+    "author": "claude",
+    "summary": "O site funcionando de ponta a ponta: questionario, resultado com margem de erro, card para redes sociais e comparacao com quem ja respondeu.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/index.css",
+        "client/src/App.jsx",
+        "client/src/main.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/lib/lang.jsx",
+        "client/src/lib/compass.js",
+        "client/src/lib/permalink.js",
+        "client/src/lib/sessao.js",
+        "client/src/lib/tradicoes.js",
+        "client/src/lib/agregados.js",
+        "client/src/lib/shareCard.js",
+        "client/src/lib/shareImage.js",
+        "client/src/lib/fluxo.test.js",
+        "client/src/data/tradicoes.json",
+        "client/src/components/Bussola.jsx",
+        "client/src/components/BarraEixo.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Teste.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "client/src/pages/Tradicoes.jsx",
+        "client/public/_redirects",
+        "client/public/_headers",
+        "functions/api/respostas.js",
+        "functions/api/agregados.js",
+        "migrations/0001_init.sql",
+        "docs/DESIGN-SYSTEM.md",
+        "wrangler.jsonc"
+      ],
+      "technical": "Interface monocromatica de proposito: cor so nos dados do grafico, porque vermelho/azul/verde ja tem leitura partidaria e um botao colorido faria a interface parecer torcer. Os quatro quadrantes sao gerados em OKLCH com mesma leveza e mesmo croma, variando so o tom, para nenhum ficar mais forte que outro. Zero biblioteca de UI: grafico em SVG a mao, animacao em CSS, card 1080x1080 em Canvas 2D. A margem de erro tem dois usos, desenhar a elipse e decidir quando parar de perguntar. O link do resultado carrega as respostas codificadas em 4 bits cada, entao funciona sem banco. PEGADINHA: o flag --d1 do wrangler pages dev trata o valor como ID do banco, nao como nome; por isso dev:pages usa o UUID.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono, procurando tom que empurre para algum lado",
+        "aprovacao visual do dono",
+        "og:image estatica por quadrante",
+        "criar o projeto no Pages e apontar compass.gsromerolab.com",
+        "aplicar a migration no banco de producao",
+        "validacao empirica (analise fatorial) quando houver respostas reais"
+      ]
+    }
+  },
+  {
+    "version": "0.2",
+    "date": "2026-08-10T21:00:00",
+    "author": "claude",
+    "summary": "As 48 perguntas, com a fonte de cada uma registrada, e a bateria de testes que prova que o teste nao e tendencioso.",
+    "details": {
+      "commits": ["e74ddd7"],
+      "files": [
+        "client/src/data/questions.json",
+        "client/src/lib/scoring.js",
+        "client/src/lib/questions.js",
+        "client/src/lib/equilibrio.test.js",
+        "client/src/lib/scoring.test.js",
+        "docs/FONTES.md",
+        "docs/METODOLOGIA.md"
+      ],
+      "technical": "Questionario mestre do World Values Survey Onda 8 lido item por item; 38 perguntas adaptadas com codigo do item conferido, 10 de redacao propria a partir de construtos do ISSP National Identity e do New Ecological Paradigm, porque o licenciamento dessas escalas para uso aberto e ambiguo. Equilibrio por construcao: 4 itens de cada lado por eixo, pesos espelhados, agrupados em pares que o modo adaptativo so pergunta inteiros. Bateria verificada por sabotagem: inverter o peso de um item derruba 10 testes.",
+      "pending": []
+    }
+  },
+  {
     "version": "0.1",
     "date": "2026-08-10T17:30:00",
     "author": "claude",
     "summary": "Projeto criado: estrutura de pastas e documentacao base, seguindo o padrao do vintage e do BBB.",
     "details": {
-      "commits": [],
-      "files": [
-        "package.json",
-        "client/package.json",
-        "client/vite.config.js",
-        ".gitignore",
-        "CLAUDE.md",
-        "AGENTS.md",
-        "docs/ARQUITETURA.md",
-        "docs/PENDENCIAS.md",
-        "docs/DESIGN-SYSTEM.md",
-        "handoff_compass.md",
-        "CHANGELOG.json"
-      ],
-      "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18 + react-router-dom, backend em Pages Functions, banco D1 com binding DB. npm run build roda os testes antes de propósito: teste de equilibrio vermelho tem que impedir o deploy. Sem biblioteca de UI: SVG a mao, animacao em CSS, card social em Canvas 2D.",
-      "pending": [
-        "git init e repositorio publico no GitHub (autorizacao do dono)",
-        "criar compass-db e compass-db-dev no D1 (autorizacao do dono)",
-        "wrangler.jsonc depende do database_id dos bancos",
-        "Fase 1 inteira: fontes, questionarios, perguntas, scoring e testes de equilibrio"
-      ]
+      "commits": ["3123d16"],
+      "files": ["package.json", "CLAUDE.md", "docs/ARQUITETURA.md", "wrangler.jsonc"],
+      "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18, backend em Pages Functions, banco D1 com binding DB.",
+      "pending": []
     }
   }
 ]

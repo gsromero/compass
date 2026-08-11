@@ -1,0 +1,6 @@
+# O site e uma pagina so: quem decide o que mostrar em /resultado/AbC123 e o
+# navegador, nao o servidor. Sem esta linha o Cloudflare Pages devolveria 404 em
+# qualquer endereco que nao seja a raiz, inclusive ao abrir um link de resultado
+# compartilhado, que e justamente o caminho mais importante do site.
+# As rotas de /api sao funcoes e sao atendidas antes disto.
+/*    /index.html   200

@@ -8,10 +8,10 @@
     "dev": "cd client && npm run dev",
     "build": "cd client && npm run build",
     "test": "cd client && npm test",
-    "dev:pages": "npm run build && wrangler pages dev client/dist --d1 DB=compass-db-dev",
+    "dev:pages": "npm run build && wrangler pages dev client/dist --d1 DB=74f18768-166f-4c59-a153-4e5490864f6b",
     "deploy": "npm run build && wrangler pages deploy client/dist --project-name compass --branch main",
-    "db:migrate:dev": "wrangler d1 migrations apply compass-db-dev --local",
-    "db:migrate:remote:dev": "wrangler d1 migrations apply compass-db-dev --remote",
+    "db:migrate:dev": "wrangler d1 migrations apply compass-db-dev --env preview --local",
+    "db:migrate:remote:dev": "wrangler d1 migrations apply compass-db-dev --env preview --remote",
     "db:migrate:prod": "wrangler d1 migrations apply compass-db --remote"
   },
   "devDependencies": {

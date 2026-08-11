@@ -18,58 +18,61 @@
 
 - [x] Estrutura de pastas, `package.json` da raiz e do client, `vite.config.js`, `.gitignore`
 - [x] `CLAUDE.md`, `AGENTS.md` e as docs de apoio
-- [ ] `git init` e repositório público no GitHub (**precisa de autorização do dono**)
-- [ ] Criar `compass-db` e `compass-db-dev` no D1 (**precisa de autorização do dono**)
-- [ ] Preencher o `database_id` real no `wrangler.jsonc`
+- [x] `git init` e repositório público no GitHub: github.com/gsromero/compass
+- [x] Criar `compass-db` e `compass-db-dev` no D1 (**precisa de autorização do dono**)
+- [x] Preencher o `database_id` real no `wrangler.jsonc`
 
 ## Fase 1 — Embasamento, perguntas e equilíbrio
 
-- [ ] `docs/FONTES.md`: catálogo dos instrumentos, com licenciamento categoria A ou B
-- [ ] Ler os questionários de verdade (WVS onda 7 e 8, módulos do ISSP, ESEB, LAPOP)
-- [ ] Mapa item por item: quais itens de origem cobrem quais subtemas de cada eixo
-- [ ] Escrever as ~48 perguntas, 8 por eixo, 4 de cada lado, com fonte e derivação
-- [ ] `client/src/lib/scoring.js`
-- [ ] Bateria de testes de equilíbrio (os 8 do plano) + teste de rastreabilidade de fonte
-- [ ] `docs/METODOLOGIA.md`
-- [ ] **Entregar para o dono revisar**: perguntas, tabela de fontes e relatório de equilíbrio
+- [x] `docs/FONTES.md`: catálogo dos instrumentos, com licenciamento categoria A ou B
+- [x] Ler os questionários de verdade (WVS onda 7 e 8, módulos do ISSP, ESEB, LAPOP)
+- [x] Mapa item por item: quais itens de origem cobrem quais subtemas de cada eixo
+- [x] Escrever as ~48 perguntas, 8 por eixo, 4 de cada lado, com fonte e derivação
+- [x] `client/src/lib/scoring.js`
+- [x] Bateria de testes de equilíbrio (os 8 do plano) + teste de rastreabilidade de fonte
+- [x] `docs/METODOLOGIA.md`
+- [ ] **Revisão do dono**: ler as 48 afirmações procurando tom que empurre para algum lado. O
+      teste automático pega desequilíbrio estrutural, não tom
+- [ ] Piloto com 4 a 6 pessoas de posições políticas diferentes, com uma pergunta ao final:
+      "alguma afirmação pareceu escrita para te empurrar para algum lado?"
 
 ## Fase 2 — Telas
 
-- [ ] Mockup de entrada, questionário, resultado e card social, publicado como Artifact
-- [ ] `docs/DESIGN-SYSTEM.md` de verdade (hoje é só um esqueleto)
-- [ ] **Aprovação do dono antes de codar o frontend**
+- [x] `docs/DESIGN-SYSTEM.md` de verdade
+- [ ] **Aprovação visual do dono**, testando o site rodando. O dono autorizou seguir sem mockup
+      prévio para chegar antes na parte de testar; se a direção visual não agradar, ajustar aqui
 
 ## Fase 3 — Questionário
 
-- [ ] `lib/i18n.js` e `lib/lang.jsx` (portar do vintage)
-- [ ] Tela de entrada com escolha de modo e idioma
-- [ ] Cartão de pergunta: teclas 1 a 5, setas, Backspace, swipe no celular
-- [ ] Chip de importância, opcional, aparecendo depois da resposta
-- [ ] Salvamento automático no `localStorage` e retomada
-- [ ] Escolha adaptativa da próxima pergunta, mantendo o balanço
+- [x] `lib/i18n.js` e `lib/lang.jsx` (portar do vintage)
+- [x] Tela de entrada com escolha de modo e idioma
+- [x] Cartão de pergunta: teclas 1 a 5, setas, Backspace, swipe no celular
+- [x] Chip de importância, opcional, aparecendo depois da resposta
+- [x] Salvamento automático no `localStorage` e retomada
+- [x] Escolha adaptativa da próxima pergunta, mantendo o balanço
 
 ## Fase 4 — Resultado e card
 
-- [ ] Bússola em SVG com elipse de incerteza
-- [ ] Barras dos 4 eixos secundários com margem
-- [ ] "Por que você caiu aqui", com a fonte de cada pergunta
-- [ ] Tradições mais próximas
-- [ ] Card social em Canvas (portar `shareCard.js` e `shareImage.js` do BBB)
-- [ ] Link permanente com o resultado codificado na URL
+- [x] Bússola em SVG com elipse de incerteza
+- [x] Barras dos 4 eixos secundários com margem
+- [x] "Por que você caiu aqui", com a fonte de cada pergunta
+- [x] Tradições mais próximas
+- [x] Card social em Canvas (portar `shareCard.js` e `shareImage.js` do BBB)
+- [x] Link permanente com o resultado codificado na URL
 
 ## Fase 5 — Dados da população
 
-- [ ] `migrations/0001_init.sql`
-- [ ] `POST /api/respostas` com validação
-- [ ] `GET /api/agregados` com `caches.default`
-- [ ] Percentil, mapa de calor e "onde você destoa"
-- [ ] Estado "ainda coletando respostas" abaixo de 50
+- [x] `migrations/0001_init.sql`
+- [x] `POST /api/respostas` com validação
+- [x] `GET /api/agregados` com `caches.default`
+- [x] Percentil, mapa de calor e "onde você destoa"
+- [x] Estado "ainda coletando respostas" abaixo de 50
 
 ## Fase 6 — Conteúdo e lançamento
 
-- [ ] ~12 páginas de tradições ideológicas
-- [ ] Página **Sobre** com a lista completa de referências
-- [ ] Página de metodologia com os pesos abertos
+- [x] ~12 páginas de tradições ideológicas
+- [x] Página **Sobre** com a lista completa de referências
+- [x] Página de metodologia com os pesos abertos
 - [ ] `og:image` estática por quadrante
 - [ ] Projeto no Pages e domínio `compass.gsromerolab.com` (**autorização do dono**)
 

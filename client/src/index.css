@@ -1,0 +1,543 @@
+/* Compass - fonte unica de UI. Ler docs/DESIGN-SYSTEM.md antes de mexer.
+   NUNCA escrever cor a mao fora deste arquivo.
+
+   A decisao central: a INTERFACE E MONOCROMATICA e a cor fica reservada
+   exclusivamente para os dados do grafico. Isso nao e estilo: e requisito de
+   produto. Vermelho, azul, verde e amarelo ja tem leitura partidaria pronta no
+   Brasil e nos EUA, e um botao colorido faria a interface parecer torcer por
+   algum lado. Aqui o unico destaque e o proprio contraste do texto.
+
+   As quatro cores dos quadrantes sao geradas em OKLCH com a MESMA leveza e o
+   MESMO croma, variando so o tom. E o jeito tecnicamente correto de garantir
+   que nenhum quadrante fique mais bonito, mais forte ou mais desejavel que
+   outro. Croma baixo de proposito: elas sao rotulo, nao torcida. */
+
+:root {
+  color-scheme: light;
+
+  /* Tinta e superficie */
+  --ink: oklch(0.22 0.008 260);
+  --ink-mid: oklch(0.48 0.008 260);
+  --ink-dim: oklch(0.62 0.008 260);
+  --bg: oklch(0.985 0.003 90);
+  --panel: oklch(1 0 0);
+  --raised: oklch(0.955 0.004 90);
+  --line: oklch(0.9 0.005 90);
+  --line-forte: oklch(0.8 0.006 90);
+
+  /* Acao: e a propria tinta, de proposito. Ver comentario do topo. */
+  --acao: var(--ink);
+  --acao-tinta: var(--bg);
+
+  /* Os quatro quadrantes. Mesmo L, mesmo C, tons a 90 graus de distancia. */
+  --q-igualdade-liberdade: oklch(0.68 0.075 155);
+  --q-igualdade-autoridade: oklch(0.68 0.075 65);
+  --q-mercado-liberdade: oklch(0.68 0.075 245);
+  --q-mercado-autoridade: oklch(0.68 0.075 335);
+
+  /* Dados: o ponto da pessoa e a mancha de quem ja respondeu */
+  --voce: var(--ink);
+  --populacao: oklch(0.68 0.03 260);
+
+  --erro: oklch(0.55 0.14 25);
+  --ok: oklch(0.55 0.1 150);
+
+  --fonte-ui:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Serifada para as afirmacoes: faz o cartao parecer documento, nao rede
+     social, e a pessoa le com mais calma. */
+  --fonte-texto: Georgia, "Times New Roman", "Noto Serif", serif;
+
+  --raio: 14px;
+  --raio-pequeno: 9px;
+  --coluna: 42rem;
+
+  --sombra: 0 1px 2px oklch(0.22 0.008 260 / 0.05), 0 8px 24px oklch(0.22 0.008 260 / 0.06);
+
+  --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --ink: oklch(0.94 0.005 260);
+    --ink-mid: oklch(0.72 0.008 260);
+    --ink-dim: oklch(0.56 0.008 260);
+    --bg: oklch(0.17 0.008 260);
+    --panel: oklch(0.21 0.009 260);
+    --raised: oklch(0.25 0.01 260);
+    --line: oklch(0.3 0.01 260);
+    --line-forte: oklch(0.4 0.012 260);
+
+    /* No escuro os quadrantes precisam de mais leveza para nao sumirem no
+       fundo, mas continuam iguais entre si, que e o que importa. */
+    --q-igualdade-liberdade: oklch(0.72 0.08 155);
+    --q-igualdade-autoridade: oklch(0.72 0.08 65);
+    --q-mercado-liberdade: oklch(0.72 0.08 245);
+    --q-mercado-autoridade: oklch(0.72 0.08 335);
+
+    --populacao: oklch(0.62 0.03 260);
+    --erro: oklch(0.68 0.14 25);
+    --ok: oklch(0.7 0.11 150);
+
+    --sombra: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fonte-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- estrutura ---------------------------------------------------------- */
+
+.pagina {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.coluna {
+  width: 100%;
+  max-width: var(--coluna);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.coluna-larga {
+  max-width: 58rem;
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.marca {
+  font-weight: 640;
+  letter-spacing: -0.02em;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.rodape {
+  margin-top: auto;
+  padding-block: 28px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.rotulo {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+  color: var(--ink-dim);
+}
+
+.apoio {
+  color: var(--ink-mid);
+  font-size: 14.5px;
+}
+
+/* --- botoes -------------------------------------------------------------- */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--acao);
+  background: var(--acao);
+  color: var(--acao-tinta);
+  font-weight: 560;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity var(--transicao), transform var(--transicao);
+}
+
+.botao:hover {
+  opacity: 0.86;
+}
+
+.botao:active {
+  transform: translateY(1px);
+}
+
+.botao-secundario {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-forte);
+}
+
+.botao-secundario:hover {
+  background: var(--raised);
+  opacity: 1;
+}
+
+.botao-discreto {
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  color: var(--ink-mid);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: var(--raio-pequeno);
+}
+
+.botao-discreto:hover {
+  color: var(--ink);
+  background: var(--raised);
+}
+
+.botao[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- cartoes ------------------------------------------------------------- */
+
+.cartao {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+  padding: 22px;
+}
+
+.cartao-destaque {
+  box-shadow: var(--sombra);
+}
+
+/* --- questionario -------------------------------------------------------- */
+
+.progresso {
+  height: 3px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progresso > i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  border-radius: 99px;
+  transition: width 320ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.afirmacao {
+  font-family: var(--fonte-texto);
+  font-size: clamp(22px, 4.6vw, 30px);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.escala {
+  display: grid;
+  gap: 8px;
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: left;
+  cursor: pointer;
+  font-size: 15.5px;
+  transition: border-color var(--transicao), background var(--transicao);
+}
+
+.opcao:hover {
+  border-color: var(--line-forte);
+  background: var(--raised);
+}
+
+.opcao[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--raised);
+  font-weight: 560;
+}
+
+.opcao > kbd {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  font-family: var(--fonte-ui);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+}
+
+.opcao[aria-pressed="true"] > kbd {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.importancia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 5px 11px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: border-color var(--transicao), color var(--transicao);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 560;
+}
+
+/* --- resultado ----------------------------------------------------------- */
+
+.bussola {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: manipulation;
+}
+
+.barra-eixo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.barra-trilho {
+  position: relative;
+  height: 30px;
+  border-radius: var(--raio-pequeno);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.barra-centro {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-forte);
+}
+
+.barra-margem {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  background: var(--populacao);
+  opacity: 0.28;
+  border-radius: 4px;
+}
+
+.barra-ponto {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 3px;
+  border-radius: 99px;
+  background: var(--ink);
+  transform: translateX(-50%);
+}
+
+.barra-pontas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.grade {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 620px) {
+  .grade-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contribuicao {
+  display: grid;
+  gap: 4px;
+  padding-block: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.contribuicao:last-child {
+  border-bottom: none;
+}
+
+.fonte-tag {
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.aviso {
+  padding: 14px 16px;
+  border: 1px dashed var(--line-forte);
+  border-radius: var(--raio-pequeno);
+  color: var(--ink-mid);
+  font-size: 14.5px;
+}
+
+/* --- tabela -------------------------------------------------------------- */
+
+.rolagem {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td.texto-longo {
+  white-space: normal;
+  min-width: 22rem;
+}
+
+/* --- utilidades ---------------------------------------------------------- */
+
+.pilha {
+  display: grid;
+  gap: 12px;
+}
+
+.pilha-larga {
+  display: grid;
+  gap: 26px;
+}
+
+.linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.entrando {
+  animation: entrar 260ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

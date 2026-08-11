@@ -4,30 +4,47 @@
 
 ## 2026-08-10 — claude
 
-**O que foi feito:** Sessão de fundação. Levantamento do que o Political Compass faz de errado
-(desequilíbrio documentado de 36 itens codificados à direita contra 20 à esquerda, e nenhuma base
-teórica), pesquisa dos instrumentos de origem para as perguntas, e plano aprovado pelo dono.
-Montada a estrutura do repositório seguindo o padrão do `vintage` e do `BBB`: `client/` com Vite e
-React, `functions/api/` com Pages Functions, `migrations/` para o D1, e a documentação de apoio.
+**O que foi feito:** O site inteiro, da fundação ao fluxo completo rodando.
 
-**Estado atual:** Fase 0 quase pronta. Estrutura de pastas, `package.json` da raiz e do client,
-`vite.config.js`, `.gitignore`, `CLAUDE.md`, `AGENTS.md`, `docs/ARQUITETURA.md`,
-`docs/PENDENCIAS.md` e o esqueleto do `docs/DESIGN-SYSTEM.md` estão no lugar. Nada de código de
-produto ainda: não existe nem pergunta, nem conta, nem tela.
+Fase 0: repositório público em github.com/gsromero/compass, estrutura no padrão do vintage e do
+BBB, bancos `compass-db` e `compass-db-dev` criados no D1.
 
-Falta na Fase 0, e **os dois dependem de autorização do dono**: `git init` mais o repositório
-público no GitHub, e a criação dos bancos `compass-db` e `compass-db-dev` no D1. O
-`wrangler.jsonc` só pode ser escrito depois de criar os bancos, porque precisa do `database_id`.
+Fase 1, a que define o valor do projeto: li o questionário mestre do World Values Survey Onda 8
+item por item (extraído do PDF com PDFKit via Swift, porque não havia extrator instalado) e
+escrevi 48 afirmações, 38 adaptadas de itens com código conferido e 10 de redação própria a partir
+de construtos. Bateria de equilíbrio com 320 testes, rodando no `npm run build`.
 
-**Para o próximo agente:** A Fase 1 é a que define se o projeto vale alguma coisa, e ela é longa.
-Não sair escrevendo pergunta de cabeça: a ordem é catalogar os instrumentos em `docs/FONTES.md`,
-**ler os questionários de verdade** (World Values Survey ondas 7 e 8, módulos do ISSP, ESEB e
-LAPOP em português), mapear item por item, e só então escrever. Toda pergunta precisa de fonte,
-código do item e tipo de derivação.
+Fases 2 a 6: design system, i18n pt/en, questionário com teclado, swipe, autosave e escolha
+adaptativa, tela de resultado com bússola em SVG, elipse de incerteza, "por que você caiu aqui"
+com a fonte de cada pergunta, tradições mais próximas, card social em Canvas, backend anônimo em
+D1 com agregados em cache, e as páginas Sobre, Metodologia e Tradições.
 
-A distinção entre `adaptado` e `construto` é jurídica, não estilística: instrumento público de
-pesquisa pode ter o item adaptado com citação; escala psicométrica com direitos (VSA, SDO7,
-Fundamentos Morais, NEP) entra só como construto, com redação própria. Marcar errado é problema
-de verdade.
+**Estado atual:** Roda de ponta a ponta. Testado com `wrangler pages dev` e banco local: 121
+respostas sintéticas gravadas, agregados devolvendo distribuição, mapa de calor e média por
+pergunta por quadrante, e a validação recusando eixo fora de escala, quadrante inventado e nota
+fora da faixa. Build limpo, 82 kB de JS comprimido.
+
+Ainda não foi ao ar: falta criar o projeto no Pages e apontar o domínio, e falta a revisão visual
+e de conteúdo do dono.
+
+**Para o próximo agente:** Três coisas que não são óbvias e quebram o projeto se ignoradas.
+
+1. **`npm run build` roda os testes antes de propósito.** A bateria de equilíbrio é a razão de
+   existir do site, não burocracia. O teste central é "quem concorda com tudo cai no centro", que
+   é o defeito documentado do Political Compass (36 itens codificados à direita contra 20 à
+   esquerda). Verifiquei que a bateria tem dentes sabotando um peso: 10 testes caíram.
+
+2. **O equilíbrio depende dos pares.** Cada eixo tem 4 pares de afirmações com pesos espelhados, e
+   o modo adaptativo só pergunta pares inteiros e só para em fronteira de par. Se alguém mexer
+   nisso para "otimizar" a escolha de perguntas, o viés volta pela porta dos fundos. Existe teste
+   simulando 2000 sessões para pegar exatamente isso.
+
+3. **`adaptado` × `construto` é distinção jurídica, não de estilo.** Escala psicométrica com
+   direitos (NEP, VSA, SDO7, Fundamentos Morais) entra só como construto, com redação própria.
+   Tem teste que barra a marcação errada.
+
+Pegadinha de ambiente: o flag `--d1 DB=<valor>` do `wrangler pages dev` trata o valor como **ID**
+do banco, não como nome. Por isso o `dev:pages` usa o UUID do `compass-db-dev`; com o nome, ele
+cria um banco local vazio separado e as gravações falham com "nao consegui gravar".
 
 O plano completo está em `/Users/gsromero/.claude/plans/cheerful-crunching-finch.md`.
