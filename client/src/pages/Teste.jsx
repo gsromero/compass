@@ -31,9 +31,9 @@ const DEMO_INICIO = 600;
 // Cada ida e uma so, sem parada no meio: o cartao sai do centro, vai ate o
 // fim, segura, atravessa e volta.
 const DEMO_PAUSA = 600;
-const DEMO_IDA = 950;       // do centro ate passar do limiar do "muito"
-const DEMO_TRAVESSIA = 1500; // de um lado ao outro
-const DEMO_VOLTA = 750;
+const DEMO_IDA = 790;        // do centro ate passar do limiar do "muito"
+const DEMO_TRAVESSIA = 1240; // de um lado ao outro
+const DEMO_VOLTA = 620;
 // O quanto a demonstracao passa do limiar do "muito". Parando exatamente em
 // cima dele o movimento lia como "quase la", e a licao util nao e acertar a
 // fronteira: e ultrapassar. Fica bem dentro do alcance, entao o cartao nao
