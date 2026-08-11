@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Bussola from "../components/Bussola.jsx";
 import BarraEixo from "../components/BarraEixo.jsx";
+import Radar from "../components/Radar.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num } from "../lib/i18n.js";
 import {
@@ -140,11 +141,15 @@ export default function Resultado() {
       </div>
 
       <section className="pilha">
-        <h2 style={{ fontSize: "20px" }}>{t("res_eixos_secundarios")}</h2>
-        <div className="grade grade-2">
-          {SECUNDARIOS.map((eixo) => (
-            <BarraEixo key={eixo} eixo={eixo} meta={EIXOS_META[eixo]} dados={resultado[eixo]} />
-          ))}
+        <h2 style={{ fontSize: "20px" }}>{t("res_perfil")}</h2>
+        <p className="apoio">{t("res_perfil_intro")}</p>
+        <div className="grade grade-2" style={{ alignItems: "center", gap: "26px" }}>
+          <Radar resultado={resultado} />
+          <div className="pilha">
+            {SECUNDARIOS.map((eixo) => (
+              <BarraEixo key={eixo} eixo={eixo} meta={EIXOS_META[eixo]} dados={resultado[eixo]} />
+            ))}
+          </div>
         </div>
       </section>
 

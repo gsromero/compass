@@ -388,6 +388,14 @@ button {
   line-height: 1.4;
 }
 
+.grafico-amostra-voce {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--voce) 14%, transparent),
+    color-mix(in oklab, var(--voce) 45%, transparent)
+  ) !important;
+}
+
 .grafico-amostra {
   flex: none;
   width: 30px;

@@ -77,6 +77,11 @@ const dict = {
     res_esquerda_direita:
       "Esquerda e direita aqui são a dimensão econômica: mais igualdade e mais Estado de um lado, mais mercado e menos Estado do outro.",
     res_mancha: "A mancha mostra onde caiu quem já respondeu. Quanto mais forte, mais gente ali.",
+    res_perfil: "Seu perfil nos seis eixos",
+    res_perfil_intro:
+      "Uma pétala por eixo, do tamanho da sua convicção e apontando para o lado que você escolheu. Polos opostos ficam em lados opostos, então a forma nunca pode dizer que você é as duas coisas ao mesmo tempo.",
+    res_perfil_legenda:
+      "A pétala clara por baixo é a margem de erro. Quando ela aparece também do lado oposto, nem o lado daquele eixo ficou definido.",
     res_eixos_secundarios: "Os outros quatro eixos",
     res_por_que: "Por que você caiu aqui",
     res_por_que_intro:
@@ -212,6 +217,11 @@ const dict = {
     res_esquerda_direita:
       "Left and right here mean the economic dimension: more equality and more state on one side, more market and less state on the other.",
     res_mancha: "The cloud shows where previous respondents landed. The stronger it is, the more people.",
+    res_perfil: "Your profile across the six axes",
+    res_perfil_intro:
+      "One petal per axis, sized by how strongly you hold it and pointing at the side you picked. Opposite poles sit on opposite sides, so the shape can never claim you are both things at once.",
+    res_perfil_legenda:
+      "The pale petal underneath is the margin of error. When it also shows up on the opposite side, not even the side of that axis is settled.",
     res_eixos_secundarios: "The other four axes",
     res_por_que: "Why you landed here",
     res_por_que_intro:

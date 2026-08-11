@@ -140,6 +140,27 @@ valores gravados no banco e na validação da API. Renomear a chave quebra os da
 legenda é neutro entre os temas ("quanto mais forte"), porque no claro a mancha escurece e no
 escuro ela clareia.
 
+## O radar de perfil
+
+Uma petala por eixo, apontando para o polo em que a pessoa pende, do tamanho da conviccao. Fica ao
+lado das quatro barras, e mostra os seis eixos de uma vez.
+
+**A regra que nao pode quebrar:** os dois polos do mesmo eixo ficam a 180 graus um do outro, e cada
+eixo desenha UMA petala so. Sem isso acontece o que acontece no radar de politica mais conhecido
+que circula por ai: "esquerda" e "direita" viram pontas independentes e a mesma pessoa aparece
+esticada para os dois lados ao mesmo tempo. Ha teste em `lib/perfil.test.js` para isso.
+
+**Nao usar um poligono unico ligando as doze pontas.** A primeira versao fazia isso: estava correta
+e ficava horrivel, porque so metade das pontas tem valor e a linha mergulhava ate o centro entre
+elas, virando um catavento.
+
+A petala clara por baixo e a margem de erro. Quando ela aparece **tambem do lado oposto**, esta
+dizendo o que a elipse da bussola nao consegue dizer: nem de que lado daquele eixo a pessoa esta
+ficou definido.
+
+Os rotulos dos polos que a pessoa NAO defende ficam apagados, e nao escondidos: sumir com eles
+tiraria a referencia de qual eixo e qual.
+
 ## O card social
 
 1080x1080, Canvas 2D, três modelos (`classico`, `cartaz`, `minimo`). A geometria vem de
