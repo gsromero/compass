@@ -12,6 +12,9 @@ const TEXTO = {
   pt: {
     intro:
       "Aqui esta a conta inteira: os pesos de todas as 48 afirmacoes, de onde cada uma veio e como o resultado e calculado. Nada disso e segredo, e essa e a diferenca.",
+    eixos_t: "O que cada eixo mede",
+    eixos_esquerda_direita:
+      "No gráfico o eixo horizontal aparece como esquerda e direita, que é como as pessoas reconhecem essa dimensão e é também o nome que a fonte usa: a dimensão do Chapel Hill Expert Survey se chama economic left-right. Na prática ela mede quanto do resultado econômico deveria vir do Estado e quanto do mercado. Esquerda é mais igualdade e mais Estado; direita é mais mercado e mais responsabilidade individual.",
     conta_t: "Como a posicao e calculada",
     conta:
       "Cada resposta vale de -2 (discordo muito) a +2 (concordo muito), com 0 neutro de verdade, que nao entra na conta de lado nenhum. A importancia que voce marca multiplica o peso da resposta: 0,5 para pouco, 1 para normal e 1,5 para muito.",
@@ -42,6 +45,9 @@ const TEXTO = {
   en: {
     intro:
       "Here is the whole calculation: the weights of all 48 statements, where each came from, and how the result is computed. None of it is secret, and that is the difference.",
+    eixos_t: "What each axis measures",
+    eixos_esquerda_direita:
+      "On the chart the horizontal axis appears as left and right, which is how people recognise this dimension and also what the source calls it: the Chapel Hill Expert Survey dimension is named economic left-right. In practice it measures how much of the economic outcome should come from the state and how much from the market. Left is more equality and more state; right is more market and more individual responsibility.",
     conta_t: "How the position is calculated",
     conta:
       "Each answer runs from -2 (strongly disagree) to +2 (strongly agree), with 0 a true neutral that counts for no side. The importance you mark multiplies the weight of the answer: 0.5 for a little, 1 for normal and 1.5 for a lot.",
@@ -97,6 +103,11 @@ export default function Metodologia() {
         <h1>{t("metodologia_titulo")}</h1>
         <p style={{ fontSize: "17px" }}>{texto.intro}</p>
       </div>
+
+      <section className="pilha">
+        <h2 style={{ fontSize: "20px" }}>{texto.eixos_t}</h2>
+        <p className="apoio">{texto.eixos_esquerda_direita}</p>
+      </section>
 
       <section className="pilha">
         <h2 style={{ fontSize: "20px" }}>{texto.conta_t}</h2>

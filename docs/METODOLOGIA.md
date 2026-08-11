@@ -18,12 +18,20 @@ como barras.
 
 | Eixo | -10 | +10 | Instrumento que definiu |
 |---|---|---|---|
-| **Econômico** | Igualdade | Mercado | CHES (dimensão econômica), World Values Survey |
+| **Econômico** | Esquerda | Direita | CHES (dimensão econômica), World Values Survey |
 | **Autoridade** | Liberdade | Autoridade | CHES (componente TAN), Very Short Authoritarianism |
 | **Fronteiras** | Mundo | Nação | CHES (componente TAN), ISSP National Identity |
 | **Costumes** | Progresso | Tradição | World Values Survey (tradicional ↔ secular-racional), Fundamentos Morais |
 | **Ecologia** | Sustentabilidade | Crescimento | CHES (componente GAL), New Ecological Paradigm |
 | **Povo** | Instituições | Povo | World Values Survey (bateria Q205 a Q210) |
+
+**Sobre os nomes "esquerda" e "direita":** o eixo econômico aparece no gráfico com esses dois
+nomes porque é como as pessoas reconhecem essa dimensão, e é também como a própria fonte a chama:
+a dimensão do CHES se chama *economic left-right*. Na substância ela mede quanto do resultado
+econômico deveria vir do Estado e quanto do mercado. **Os identificadores internos continuam
+`igualdade` e `mercado`** (nos nomes das cores dos quadrantes, nos valores gravados no banco e na
+validação da API), porque descrevem a substância e porque mudá-los quebraria os dados já gravados.
+Só o texto que aparece na tela mudou.
 
 **Sobre o eixo Povo:** o plano original previa um eixo "Ordem ↔ Transformação". Ao ler o
 questionário de verdade, os itens que existem e são conferíveis (Q205 a Q210) medem outra coisa,

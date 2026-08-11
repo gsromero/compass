@@ -116,9 +116,14 @@ Três camadas, nesta ordem de importância visual:
    dizer.
 3. **O seu ponto** é sólido, com um anel da cor do painel por baixo, para não sumir sobre a mancha.
 
-Os rótulos ficam na ponta de cada eixo: Igualdade e Mercado deitados nas laterais, Autoridade e
+Os rótulos ficam na ponta de cada eixo: Esquerda e Direita deitados nas laterais, Autoridade e
 Liberdade em cima e embaixo. Com os quatro na linha de cima não dava para saber qual pertencia a
 qual eixo.
+
+**Atenção ao mexer nos rótulos do eixo econômico:** o texto na tela é "Esquerda" e "Direita", mas
+as chaves de i18n continuam `polo_igualdade` e `polo_mercado`, e os identificadores internos
+continuam `igualdade` e `mercado`. Eles estão nos nomes das variáveis de cor dos quadrantes, nos
+valores gravados no banco e na validação da API. Renomear a chave quebra os dados já gravados.
 
 **A mancha sempre vem com legenda.** Sem ela, a pessoa olha e acha que é defeito. E o texto da
 legenda é neutro entre os temas ("quanto mais forte"), porque no claro a mancha escurece e no

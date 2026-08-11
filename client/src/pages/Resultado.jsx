@@ -130,6 +130,9 @@ export default function Resultado() {
               <BarraEixo key={eixo} eixo={eixo} meta={EIXOS_META[eixo]} dados={resultado[eixo]} />
             ))}
             <p className="apoio" style={{ fontSize: "13.5px" }}>
+              {t("res_esquerda_direita")}
+            </p>
+            <p className="apoio" style={{ fontSize: "13.5px" }}>
               {t("res_area_explicacao")}
             </p>
           </div>

@@ -74,6 +74,8 @@ const dict = {
     res_contraditorio:
       "Suas respostas se contradizem bastante entre si, então a área de incerteza ficou grande e a posição no gráfico é pouco confiável. Isso não é defeito do teste: é ele admitindo que não conseguiu te medir bem, em vez de fingir uma posição.",
     res_refazer_lendo: "Refazer com calma",
+    res_esquerda_direita:
+      "Esquerda e direita aqui são a dimensão econômica: mais igualdade e mais Estado de um lado, mais mercado e menos Estado do outro.",
     res_mancha: "A mancha mostra onde caiu quem já respondeu. Quanto mais forte, mais gente ali.",
     res_eixos_secundarios: "Os outros quatro eixos",
     res_por_que: "Por que você caiu aqui",
@@ -112,8 +114,13 @@ const dict = {
     eixo_ecologia: "Ecologia",
     eixo_povo: "Decisão",
 
-    polo_igualdade: "Igualdade",
-    polo_mercado: "Mercado",
+    // As CHAVES continuam igualdade/mercado porque sao identificadores
+    // internos: estao no banco, nos nomes das cores dos quadrantes e na
+    // validacao da API. So o texto mudou. "Esquerda" e "direita" e como as
+    // pessoas reconhecem esse eixo, e e tambem o nome que a propria fonte usa:
+    // a dimensao do Chapel Hill Expert Survey se chama "economic left-right".
+    polo_igualdade: "Esquerda",
+    polo_mercado: "Direita",
     polo_liberdade: "Liberdade",
     polo_autoridade: "Autoridade",
     polo_mundo: "Mundo",
@@ -202,6 +209,8 @@ const dict = {
     res_contraditorio:
       "Your answers contradict each other quite a bit, so the uncertainty area came out large and the position on the chart is not reliable. That is not a flaw in the test: it is the test admitting it could not measure you well, instead of faking a position.",
     res_refazer_lendo: "Take it again slowly",
+    res_esquerda_direita:
+      "Left and right here mean the economic dimension: more equality and more state on one side, more market and less state on the other.",
     res_mancha: "The cloud shows where previous respondents landed. The stronger it is, the more people.",
     res_eixos_secundarios: "The other four axes",
     res_por_que: "Why you landed here",
@@ -238,8 +247,8 @@ const dict = {
     eixo_ecologia: "Ecology",
     eixo_povo: "Decision",
 
-    polo_igualdade: "Equality",
-    polo_mercado: "Market",
+    polo_igualdade: "Left",
+    polo_mercado: "Right",
     polo_liberdade: "Liberty",
     polo_autoridade: "Authority",
     polo_mundo: "World",
