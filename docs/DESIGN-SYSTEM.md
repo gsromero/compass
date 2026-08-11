@@ -183,6 +183,14 @@ cartão pode estar deslocado na hora da medida (durante a demonstração ou no m
 Com o centro fora do lugar, o alcance saía menor e um arrasto curto virava "concordo muito". A
 medida passou a sair do **pai**, que nunca é transformado, com `offsetWidth` no lugar do rect.
 
+### Inclinação do cartão
+
+O cartão inclina até **10 graus** ao ser arrastado, e o limite não é arbitrário: a inclinação
+acompanha o mesmo progresso que decide a resposta, e esse progresso satura no limiar do "muito".
+Arrastar além disso não inclina mais porque a resposta também não muda mais. Quem sai da tela sai
+com 18 graus, um pouco mais do que ficou na mão, senão a saída parece frouxa depois de um arrasto
+forte.
+
 ### O gesto
 
 Arrasta-se para o lado para responder: a direção diz se concorda, **a distância diz o quanto**.

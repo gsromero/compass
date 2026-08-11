@@ -39,6 +39,13 @@ const DEMO_VOLTA = 620;
 // fronteira: e ultrapassar. Fica bem dentro do alcance, entao o cartao nao
 // some da tela.
 const DEMO_EXCEDE = 1.35;
+// Inclinacao maxima do cartao, em graus. O limite existe porque o progresso
+// satura no limiar do "muito": arrastar alem disso nao inclina mais, ja que a
+// resposta tambem nao muda mais.
+const INCLINACAO_MAXIMA = 10;
+// O cartao sai da tela inclinado um pouco mais do que ficou na mao, senao a
+// saida parece frouxa depois de um arrasto forte.
+const INCLINACAO_SAIDA = 18;
 const KEY_MODO = "compass.modoResposta";
 
 function prefereMenosMovimento() {
@@ -378,13 +385,18 @@ export default function Teste() {
       : null;
 
   const estiloCartao = saindoPara
-    ? { transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * 12}deg)`, opacity: 0 }
+    ? {
+        transform: `translateX(${saindoPara * 120}%) rotate(${saindoPara * INCLINACAO_SAIDA}deg)`,
+        opacity: 0,
+      }
     : arrasto.ativo
-      ? { transform: `translateX(${arrasto.dx}px) rotate(${progresso * 5}deg)` }
+      ? {
+          transform: `translateX(${arrasto.dx}px) rotate(${progresso * INCLINACAO_MAXIMA}deg)`,
+        }
       : demonstrando
         ? {
             transform: `translateX(${demoX}px) rotate(${
-              progressoDoArrasto(demoX, alcanceDemo.current) * 5
+              progressoDoArrasto(demoX, alcanceDemo.current) * INCLINACAO_MAXIMA
             }deg)`,
           }
         : undefined;
