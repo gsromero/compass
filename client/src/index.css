@@ -37,7 +37,7 @@
 
   /* Dados: o ponto da pessoa e a mancha de quem ja respondeu */
   --voce: var(--ink);
-  --populacao: oklch(0.68 0.03 260);
+  --populacao: oklch(0.56 0.045 260);
 
   --erro: oklch(0.55 0.14 25);
   --ok: oklch(0.55 0.1 150);
@@ -57,8 +57,11 @@
   --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+/* O tema CLARO e o padrao, e nao o que o sistema da pessoa esta usando.
+   Decisao do dono: o site tem que abrir claro para todo mundo, e o escuro
+   existe como escolha, guardada em lib/tema.jsx. Por isso aqui e um atributo
+   no <html>, e nao uma media query. */
+:root[data-tema="escuro"] {
     color-scheme: dark;
 
     --ink: oklch(0.94 0.005 260);
@@ -77,12 +80,11 @@
     --q-mercado-liberdade: oklch(0.72 0.08 245);
     --q-mercado-autoridade: oklch(0.72 0.08 335);
 
-    --populacao: oklch(0.62 0.03 260);
+    --populacao: oklch(0.72 0.05 260);
     --erro: oklch(0.68 0.14 25);
     --ok: oklch(0.7 0.11 150);
 
     --sombra: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
-  }
 }
 
 *,
@@ -362,11 +364,41 @@ button {
 
 /* --- resultado ----------------------------------------------------------- */
 
+.grafico {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
 .bussola {
   width: 100%;
   height: auto;
   display: block;
   touch-action: manipulation;
+}
+
+/* A mancha da populacao precisa se explicar: sem legenda ela parece defeito
+   do grafico, e nao o dado que e. */
+.grafico-legenda {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  line-height: 1.4;
+}
+
+.grafico-amostra {
+  flex: none;
+  width: 30px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 99px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--populacao) 12%, transparent),
+    var(--populacao)
+  );
 }
 
 .barra-eixo {

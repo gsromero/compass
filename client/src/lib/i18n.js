@@ -14,6 +14,8 @@ const dict = {
     nav_sobre: "Sobre",
     nav_metodologia: "Metodologia",
     nav_idioma: "English",
+    nav_tema_escuro: "Mudar para o tema escuro",
+    nav_tema_claro: "Mudar para o tema claro",
     rodape_privacidade: "Nada aqui identifica quem respondeu",
     rodape_codigo: "Código aberto",
 
@@ -66,6 +68,7 @@ const dict = {
     res_margem: (m) => `margem de ${m}`,
     res_area_explicacao:
       "A área ao redor do ponto é a sua margem de erro. Ela é maior quando suas respostas se contradizem, e menor quando são coerentes entre si.",
+    res_mancha: "A mancha mostra onde caiu quem já respondeu. Quanto mais forte, mais gente ali.",
     res_eixos_secundarios: "Os outros quatro eixos",
     res_por_que: "Por que você caiu aqui",
     res_por_que_intro:
@@ -137,6 +140,8 @@ const dict = {
     nav_sobre: "About",
     nav_metodologia: "Methodology",
     nav_idioma: "Português",
+    nav_tema_escuro: "Switch to dark theme",
+    nav_tema_claro: "Switch to light theme",
     rodape_privacidade: "Nothing here identifies who answered",
     rodape_codigo: "Open source",
 
@@ -185,6 +190,7 @@ const dict = {
     res_margem: (m) => `margin of ${m}`,
     res_area_explicacao:
       "The area around the dot is your margin of error. It grows when your answers contradict each other, and shrinks when they line up.",
+    res_mancha: "The cloud shows where previous respondents landed. The stronger it is, the more people.",
     res_eixos_secundarios: "The other four axes",
     res_por_que: "Why you landed here",
     res_por_que_intro:

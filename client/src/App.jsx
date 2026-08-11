@@ -1,5 +1,6 @@
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
+import { useTema } from "./lib/tema.jsx";
 import Home from "./pages/Home.jsx";
 import Teste from "./pages/Teste.jsx";
 import Resultado from "./pages/Resultado.jsx";
@@ -9,6 +10,7 @@ import Tradicoes from "./pages/Tradicoes.jsx";
 
 function Topo() {
   const { t, toggle } = useLang();
+  const { tema, alternar } = useTema();
   const { pathname } = useLocation();
   // No questionario o topo some: a tela tem uma coisa para fazer e mais nada.
   if (pathname === "/teste") return null;
@@ -27,6 +29,15 @@ function Topo() {
         </Link>
         <button type="button" className="botao-discreto" onClick={toggle}>
           {t("nav_idioma")}
+        </button>
+        <button
+          type="button"
+          className="botao-discreto"
+          onClick={alternar}
+          aria-label={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
+          title={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
+        >
+          {tema === "claro" ? "\u25D1" : "\u25D0"}
         </button>
       </nav>
     </header>

@@ -47,9 +47,16 @@ O croma é baixo de propósito. Elas são rótulo, não torcida.
 
 ## Tema claro e escuro
 
-Os dois, por `prefers-color-scheme`. Diferente do vintage, que é só escuro por decisão de produto,
-aqui a pessoa pode estar respondendo em qualquer contexto. No escuro os quadrantes ganham um pouco
-de leveza para não sumirem no fundo, mas continuam iguais entre si, que é o que importa.
+**O claro é o padrão, sempre.** O site abre claro para todo mundo, inclusive para quem tem o
+computador inteiro no escuro, e o escuro existe como escolha da pessoa. Decisão do dono, em
+10/08/2026.
+
+Por isso **não existe `prefers-color-scheme` neste projeto**: o tema é um atributo `data-tema` no
+`<html>`, controlado por `lib/tema.jsx` e guardado no `localStorage`. Quem for adicionar cor nova
+precisa declará-la nos dois blocos, `:root` e `:root[data-tema="escuro"]`.
+
+No escuro os quadrantes ganham um pouco de leveza para não sumirem no fundo, mas continuam iguais
+entre si, que é o que importa.
 
 ## Tipografia
 
@@ -95,6 +102,27 @@ sozinha, sem biblioteca e sem estado extra.
 - **Toda string de interface** vive em `client/src/lib/i18n.js`, em pt e en.
 - **Sem travessão (em dash)** em nenhum idioma. Existe teste que barra isso nas perguntas.
 - Números pelo `Intl` no **idioma do app**, nunca no locale do navegador. Use `num()` do `i18n.js`.
+
+## A bússola
+
+Três camadas, nesta ordem de importância visual:
+
+1. **A mancha da população** é o fundo de dados: células de 2 pontos do eixo, desenhadas como
+   retângulos e passadas por um `feGaussianBlur`. **Não usar um ponto por célula.** A primeira
+   versão fazia isso e o gráfico parecia ter defeito: bolinha espalhada não se lê como densidade,
+   se lê como sujeira. Borrada, a mesma informação vira uma nuvem, que é o que ela é.
+2. **A elipse da margem de erro** é **só contorno tracejado**, sem preenchimento. Com preenchimento
+   ela virava um disco cinza que competia com a mancha e escondia justamente o que a mancha tem a
+   dizer.
+3. **O seu ponto** é sólido, com um anel da cor do painel por baixo, para não sumir sobre a mancha.
+
+Os rótulos ficam na ponta de cada eixo: Igualdade e Mercado deitados nas laterais, Autoridade e
+Liberdade em cima e embaixo. Com os quatro na linha de cima não dava para saber qual pertencia a
+qual eixo.
+
+**A mancha sempre vem com legenda.** Sem ela, a pessoa olha e acha que é defeito. E o texto da
+legenda é neutro entre os temas ("quanto mais forte"), porque no claro a mancha escurece e no
+escuro ela clareia.
 
 ## O card social
 
