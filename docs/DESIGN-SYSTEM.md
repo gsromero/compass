@@ -164,6 +164,8 @@ arrastar, e ninguém descobre um gesto lendo sobre ele.
 - **Para exatamente no limiar do "muito"**, e não numa distância bonita qualquer: assim ela ensina
   a distância de verdade em vez de ser enfeite.
 - **A etiqueta acompanha**, então a pessoa vê o gesto e o resultado dele ao mesmo tempo.
+- **Começa parada no centro por 0,7s.** Sem essa pausa o primeiro passo dispara em tempo zero, o
+  navegador pinta o cartão já deslocado, e ele parece nascer no canto em vez de sair do meio.
 - **Encostar no cartão corta a demonstração na hora.** Quem já entendeu não precisa esperar.
 - **Ida e volta com a mesma duração.** Com a volta mais rápida, o movimento parecia erro.
 - Sob `prefers-reduced-motion`, não roda.

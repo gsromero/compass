@@ -26,6 +26,10 @@ const VOO = 170;
 // verdade em vez de um movimento decorativo.
 const DEMO_DESLIZE = 460;
 const DEMO_PAUSA = 500;
+// Espera antes do primeiro movimento. Sem ela o primeiro passo dispara em tempo
+// zero, o navegador pinta o cartao ja deslocado, e ele parece nascer no canto
+// em vez de sair do meio. Tambem da tempo da animacao de entrada terminar.
+const DEMO_INICIO = 700;
 // `null` no fim encerra a demonstracao. O passo 0 (voltar ao centro) e um
 // estado da demonstracao, e nao a ausencia dela: se fosse null ali, a volta
 // perderia a transicao longa e voltaria mais rapido do que foi.
@@ -215,7 +219,7 @@ export default function Teste() {
   useEffect(() => {
     if (!pronto || comoResponder !== "cartao" || prefereMenosMovimento()) return;
 
-    let atraso = 0;
+    let atraso = DEMO_INICIO;
     relogiosDemo.current = DEMO_PASSOS.map(({ lado, espera }) => {
       const id = setTimeout(() => setDemo(lado), atraso);
       atraso += espera;
