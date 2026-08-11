@@ -20,9 +20,9 @@ const dict = {
     rodape_codigo: "Código aberto",
 
     // entrada
-    home_titulo: "Um teste político que mostra a conta",
+    home_titulo: "Onde você está no espectro político",
     home_intro:
-      "Duas perguntas que quase nenhum teste político responde: de onde vêm as afirmações, e o quanto o resultado é confiável. Aqui as duas estão respondidas na tela.",
+      "Um teste de 48 afirmações tiradas de pesquisas acadêmicas, com os pesos publicados e a margem de erro na tela.",
     home_diferenca_1_titulo: "As perguntas vêm de pesquisa de verdade",
     home_diferenca_1:
       "As 48 afirmações derivam de instrumentos usados em pesquisa acadêmica, com o código do item registrado e conferível.",
@@ -31,7 +31,7 @@ const dict = {
       "Quem concorda com todas as afirmações cai no centro do gráfico. Isso é testado automaticamente a cada mudança.",
     home_diferenca_3_titulo: "O resultado vem com margem de erro",
     home_diferenca_3:
-      "Você recebe uma área, não um ponto de precisão falsa, mais as respostas que mais puxaram cada eixo.",
+      "O resultado vem com margem de erro, e com a lista das respostas que mais pesaram em cada eixo.",
     home_escolha_modo: "Quanto tempo você tem?",
     home_comecar: "Começar",
     home_retomar: "Continuar de onde parei",
@@ -75,9 +75,9 @@ const dict = {
       "A área ao redor do ponto é a sua margem de erro. Ela é maior quando suas respostas se contradizem, e menor quando são coerentes entre si.",
     res_confianca_baixa_titulo: "Este resultado diz pouco sobre você",
     res_uniforme:
-      "Você deu a mesma nota em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É exatamente esse mecanismo que impede o teste de empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação e o resultado passa a significar alguma coisa.",
+      "Você deu a mesma nota em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É assim que o teste evita empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação e o resultado passa a significar alguma coisa.",
     res_contraditorio:
-      "Suas respostas se contradizem bastante entre si, então a área de incerteza ficou grande e a posição no gráfico é pouco confiável. Isso não é defeito do teste: é ele admitindo que não conseguiu te medir bem, em vez de fingir uma posição.",
+      "Suas respostas se contradizem bastante, e a área de incerteza no gráfico ficou grande por causa disso. O teste não conseguiu te medir bem, e prefere dizer isso a inventar uma posição.",
     res_refazer_lendo: "Refazer com calma",
     res_esquerda_direita:
       "Esquerda e direita aqui são a dimensão econômica: mais igualdade e mais Estado de um lado, mais mercado e menos Estado do outro.",
@@ -168,9 +168,9 @@ const dict = {
     rodape_privacidade: "Nothing here identifies who answered",
     rodape_codigo: "Open source",
 
-    home_titulo: "A political test that shows its work",
+    home_titulo: "Where you stand on the political spectrum",
     home_intro:
-      "Two questions almost no political test answers: where the statements come from, and how much the result can be trusted. Both are answered on screen here.",
+      "A test of 48 statements taken from academic surveys, with the weights published and the margin of error on screen.",
     home_diferenca_1_titulo: "The questions come from real research",
     home_diferenca_1:
       "All 48 statements derive from instruments used in academic research, with the source item code recorded and checkable.",
@@ -179,7 +179,7 @@ const dict = {
       "Anyone who agrees with every statement lands at the center of the chart. That is tested automatically on every change.",
     home_diferenca_3_titulo: "The result comes with a margin of error",
     home_diferenca_3:
-      "You get an area, not a dot of false precision, plus the answers that pulled each axis the most.",
+      "The result comes with a margin of error, and with the answers that weighed most on each axis.",
     home_escolha_modo: "How much time do you have?",
     home_comecar: "Start",
     home_retomar: "Pick up where I left off",
@@ -220,9 +220,9 @@ const dict = {
       "The area around the dot is your margin of error. It grows when your answers contradict each other, and shrinks when they line up.",
     res_confianca_baixa_titulo: "This result says little about you",
     res_uniforme:
-      "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the center. That mechanism is exactly what stops the test from pushing anyone who answers on autopilot. Take it again reading each statement and the result starts to mean something.",
+      "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the center. That is how the test avoids pushing anyone who answers on autopilot. Take it again reading each statement and the result starts to mean something.",
     res_contraditorio:
-      "Your answers contradict each other quite a bit, so the uncertainty area came out large and the position on the chart is not reliable. That is not a flaw in the test: it is the test admitting it could not measure you well, instead of faking a position.",
+      "Your answers contradict each other a lot, and that is why the uncertainty area came out large. The test could not measure you well, and would rather say so than invent a position.",
     res_refazer_lendo: "Take it again slowly",
     res_esquerda_direita:
       "Left and right here mean the economic dimension: more equality and more state on one side, more market and less state on the other.",

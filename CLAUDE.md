@@ -1,4 +1,4 @@
-# Compass — bússola política com resultado explicado (contexto do repositório)
+# Compass: bússola política com resultado explicado (contexto do repositório)
 
 Teste político de dois eixos, no espírito do Political Compass, mas com três coisas que ele não
 tem: **perguntas derivadas de instrumentos de pesquisa reais e citados**, **equilíbrio provado por
@@ -12,7 +12,7 @@ Regra de ouro: aqui fica só o que NÃO é óbvio pelo código.
 
 ## Usuário
 
-- **Guilherme Romero** — dono do produto, **não programador**. Sabe o que quer, não escreve código.
+- **Guilherme Romero**: dono do produto, **não programador**. Sabe o que quer, não escreve código.
 - Como trabalhar com ele:
   - Agir de forma autônoma; confirmar **apenas** antes de: apagar dados, gastar dinheiro, ações
     irreversíveis ou algo voltado para fora (publicar, deploy de produção).
@@ -155,3 +155,9 @@ Ler o handoff recente **antes de começar**.
   `Teste.jsx`, e uma cópia fora de sincronia faria o mesmo link decodificar respostas diferentes,
   sem erro nenhum.
 - **`r: 0` é "não sei", e não "sou moderado".** Não entra na conta, e derruba o par inteiro junto.
+- **Texto de tela leva acento.** Comentário de código aqui é escrito sem acento por convenção, e
+  esse hábito já vazou para as páginas Sobre e Metodologia, que ficaram meses renderizando
+  "O Compass e um teste politico". String que a pessoa lê é português de verdade.
+- **Nunca rodar substituição cega de texto num arquivo `.jsx` inteiro.** Já renomeou variável
+  (`const forca` virou `const força`) e injetou português dentro da string em inglês. Trocar por
+  chave, ou só dentro do bloco do idioma.

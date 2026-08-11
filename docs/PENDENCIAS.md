@@ -1,4 +1,4 @@
-# Compass — Pendências (tudo que está em aberto)
+# Compass: Pendências (tudo que está em aberto)
 
 > Criado em 2026-08-10, na sessão que montou o projeto. Marcar concluídos AQUI.
 > Contexto: `CLAUDE.md`. Mapa do código: `docs/ARQUITETURA.md`. UI: `docs/DESIGN-SYSTEM.md`.
@@ -14,7 +14,7 @@
 
 ---
 
-## Fase 0 — Fundação
+## Fase 0: Fundação
 
 - [x] Estrutura de pastas, `package.json` da raiz e do client, `vite.config.js`, `.gitignore`
 - [x] `CLAUDE.md`, `AGENTS.md` e as docs de apoio
@@ -22,7 +22,7 @@
 - [x] Criar `compass-db` e `compass-db-dev` no D1 (**precisa de autorização do dono**)
 - [x] Preencher o `database_id` real no `wrangler.jsonc`
 
-## Fase 1 — Embasamento, perguntas e equilíbrio
+## Fase 1: Embasamento, perguntas e equilíbrio
 
 - [x] `docs/FONTES.md`: catálogo dos instrumentos, com licenciamento categoria A ou B
 - [x] Ler os questionários de verdade (WVS onda 7 e 8, módulos do ISSP, ESEB, LAPOP)
@@ -31,18 +31,19 @@
 - [x] `client/src/lib/scoring.js`
 - [x] Bateria de testes de equilíbrio (os 8 do plano) + teste de rastreabilidade de fonte
 - [x] `docs/METODOLOGIA.md`
+- [x] Revisão de redação das 48 afirmações: saiu o tom de memorando, aprovado pelo dono em 11/08
 - [ ] **Revisão do dono**: ler as 48 afirmações procurando tom que empurre para algum lado. O
       teste automático pega desequilíbrio estrutural, não tom
 - [ ] Piloto com 4 a 6 pessoas de posições políticas diferentes, com uma pergunta ao final:
       "alguma afirmação pareceu escrita para te empurrar para algum lado?"
 
-## Fase 2 — Telas
+## Fase 2: Telas
 
 - [x] `docs/DESIGN-SYSTEM.md` de verdade
 - [ ] **Aprovação visual do dono**, testando o site rodando. O dono autorizou seguir sem mockup
       prévio para chegar antes na parte de testar; se a direção visual não agradar, ajustar aqui
 
-## Fase 3 — Questionário
+## Fase 3: Questionário
 
 - [x] `lib/i18n.js` e `lib/lang.jsx` (portar do vintage)
 - [x] Tela de entrada com escolha de modo e idioma
@@ -51,7 +52,7 @@
 - [x] Salvamento automático no `localStorage` e retomada
 - [x] Escolha adaptativa da próxima pergunta, mantendo o balanço
 
-## Fase 4 — Resultado e card
+## Fase 4: Resultado e card
 
 - [x] Bússola em SVG com elipse de incerteza
 - [x] Barras dos 4 eixos secundários com margem
@@ -60,7 +61,7 @@
 - [x] Card social em Canvas (portar `shareCard.js` e `shareImage.js` do BBB)
 - [x] Link permanente com o resultado codificado na URL
 
-## Fase 5 — Dados da população
+## Fase 5: Dados da população
 
 - [x] `migrations/0001_init.sql`
 - [x] `POST /api/respostas` com validação
@@ -68,7 +69,7 @@
 - [x] Percentil, mapa de calor e "onde você destoa"
 - [x] Estado "ainda coletando respostas" abaixo de 50
 
-## Fase 6 — Conteúdo e lançamento
+## Fase 6: Conteúdo e lançamento
 
 - [x] ~12 páginas de tradições ideológicas
 - [x] Página **Sobre** com a lista completa de referências

@@ -1,4 +1,4 @@
-# Compass — mapa do código (para agentes)
+# Compass: mapa do código (para agentes)
 
 > Consultar ANTES de sair explorando o repo. Regra de manutenção: criou ou mudou helper,
 > componente ou padrão, atualiza este arquivo na mesma sessão.

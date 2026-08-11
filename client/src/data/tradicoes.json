@@ -58,8 +58,8 @@
       "eixos": { "economico": 7, "autoridade": -5, "fronteiras": -5, "costumes": 0, "ecologia": 3, "povo": -2 },
       "nome": { "pt": "Liberalismo clássico", "en": "Classical liberalism" },
       "resumo": {
-        "pt": "Nasceu contra o poder absoluto: quer Estado limitado por lei, liberdades individuais protegidas e comércio livre entre pessoas e países. Não é indiferente ao Estado, é desconfiado dele. Aceita governo, desde que amarrado.",
-        "en": "Born against absolute power: it wants a state limited by law, protected individual liberties and free trade between people and countries. It is not indifferent to the state but suspicious of it. It accepts government, as long as government is bound."
+        "pt": "Nasceu contra o poder absoluto: quer Estado limitado por lei, liberdades individuais protegidas e comércio livre entre pessoas e países. Desconfia do Estado sem querer aboli-lo: aceita governo desde que amarrado por lei.",
+        "en": "Born against absolute power: it wants a state limited by law, protected individual liberties and free trade between people and countries. It distrusts the state without wanting to abolish it: government is acceptable as long as it is bound by law."
       },
       "leituras": {
         "pt": ["John Stuart Mill, Sobre a Liberdade", "Adam Smith, A Riqueza das Nações"],
@@ -97,8 +97,8 @@
       "eixos": { "economico": 4, "autoridade": 5, "fronteiras": 6, "costumes": 8, "ecologia": 3, "povo": -3 },
       "nome": { "pt": "Conservadorismo tradicional", "en": "Traditional conservatism" },
       "resumo": {
-        "pt": "Parte da ideia de que instituições que duraram séculos carregam um saber que ninguém projetou e ninguém consegue reconstruir do zero. Não é contra toda mudança: é contra mudança rápida e planejada de cima, e prefere reforma lenta a ruptura.",
-        "en": "Starts from the idea that institutions which lasted centuries carry knowledge no one designed and no one could rebuild from scratch. It is not against all change: it is against fast change planned from above, and prefers slow reform to rupture."
+        "pt": "Parte da ideia de que instituições que duraram séculos carregam um saber que ninguém projetou e ninguém consegue reconstruir do zero. Aceita mudança lenta e desconfia da mudança rápida planejada de cima. Prefere reforma a ruptura.",
+        "en": "Starts from the idea that institutions which lasted centuries carry knowledge no one designed and no one could rebuild from scratch. It accepts slow change and distrusts fast change planned from above. It prefers reform to rupture."
       },
       "leituras": {
         "pt": ["Edmund Burke, Reflexões sobre a Revolução na França", "Michael Oakeshott, Racionalismo na Política"],
@@ -149,8 +149,8 @@
       "eixos": { "economico": 1, "autoridade": 8, "fronteiras": 8, "costumes": 6, "ecologia": 5, "povo": 7 },
       "nome": { "pt": "Populismo autoritário", "en": "Authoritarian populism" },
       "resumo": {
-        "pt": "Divide a sociedade entre um povo verdadeiro e uma elite que o traiu, e conclui que a vontade desse povo não deveria ser travada por tribunais, imprensa ou órgãos de controle. É uma posição sobre quem decide, mais do que sobre economia, e por isso aparece à direita e à esquerda.",
-        "en": "Splits society between a real people and an elite that betrayed them, and concludes that the will of that people should not be checked by courts, press or oversight bodies. It is a stance about who decides more than about economics, which is why it appears on both the right and the left."
+        "pt": "Divide a sociedade entre um povo verdadeiro e uma elite que o traiu, e conclui que a vontade desse povo não deveria ser travada por tribunais, imprensa ou órgãos de controle. Trata de quem decide antes de tratar de economia, e por isso aparece à direita e à esquerda.",
+        "en": "Splits society between a real people and an elite that betrayed them, and concludes that the will of that people should not be checked by courts, press or oversight bodies. It is about who decides before it is about economics, which is why it appears on both the right and the left."
       },
       "leituras": {
         "pt": ["Jan-Werner Müller, O que é Populismo?", "Cas Mudde, Populismo: uma brevíssima introdução"],

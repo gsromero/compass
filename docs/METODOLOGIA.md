@@ -1,4 +1,4 @@
-# Compass — metodologia
+# Compass: metodologia
 
 > A conta, o relatório de equilíbrio e os limites. Este arquivo alimenta a página `/metodologia`
 > do site. De onde vem cada pergunta: `docs/FONTES.md`.
@@ -177,10 +177,39 @@ central do projeto ser percebido como qualidade ou como defeito.
 | Ecologia | 8 | 4 | 4 | 0,000 | 0,85 / 0,85 |
 | Povo | 8 | 4 | 4 | 0,000 | 0,85 / 0,85 |
 
-**48 perguntas.** 38 adaptadas de itens conferidos palavra por palavra no questionário oficial do
+**48 afirmações.** 38 adaptadas de itens conferidos palavra por palavra no questionário oficial do
 World Values Survey; 10 de redação própria a partir de construtos documentados.
 
+**Versão 3 do banco (11/08/2026):** as 48 foram reescritas para soar como gente falando, sem mexer
+no que cada uma mede. Saiu o `deveria` que aparecia em 25 delas, saíram as concessivas longas e o
+hedge. O item de origem continua o mesmo, e é ele que a citação promete. Como redação diferente
+muda a resposta das pessoas, links de resultado de versões anteriores passam a ser recusados.
+
 ---
+
+## Uma regra de redação que nasceu de um erro
+
+A primeira versão da afirmação sobre liberdade de expressão dizia *"ninguém deve ser punido por
+defender uma opinião impopular"*. Está errada por dois motivos, e os dois importam.
+
+**Ela drifta da fonte.** O item de origem, WVS-8 Q193, mede a importância de "liberdade de
+expressão e de publicação" como princípio de governo. Não fala em punição. A palavra foi
+introduzida na reescrita, e é ela que cria o problema.
+
+**E ela mede coisas diferentes nos dois idiomas.** No Brasil, racismo é crime imprescritível, e
+desde 2019 o STF equiparou homofobia e transfobia a racismo; então concordar pode significar "sou
+a favor da liberdade de expressão" ou "acho que discurso de ódio não deveria ser crime", que são
+posições distintas. Nos Estados Unidos a mesma frase é quase um truísmo constitucional, com o qual
+quase todo mundo concorda, e por isso não separa ninguém. **A mesma afirmação, dois idiomas, dois
+significados** é exatamente o funcionamento diferencial que este documento diz querer evitar.
+
+A afirmação virou **"O governo não deveria poder censurar quem o critica"**: fiel ao Q193, separa
+bem quem prioriza ordem de quem prioriza liberdade, e não encosta em lei penal.
+
+**Regra que fica:** afirmação cujo sentido dependa de a conduta ser crime não entra, porque a
+legalidade difere entre os dois países e a afirmação passaria a medir conhecimento da lei em vez
+de posição política. Hoje só uma das 48 toca em legalidade, e ela trata de censura estatal, que é
+poder de governo e não conduta de cidadão.
 
 ## O que os testes NÃO provam
 

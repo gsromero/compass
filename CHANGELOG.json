@@ -1,5 +1,30 @@
 [
   {
+    "version": "3.0",
+    "date": "2026-08-11T02:30:00",
+    "author": "claude",
+    "summary": "Todos os textos do site reescritos: as 48 afirmacoes perderam o tom de memorando, e as paginas Sobre e Metodologia ganharam a acentuacao que faltava.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/data/questions.json",
+        "client/src/lib/i18n.js",
+        "client/src/data/tradicoes.json",
+        "client/src/pages/Sobre.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "functions/api/_versao.js",
+        "docs/"
+      ],
+      "technical": "Auditoria contou os tiques antes de reescrever: 25 das 48 afirmacoes usavam 'deveria', 8 usavam 'mesmo que', 3 tinham a antitese 'X e nao Y'. Depois: deveria 0, mesmo que 3 (onde a concessao E o que se mede), antitese 0. Sentido preservado em todas, porque cada uma cita um item real e mudar o sentido tornaria a citacao falsa. Banco na versao 3 e _versao.js sincronizado; link antigo e recusado. Achado grave no caminho: as paginas Sobre e Metodologia renderizavam portugues SEM ACENTO ('O Compass e um teste politico'), porque o habito de escrever comentario sem acento vazou para as strings de tela. 36 travessoes removidos dos documentos, incluindo o README publico.",
+      "pending": [
+        "revisao das afirmacoes pelo dono",
+        "melhorias de interface",
+        "og:image por quadrante",
+        "deploy"
+      ]
+    }
+  },
+  {
     "version": "2.0",
     "date": "2026-08-11T01:00:00",
     "author": "claude",
@@ -114,25 +139,6 @@
         "docs/METODOLOGIA.md"
       ],
       "technical": "Questionario mestre do World Values Survey Onda 8 lido item por item; 38 perguntas adaptadas com codigo do item conferido, 10 de redacao propria a partir de construtos do ISSP National Identity e do New Ecological Paradigm, porque o licenciamento dessas escalas para uso aberto e ambiguo. Equilibrio por construcao: 4 itens de cada lado por eixo, pesos espelhados, agrupados em pares que o modo adaptativo so pergunta inteiros. Bateria verificada por sabotagem: inverter o peso de um item derruba 10 testes.",
-      "pending": []
-    }
-  },
-  {
-    "version": "0.1",
-    "date": "2026-08-10T17:30:00",
-    "author": "claude",
-    "summary": "Projeto criado: estrutura de pastas e documentacao base, seguindo o padrao do vintage e do BBB.",
-    "details": {
-      "commits": [
-        "3123d16"
-      ],
-      "files": [
-        "package.json",
-        "CLAUDE.md",
-        "docs/ARQUITETURA.md",
-        "wrangler.jsonc"
-      ],
-      "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18, backend em Pages Functions, banco D1 com binding DB.",
       "pending": []
     }
   }

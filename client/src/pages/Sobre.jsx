@@ -12,7 +12,7 @@ const REFERENCIAS = [
     url: "https://www.worldvaluessurvey.org/documents/WVS-8_QUESTIONNAIRE_V11_FINAL_Jan_2024.pdf",
     categoria: "A",
     o_que: {
-      pt: "A maior pesquisa comparativa de valores do mundo, rodando desde 1981. As perguntas daqui vieram do questionario mestre da Onda 8, lido item por item. Os codigos Q___ que aparecem no seu resultado sao os desse documento.",
+      pt: "A maior pesquisa comparativa de valores do mundo, em campo desde 1981. As afirmações daqui saíram do questionário mestre da Onda 8, lido item por item. Os códigos Q___ que aparecem no seu resultado são os desse documento.",
       en: "The largest comparative values survey in the world, running since 1981. The questions here come from the Wave 8 master questionnaire, read item by item. The Q___ codes shown in your result are from that document.",
     },
   },
@@ -22,7 +22,7 @@ const REFERENCIAS = [
     url: "https://issp.org/data-download/by-topic/",
     categoria: "B",
     o_que: {
-      pt: "Modulo do International Social Survey Programme sobre identidade nacional, aplicado em 1995, 2003, 2013 e 2023. Cobre nacionalismo, protecionismo e cooperacao entre paises.",
+      pt: "Módulo do International Social Survey Programme sobre identidade nacional, aplicado em 1995, 2003, 2013 e 2023. Cobre nacionalismo, protecionismo e cooperação entre países.",
       en: "The International Social Survey Programme module on national identity, fielded in 1995, 2003, 2013 and 2023. It covers nationalism, protectionism and cooperation between countries.",
     },
   },
@@ -32,7 +32,7 @@ const REFERENCIAS = [
     url: "https://www.researchgate.net/publication/279892834_Measuring_Endorsement_of_the_New_Ecological_Paradigm_A_Revised_NEP_Scale",
     categoria: "B",
     o_que: {
-      pt: "A medida de preocupacao ambiental mais usada no mundo, de Dunlap e colegas. Cada pergunta do eixo Ecologia corresponde a uma das cinco facetas dela.",
+      pt: "A medida de preocupação ambiental mais usada no mundo, de Dunlap e colegas. Cada afirmação do eixo Ecologia corresponde a uma das cinco facetas dela.",
       en: "The most widely used measure of environmental concern, by Dunlap and colleagues. Each question on the Ecology axis maps to one of its five facets.",
     },
   },
@@ -42,7 +42,7 @@ const REFERENCIAS = [
     url: "https://hooghe.web.unc.edu/wp-content/uploads/sites/11492/2021/11/2021_Jolly-et-al_-Chapel-Hill-Expert-Survey-trend-file-1999-2019.pdf",
     categoria: "eixos",
     o_que: {
-      pt: "O padrao para descrever espaco politico em democracias, com a dimensao economica esquerda-direita e a dimensao GAL-TAN. Definiu quais eixos existem aqui.",
+      pt: "O padrão para descrever espaço político em democracias, com a dimensão econômica esquerda-direita e a dimensão GAL-TAN. Definiu quais eixos existem aqui.",
       en: "The standard for describing political space in democracies, with the economic left-right dimension and the GAL-TAN dimension. It defined which axes exist here.",
     },
   },
@@ -52,7 +52,7 @@ const REFERENCIAS = [
     url: "https://jspp.psychopen.eu/index.php/jspp/article/view/5047",
     categoria: "eixos",
     o_que: {
-      pt: "Versao curta e validada da escala de autoritarismo de Altemeyer, por Bizumic e Duckitt. Vale mencao especial: ela e balanceada por direcao de redacao por construcao, que e exatamente o principio adotado neste site.",
+      pt: "Versão curta e validada da escala de autoritarismo de Altemeyer, por Bizumic e Duckitt. Vale menção especial: ela já nasce balanceada por direção de redação, que é o mesmo princípio adotado aqui.",
       en: "A short, validated version of Altemeyer's authoritarianism scale, by Bizumic and Duckitt. Worth a special mention: it is balanced by wording direction by design, which is exactly the principle this site adopts.",
     },
   },
@@ -62,7 +62,7 @@ const REFERENCIAS = [
     url: "https://lab.research.sickkids.ca/pscoreprogram/wp-content/uploads/sites/72/2017/12/Beaton2000-GuidelinesCrossCulturalAdaptation.pdf",
     categoria: "metodo",
     o_que: {
-      pt: "O guia de adaptacao de questionarios entre culturas. Traducao literal nao basta: o que precisa ser preservado e a equivalencia conceitual.",
+      pt: "O guia de adaptação de questionários entre culturas. Tradução literal não basta, porque o que precisa ser preservado é a equivalência conceitual.",
       en: "The guide to adapting questionnaires across cultures. Literal translation is not enough: what must be preserved is conceptual equivalence.",
     },
   },
@@ -71,31 +71,31 @@ const REFERENCIAS = [
 const TEXTO = {
   pt: {
     intro:
-      "O Compass e um teste politico de dois eixos, no espirito do Political Compass, com tres diferencas que sao a razao de ele existir.",
-    d1_t: "As perguntas vem de instrumentos de pesquisa reais",
-    d1: "Cada uma das 48 afirmacoes deriva de um item de pesquisa academica, com o instrumento e o codigo do item registrados e mostrados no seu resultado. O Political Compass nunca publicou de onde vem as afirmacoes dele nem quanto cada uma pesa.",
-    d2_t: "O equilibrio e provado por teste automatico",
-    d2: "Das 62 afirmacoes do Political Compass, 36 sao codificadas para a direita e 20 para a esquerda. Como as pessoas tendem a concordar com o que leem, quem responde no automatico e deslocado pela construcao do teste. Aqui existe uma bateria de testes que impede o site de ir ao ar se isso acontecer, e o principal deles e direto: quem concorda com todas as afirmacoes tem que cair no centro do grafico.",
+      "O Compass é um teste político de dois eixos, no espírito do Political Compass, com três diferenças que são a razão de ele existir.",
+    d1_t: "As afirmações vêm de instrumentos de pesquisa reais",
+    d1: "Cada uma das 48 afirmações deriva de um item de pesquisa acadêmica, com o instrumento e o código registrados e mostrados no seu resultado. O Political Compass nunca publicou de onde vêm as afirmações dele nem quanto cada uma pesa.",
+    d2_t: "O equilíbrio é provado por teste automático",
+    d2: "Das 62 afirmações do Political Compass, 36 são codificadas para a direita e 20 para a esquerda. Como as pessoas tendem a concordar com o que leem, quem responde no automático é deslocado pela construção do teste. Aqui existe uma bateria de testes que impede o site de ir ao ar se isso acontecer, e o principal deles é direto: quem concorda com todas as afirmações tem que cair no centro do gráfico.",
     d3_t: "O resultado vem com margem de erro",
-    d3: "Voce recebe uma area, nao um ponto com duas casas decimais. A area cresce quando suas respostas se contradizem e encolhe quando elas se sustentam, e e a mesma conta que decide quando o teste pode parar de perguntar.",
-    fontes_t: "De onde vem as perguntas",
+    d3: "O resultado vem como área, e não como um número de duas casas decimais. A área cresce quando suas respostas se contradizem e encolhe quando elas se sustentam, e é a mesma conta que decide quando o teste pode parar de perguntar.",
+    fontes_t: "De onde vêm as afirmações",
     fontes_i:
-      "Duas categorias, porque nem todo instrumento pode ser reusado do mesmo jeito. Da categoria A a afirmacao e adaptada do item original, com citacao. Da categoria B eu uso so o construto e escrevo a afirmacao com minhas palavras, porque o licenciamento dessas escalas para uso aberto e ambiguo.",
-    cat_A: "Item adaptado, com citacao",
-    cat_B: "Redacao propria, construto citado",
+      "Duas categorias, porque nem todo instrumento pode ser reusado do mesmo jeito. Da categoria A a afirmação é adaptada do item original, com citação. Da categoria B entra só o construto, e a afirmação é escrita com palavras próprias, porque o licenciamento dessas escalas para uso aberto é ambíguo.",
+    cat_A: "Item adaptado, com citação",
+    cat_B: "Redação própria, construto citado",
     cat_eixos: "Definiu os eixos",
-    cat_metodo: "Metodo",
-    limites_t: "O que este teste nao e",
+    cat_metodo: "Método",
+    limites_t: "O que este teste não é",
     limites: [
-      "Os itens de origem usam formatos variados: escala de 1 a 10 entre duas frases, escolha forcada, concordancia de 4 pontos. Aqui tudo virou uma escala unica de 5 pontos. A derivacao e rastreavel, mas o resultado nao e o instrumento original e nao herda a validacao dele.",
-      "A redacao em ingles foi conferida no questionario oficial. A redacao em portugues e adaptacao minha, seguindo equivalencia conceitual, porque os questionarios nacionais sao distribuidos junto dos microdados e nao como documentos avulsos.",
-      "Onde fica o zero e decisao normativa, nao fato. Aqui o zero e o meio da escala de resposta, e nao a media de quem respondeu, para o centro nao andar conforme o publico do site muda.",
-      "Os testes provam equilibrio estrutural, nao equilibrio de tom. Nenhuma maquina detecta uma afirmacao escrita de um jeito que soa mais razoavel de um lado.",
-      "Ainda nao ha validacao empirica. Provar que as perguntas medem o que dizem medir exige respostas reais e analise fatorial.",
+      "Os itens de origem usam formatos variados: escala de 1 a 10 entre duas frases, escolha forçada, concordância de 4 pontos. Aqui tudo virou uma escala única de 5 pontos. A derivação e rastreável, mas o resultado não e o instrumento original e não herda a validação dele.",
+      "A redação em inglês foi conferida no questionário oficial. A redação em português é adaptação nossa, seguindo equivalência conceitual, porque os questionários nacionais são distribuídos junto dos microdados e não como documentos avulsos.",
+      "Onde fica o zero é decisão normativa, e não um fato. Aqui o zero é o meio da escala de resposta, e não a média de quem respondeu, para o centro não andar conforme o público do site muda.",
+      "Os testes provam equilíbrio estrutural, e não equilíbrio de tom. Nenhuma máquina detecta uma afirmação escrita de um jeito que soa mais razoável de um lado.",
+      "Ainda não ha validação empírica. Provar que as perguntas medem o que dizem medir exige respostas reais e análise fatorial.",
     ],
     privacidade_t: "Privacidade",
     privacidade:
-      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na proxima visita. Fica guardado so o vetor de respostas solto, usado para os numeros de comparacao. O link do seu resultado carrega o resultado inteiro codificado na propria URL, e por isso funciona sem consultar banco nenhum.",
+      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na próxima visita. Fica guardado só o vetor de respostas solto, usado para os números de comparação. O link do seu resultado carrega o resultado inteiro codificado na própria URL, e por isso funciona sem consultar banco nenhum.",
     ver_metodologia: "Ver a conta completa",
   },
   en: {

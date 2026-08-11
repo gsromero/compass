@@ -1,4 +1,4 @@
-# Compass — design system (fonte de verdade de UI)
+# Compass: design system (fonte de verdade de UI)
 
 > Ler ANTES de qualquer mudança visual. A implementação inteira mora em
 > `client/src/index.css`; este arquivo explica o porquê e como usar.

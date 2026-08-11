@@ -1,4 +1,4 @@
-## 2026-08-11 — claude
+## 2026-08-11, claude
 
 **O que foi feito:** O questionário virou um cartão que se arrasta, e no caminho apareceu um bug
 mais importante que a mudança de interface.
@@ -31,7 +31,7 @@ tem 174 linhas da 1 e 130 da 2, e o total reportado é 130).
 
 A lista de botões e o teclado NÃO podem sumir: são o único caminho para leitor de tela e teclado.
 
-## 2026-08-10 — claude
+## 2026-08-10, claude
 
 **O que foi feito:** O site inteiro, da fundação ao fluxo completo rodando.
 

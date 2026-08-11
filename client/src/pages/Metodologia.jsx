@@ -11,35 +11,35 @@ import { EIXOS } from "../lib/scoring.js";
 const TEXTO = {
   pt: {
     intro:
-      "Aqui esta a conta inteira: os pesos de todas as 48 afirmacoes, de onde cada uma veio e como o resultado e calculado. Nada disso e segredo, e essa e a diferenca.",
+      "Aqui está a conta inteira: o peso de todas as 48 afirmações, de onde cada uma veio e como o resultado é calculado. Nada disso é segredo, e essa é a diferença.",
     eixos_t: "O que cada eixo mede",
     eixos_esquerda_direita:
       "No gráfico o eixo horizontal aparece como esquerda e direita, que é como as pessoas reconhecem essa dimensão e é também o nome que a fonte usa: a dimensão do Chapel Hill Expert Survey se chama economic left-right. Na prática ela mede quanto do resultado econômico deveria vir do Estado e quanto do mercado. Esquerda é mais igualdade e mais Estado; direita é mais mercado e mais responsabilidade individual.",
-    conta_t: "Como a posicao e calculada",
+    conta_t: "Como a posição é calculada",
     conta:
-      "Cada resposta vale de -2 (discordo muito) a +2 (concordo muito), com 0 neutro de verdade, que nao entra na conta de lado nenhum. A importancia que voce marca multiplica o peso da resposta: 0,5 para pouco, 1 para normal e 1,5 para muito.",
-    formula: "posicao = soma(resposta x peso x importancia) / (2 x soma(|peso| x importancia))",
+      "Cada resposta vale de -2 (discordo muito) a +2 (concordo muito). Não existe ponto do meio: \"não sei dizer\" é uma opção à parte e fica fora da conta. A importância que você marca multiplica o peso da resposta: 0,5 para pouco, 1 para normal e 1,5 para muito.",
+    formula: "posição = soma(resposta x peso x importância) / (2 x soma(|peso| x importância))",
     conta2:
-      "Dividir pelo que foi efetivamente respondido e o que faz um teste incompleto nao distorcer o resultado. O numero vai de -1 a +1 e aparece de -10 a +10.",
-    margem_t: "Como a margem de erro e calculada",
+      "Dividir pelo que foi efetivamente respondido é o que faz um teste incompleto não distorcer o resultado. O número vai de -1 a +1 e aparece de -10 a +10.",
+    margem_t: "Como a margem de erro é calculada",
     margem:
-      "Cada resposta, sozinha, da um palpite de onde voce esta naquele eixo. O quanto esses palpites discordam entre si vira a margem. Quem responde de forma coerente ganha uma area apertada; quem se contradiz ganha uma area larga, e isso e informacao, nao defeito. A conta mistura o que suas respostas mostram com um ponto de partida de 'nao sei nada sobre esta pessoa', pesando pelo tamanho da amostra: sem isso, quem responde uma unica pergunta de um eixo apareceria com margem zero, que e precisao falsa.",
-    equilibrio_t: "Como o equilibrio e garantido",
+      "Cada resposta, sozinha, dá um palpite de onde você está naquele eixo. O quanto esses palpites discordam entre si vira a margem. Quem responde de forma coerente ganha uma área apertada, e quem se contradiz ganha uma área larga, o que é informação e não defeito. A conta mistura o que suas respostas mostram com um ponto de partida de \"não sei nada sobre esta pessoa\", pesando pelo tamanho da amostra: sem isso, quem responde uma única afirmação de um eixo apareceria com margem zero, que é precisão falsa.",
+    equilibrio_t: "Como o equilíbrio é garantido",
     equilibrio:
-      "Cada eixo tem 8 afirmacoes: 4 em que concordar puxa para um lado e 4 em que puxa para o outro, com pesos espelhados. As 8 formam 4 pares, e o modo adaptativo so pergunta pares inteiros e so para em fronteira de par. Assim qualquer subconjunto de perguntas continua equilibrado, inclusive no modo rapido. Se a escolha fosse feita so por informacao, o algoritmo poderia montar um conjunto torto sem querer e trazer o vies de volta pela porta dos fundos.",
-    relatorio_t: "Relatorio de equilibrio",
-    tabela_t: "Todas as afirmacoes e seus pesos",
-    col_afirmacao: "Afirmacao",
+      "Cada eixo tem 8 afirmações: 4 em que concordar puxa para um lado e 4 em que puxa para o outro, com pesos espelhados. As 8 formam 4 pares, e o teste só pergunta pares inteiros e só conta pares inteiros. Assim qualquer subconjunto continua equilibrado, inclusive no modo rápido. Se a escolha fosse feita só por informação, o algoritmo poderia montar um conjunto torto sem querer e trazer o viés de volta pela porta dos fundos.",
+    relatorio_t: "Relatório de equilíbrio",
+    tabela_t: "Todas as afirmações e seus pesos",
+    col_afirmacao: "Afirmação",
     col_eixo: "Eixo",
     col_peso: "Peso",
     col_fonte: "Fonte",
-    col_derivacao: "Derivacao",
+    col_derivacao: "Derivação",
     r_eixo: "Eixo",
     r_itens: "Itens",
     r_neg: "Concordar puxa",
     r_pos: "Concordar puxa",
     r_soma: "Soma dos pesos",
-    r_forca: "Forca media",
+    r_forca: "Força média",
     voltar_sobre: "Ver as fontes e os limites",
   },
   en: {
