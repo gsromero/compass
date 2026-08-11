@@ -167,9 +167,10 @@ arrastar, e ninguém descobre um gesto lendo sobre ele.
   Com transição de CSS o rótulo ficava preso no destino e o "concordo" só piscava.
 - **Passa do limiar do "muito", em vez de parar em cima dele.** Já parou exatamente na fronteira, e
   o movimento lia como "quase lá": a lição útil não é acertar o limiar, é ultrapassá-lo.
-- **Para na faixa leve antes de avançar, dos dois lados.** Sem essa parada a faixa leve cai no meio
-  do percurso, onde o movimento é mais rápido, e "concordo" só piscava. As paradas garantem que os
-  quatro rótulos apareçam cerca de um segundo cada, em vez de depender do acaso da aceleração.
+- **Cada ida é um movimento só, sem parada no meio.** Chegou a ter uma parada na faixa leve para
+  segurar "concordo" mais tempo, e ficou travado: a demonstração vira uma sequência de poses em vez
+  de um gesto. Os rótulos da faixa leve aparecem de passagem (cerca de 0,5s), e os do limiar ficam
+  1,2s por causa da pausa nas pontas. É o suficiente para se lerem.
 - **Começa parada no centro por 0,7s.** Sem essa pausa o primeiro passo dispara em tempo zero, o
   navegador pinta o cartão já deslocado, e ele parece nascer no canto em vez de sair do meio.
 - **Encostar no cartão corta a demonstração na hora.** Quem já entendeu não precisa esperar.

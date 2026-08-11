@@ -28,13 +28,12 @@ const VOO = 170;
 // enquanto atravessa a faixa leve, "concordo muito" ao chegar no limiar. Com
 // transicao de CSS o rotulo ficava preso no destino e o "concordo" so piscava.
 const DEMO_INICIO = 600;
-// Cada parada segura um rotulo na tela. Sem elas, a faixa leve cai no meio do
-// percurso, onde o movimento e mais rapido, e "concordo" so pisca.
-const DEMO_PAUSA = 550;
-const DEMO_IDA = 520;      // do centro ate a faixa leve
-const DEMO_AVANCO = 380;   // da faixa leve ate passar do limiar do "muito"
-const DEMO_TRAVESSIA = 820; // de um lado ao outro
-const DEMO_VOLTA = 620;
+// Cada ida e uma so, sem parada no meio: o cartao sai do centro, vai ate o
+// fim, segura, atravessa e volta.
+const DEMO_PAUSA = 600;
+const DEMO_IDA = 950;       // do centro ate passar do limiar do "muito"
+const DEMO_TRAVESSIA = 1500; // de um lado ao outro
+const DEMO_VOLTA = 750;
 // O quanto a demonstracao passa do limiar do "muito". Parando exatamente em
 // cima dele o movimento lia como "quase la", e a licao util nao e acertar a
 // fronteira: e ultrapassar. Fica bem dentro do alcance, entao o cartao nao
@@ -232,17 +231,13 @@ export default function Teste() {
       if (!alcance || cancelado) return;
       alcanceDemo.current = alcance;
 
-      // Para na faixa leve, segura, avanca para alem do limiar do "muito",
-      // segura, e faz o mesmo do outro lado. As paradas sao de proposito: sem
-      // elas a faixa leve fica no meio do percurso, onde o movimento e mais
-      // rapido, e "concordo" so piscava.
-      const leve = alcance * ((LIMIARES.zonaMorta + LIMIARES.forte) / 2);
+      // Um movimento continuo para cada lado, sem parada no meio do caminho.
+      // Os rotulos aparecem sozinhos porque a posicao passa pela mesma funcao
+      // que decide a resposta de um arrasto de verdade.
       const forte = alcance * LIMIARES.forte * DEMO_EXCEDE;
       const trechos = [
-        { de: 0, para: leve, duracao: DEMO_IDA, pausa: DEMO_PAUSA },
-        { de: leve, para: forte, duracao: DEMO_AVANCO, pausa: DEMO_PAUSA },
-        { de: forte, para: -leve, duracao: DEMO_TRAVESSIA, pausa: DEMO_PAUSA },
-        { de: -leve, para: -forte, duracao: DEMO_AVANCO, pausa: DEMO_PAUSA },
+        { de: 0, para: forte, duracao: DEMO_IDA, pausa: DEMO_PAUSA },
+        { de: forte, para: -forte, duracao: DEMO_TRAVESSIA, pausa: DEMO_PAUSA },
         { de: -forte, para: 0, duracao: DEMO_VOLTA, pausa: 0 },
       ];
 
