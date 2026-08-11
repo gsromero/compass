@@ -161,7 +161,7 @@ export default function Resultado() {
               <div className="linha" style={{ justifyContent: "space-between" }}>
                 <strong style={{ fontSize: "16.5px" }}>{pick(tradicao.nome)}</strong>
                 <span className="fonte-tag">
-                  {t("res_distancia", num(lang, distancia * 100, 0))}
+                  {t("res_proximidade", num(lang, (1 - distancia) * 100, 0))}
                 </span>
               </div>
               <p className="apoio">{pick(tradicao.resumo)}</p>

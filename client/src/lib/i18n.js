@@ -54,9 +54,10 @@ const dict = {
     teste_importancia_alta: "Muito",
     teste_calculando: "Montando seu resultado",
 
-    resposta_2: "Discordo muito",
-    resposta_1: "Discordo",
-    resposta_0: "Neutro ou não sei",
+    // A chave inclui o sinal da nota (-2 a 2), porque e assim que a tela pede.
+    "resposta-2": "Discordo muito",
+    "resposta-1": "Discordo",
+    resposta0: "Neutro ou não sei",
     resposta1: "Concordo",
     resposta2: "Concordo muito",
 
@@ -72,8 +73,8 @@ const dict = {
     res_puxou_para: (polo) => `puxou para ${polo}`,
     res_tradicoes: "Tradições mais próximas de você",
     res_tradicoes_intro:
-      "Distância medida nos seis eixos. Estar perto de uma tradição não significa concordar com ela em tudo.",
-    res_distancia: (d) => `distância ${d}`,
+      "Proximidade medida nos seis eixos. Estar perto de uma tradição não significa concordar com ela em tudo.",
+    res_proximidade: (p) => `${p}% de proximidade`,
     res_compartilhar: "Compartilhar",
     res_baixar: "Baixar imagem",
     res_copiar_link: "Copiar link",
@@ -174,9 +175,9 @@ const dict = {
     teste_importancia_alta: "A lot",
     teste_calculando: "Building your result",
 
-    resposta_2: "Strongly disagree",
-    resposta_1: "Disagree",
-    resposta_0: "Neutral or unsure",
+    "resposta-2": "Strongly disagree",
+    "resposta-1": "Disagree",
+    resposta0: "Neutral or unsure",
     resposta1: "Agree",
     resposta2: "Strongly agree",
 
@@ -192,7 +193,7 @@ const dict = {
     res_tradicoes: "Traditions closest to you",
     res_tradicoes_intro:
       "Distance measured across all six axes. Being close to a tradition does not mean agreeing with all of it.",
-    res_distancia: (d) => `distance ${d}`,
+    res_proximidade: (p) => `${p}% close`,
     res_compartilhar: "Share",
     res_baixar: "Download image",
     res_copiar_link: "Copy link",

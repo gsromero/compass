@@ -62,7 +62,7 @@ function encolherPara(ctx, texto, larguraMax, tamanhoBase, peso, familia) {
 }
 
 /** Desenha a bussola dentro de um quadrado de lado `tamanho` em (x, y). */
-function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante }) {
+function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante, lang }) {
   const borda = tamanho * 0.1;
   const fim = tamanho - borda;
   const meio = tamanho / 2;
@@ -77,7 +77,7 @@ function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante }) {
     { id: "mercado-liberdade", cx: meio, cy: meio },
   ];
   for (const canto of cantos) {
-    ctx.globalAlpha = canto.id === quadrante ? 0.3 : 0.12;
+    ctx.globalAlpha = canto.id === quadrante ? 0.42 : 0.16;
     ctx.fillStyle = TEMA.quadrantes[canto.id];
     ctx.fillRect(canto.cx, canto.cy, meio - borda, meio - borda);
   }
@@ -113,6 +113,28 @@ function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante }) {
   ctx.fillStyle = TEMA.tinta;
   ctx.fill();
 
+  // Sem rotulo o card vira um ponto num quadrado: no feed de alguem, quem ve
+  // nao tem o resto da pagina para deduzir o que cada eixo significa.
+  ctx.font = fonte(600, tamanho * 0.036);
+  ctx.fillStyle = TEMA.tintaMedia;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText(t(lang, "polo_autoridade"), meio, borda - tamanho * 0.028);
+  ctx.fillText(t(lang, "polo_liberdade"), meio, fim + tamanho * 0.06);
+
+  ctx.save();
+  ctx.translate(borda - tamanho * 0.035, meio);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(t(lang, "polo_igualdade"), 0, 0);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(fim + tamanho * 0.045, meio);
+  ctx.rotate(Math.PI / 2);
+  ctx.fillText(t(lang, "polo_mercado"), 0, 0);
+  ctx.restore();
+
+  ctx.textAlign = "left";
   ctx.restore();
 }
 
@@ -165,6 +187,7 @@ function desenharBarras(ctx, { x, y, largura, resultado, lang, eixosMeta }) {
     ctx.fill();
   });
 
+  ctx.textAlign = "left";
   return secundarios.length * alturaLinha;
 }
 
@@ -204,6 +227,7 @@ export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixos
       tamanho: larguraUtil,
       resultado,
       quadrante,
+      lang,
     });
     escreverAssinatura(ctx, { lang, tradicao, y: LADO - margem - 10, margem });
     return canvas;
@@ -226,13 +250,14 @@ export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixos
       tamanho: 520,
       resultado,
       quadrante,
+      lang,
     });
     escreverAssinatura(ctx, { lang, tradicao: null, y: LADO - margem - 10, margem });
     return canvas;
   }
 
   // classico: bussola em cima, quatro eixos secundarios embaixo
-  desenharBussola(ctx, { x: LADO / 2 - 235, y: 150, tamanho: 470, resultado, quadrante });
+  desenharBussola(ctx, { x: LADO / 2 - 235, y: 150, tamanho: 470, resultado, quadrante, lang });
 
   const barrasY = 690;
   desenharBarras(ctx, {
@@ -249,6 +274,12 @@ export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixos
 }
 
 function escreverAssinatura(ctx, { lang, tradicao, y, margem }) {
+  // Cada funcao de desenho reposiciona o que usa, em vez de confiar no estado
+  // que a anterior deixou. Sem esta linha a assinatura saia centralizada em
+  // x=margem e vazava pela borda esquerda do card.
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+
   if (tradicao) {
     ctx.font = fonte(500, 20);
     ctx.fillStyle = TEMA.tintaMedia;

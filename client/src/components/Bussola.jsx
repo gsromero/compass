@@ -103,18 +103,33 @@ export default function Bussola({ resultado, quadrante, populacao = null }) {
       />
       <circle cx={x} cy={y} r={1.6} fill="var(--voce)" />
 
-      <g fontSize="3.4" fill="var(--ink-dim)" fontWeight="600">
-        <text x={BORDA} y={BORDA - 3}>
-          {t("polo_igualdade")}
-        </text>
-        <text x={FIM} y={BORDA - 3} textAnchor="end">
-          {t("polo_mercado")}
-        </text>
-        <text x={meio} y={BORDA - 3} textAnchor="middle" fill="var(--ink-mid)">
+      {/* Cada rotulo fica na ponta do SEU eixo: os do economico deitados nas
+          laterais, os da autoridade em cima e embaixo. Com os quatro na linha
+          de cima nao dava para saber qual rotulo pertence a qual eixo. */}
+      <g fontSize="3.4" fill="var(--ink-mid)" fontWeight="600">
+        <text x={meio} y={BORDA - 3} textAnchor="middle">
           {t("polo_autoridade")}
         </text>
-        <text x={meio} y={FIM + 6} textAnchor="middle" fill="var(--ink-mid)">
+        <text x={meio} y={FIM + 6} textAnchor="middle">
           {t("polo_liberdade")}
+        </text>
+        <text
+          x={BORDA - 4}
+          y={meio}
+          textAnchor="middle"
+          dominantBaseline="central"
+          transform={`rotate(-90 ${BORDA - 4} ${meio})`}
+        >
+          {t("polo_igualdade")}
+        </text>
+        <text
+          x={FIM + 4}
+          y={meio}
+          textAnchor="middle"
+          dominantBaseline="central"
+          transform={`rotate(90 ${FIM + 4} ${meio})`}
+        >
+          {t("polo_mercado")}
         </text>
       </g>
     </svg>
