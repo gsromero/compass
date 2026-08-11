@@ -291,15 +291,6 @@ export default function Teste() {
 
       {noCartao ? (
         <div className="palco">
-          <div className="palco-lados" aria-hidden="true">
-            <span>
-              &larr; <Polegar nota={-1} tamanho={14} /> {t("resposta-1")}
-            </span>
-            <span>
-              {t("resposta1")} <Polegar nota={1} tamanho={14} /> &rarr;
-            </span>
-          </div>
-
           <div
             key={idAtual}
             ref={cartao}
@@ -313,15 +304,31 @@ export default function Teste() {
               setArrasto(SEM_ARRASTO);
             }}
           >
-            <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
-            <span className="previa" data-visivel={previa !== null}>
-              {previa !== null && (
-                <>
-                  <Polegar nota={previa} tamanho={19} />
-                  {t(`resposta${previa}`)}
-                </>
-              )}
-            </span>
+            <div className="cartao-conteudo">
+              <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+              <span className="previa" data-visivel={previa !== null}>
+                {previa !== null && (
+                  <>
+                    <Polegar nota={previa} tamanho={19} />
+                    {t(`resposta${previa}`)}
+                  </>
+                )}
+              </span>
+            </div>
+
+            {/* Os dois lados moram na base do cartao: o polegar em cima e o
+                rotulo embaixo dele. Ficam dentro do cartao de proposito, entao
+                acompanham o arrasto e reforcam para onde a pessoa esta puxando. */}
+            <div className="palco-lados" aria-hidden="true">
+              <span className="palco-lado">
+                <Polegar nota={-1} tamanho={20} />
+                <em>&larr; {t("resposta-1")}</em>
+              </span>
+              <span className="palco-lado">
+                <Polegar nota={1} tamanho={20} />
+                <em>{t("resposta1")} &rarr;</em>
+              </span>
+            </div>
           </div>
 
           <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
@@ -345,7 +352,6 @@ export default function Teste() {
             onClick={() => responder(nota)}
           >
             <kbd aria-hidden="true">{i + 1}</kbd>
-            <Polegar nota={nota} tamanho={16} />
             <span>{t(`resposta${nota}`)}</span>
           </button>
         ))}

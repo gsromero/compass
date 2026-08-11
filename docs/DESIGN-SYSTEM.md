@@ -174,8 +174,15 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
   varre pixel a pixel para garantir.
 - **`touch-action: pan-y` no cartão.** Deixa a página rolar no vertical e entrega o horizontal ao
   gesto. Sem isso, arrastar de lado rolaria a página junto.
-- **Os rótulos dos dois lados ficam numa linha ACIMA do cartão.** Já estiveram sobrepostos a ele,
-  onde ficavam escondidos atrás da própria coisa que explicavam.
+- **Os rótulos dos dois lados ficam na BASE do cartão**, com o polegar uma linha acima do texto.
+  Ficam dentro do cartão de propósito: acompanham o arrasto e reforçam para onde a pessoa está
+  puxando. Já estiveram sobrepostos ao cartão (escondidos atrás da própria coisa que explicavam) e
+  depois acima dele.
+
+  **Atenção à grade do `.palco`:** ela tem duas faixas, `1fr auto`, com o cartão esticando e a dica
+  colada embaixo. Eram três quando os rótulos ficavam acima; ao movê-los para dentro do cartão e
+  esquecer de ajustar a grade, o cartão pegou a faixa que não estica e encolheu de 564px para
+  211px.
 - **A ordem da tela é por frequência de uso:** cartão, dica, importância, "não sei", e por último a
   lista de botões. No celular a lista é a alternativa; no desktop mandam o mouse e o teclado.
 - **No modo cartão tudo é centralizado**, e no modo lista o conteúdo fica no meio vertical da tela
@@ -189,19 +196,21 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
 Um polegar para "concordo", dois para "concordo muito", e virados para baixo do lado de discordar.
 Desenhados à mão em SVG, porque a regra é não trazer biblioteca de ícone para dois traços.
 
+**Só no modo cartão**, onde ajudam a ler a direção do arrasto: na base do cartão e na prévia. Na
+lista não entram, porque lá o número da tecla e o rótulo já bastam e o ícone só apertava o botão.
+
 **São decorativos, e por isso ficam com `aria-hidden`.** Quem carrega o sentido é o texto ao lado:
 ícone sozinho não é lido por leitor de tela e não é entendido do mesmo jeito por todo mundo.
 
-### Cascata das regras da lista de respostas
+### A lista de respostas
 
-As regras responsivas de `.opcao` ficam **todas juntas, em ordem do mais amplo para o mais
-estreito**, logo depois da regra base. Já estiveram espalhadas pelo arquivo, e o bloco que aparecia
-por último sobrescrevia o de cima sem ninguém perceber: o `display: none` do número da tecla ficou
-sem efeito, e depois o passo de tipografia da tela estreita também. Se for mexer, mexa ali e mantenha
-a ordem.
+Uma opção embaixo da outra, sempre, com o número da tecla visível em qualquer tela. Chegou a ser
+uma grade de duas colunas com polegar, e isso exigiu uma cadeia de três blocos de CSS só para
+"Concordo muito" caber numa linha. Voltando à coluna única, todos eles saíram: **remendo que existe
+só por causa de outra decisão morre junto com ela.**
 
-No toque o número da tecla some, porque não existe teclado e ele só empurrava o rótulo para uma
-segunda linha.
+Lição que ficou daquela cadeia: regra responsiva espalhada pelo arquivo se sobrescreve sem ninguém
+notar. Se voltar a existir, mantenha tudo junto e do mais amplo para o mais estreito.
 
 **"Não sei dizer" é discreto de propósito.** O defeito da resposta do meio nunca foi ela existir,
 foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar. Lados sem esforço,
