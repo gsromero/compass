@@ -349,14 +349,6 @@ button {
   color: inherit;
 }
 
-.previa .polegares {
-  margin-right: 7px;
-}
-
-.palco-lados .polegares {
-  vertical-align: -0.2em;
-}
-
 /* A afirmacao fica centrada no espaco que sobra acima dos rotulos. */
 .cartao-conteudo {
   display: grid;
@@ -365,39 +357,6 @@ button {
   min-height: 0;
 }
 
-/* Os dois lados ficam na BASE do cartao, com o polegar uma linha acima do
-   rotulo. Dentro do cartao de proposito: acompanham o arrasto e reforcam para
-   onde a pessoa esta puxando. Ja estiveram acima do cartao, e antes disso
-   sobrepostos a ele, onde sumiam atras da propria coisa que explicavam. */
-.palco-lados {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 12px;
-  pointer-events: none;
-  user-select: none;
-}
-
-.palco-lado {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  color: var(--ink-dim);
-}
-
-.palco-lado em {
-  font-style: normal;
-}
-
-.palco-lado .polegares {
-  color: var(--ink-dim);
-  vertical-align: baseline;
-}
 
 .cartao-pergunta {
   position: relative;
@@ -435,17 +394,29 @@ button {
 
 .previa {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-top: 14px;
-  min-height: 1.2em;
-  font-size: 13px;
-  font-weight: 620;
+  justify-content: flex-end;
+  gap: 5px;
+  /* A etiqueta fica SEMPRE montada e so muda de opacidade. Com ela entrando e
+     saindo do DOM, a afirmacao pulava 21px a cada arrasto, e reservar altura na
+     mao seria chute que quebra em outra fonte. */
+  font-size: 12px;
+  font-weight: 650;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   color: var(--ink-mid);
   opacity: 0;
   transition: opacity 120ms linear;
+}
+
+.previa em {
+  font-style: normal;
+}
+
+.previa .polegares {
+  color: var(--ink-mid);
+  vertical-align: baseline;
 }
 
 .previa[data-visivel="true"] {

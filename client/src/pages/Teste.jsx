@@ -306,29 +306,15 @@ export default function Teste() {
           >
             <div className="cartao-conteudo">
               <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
-              <span className="previa" data-visivel={previa !== null}>
-                {previa !== null && (
-                  <>
-                    <Polegar nota={previa} tamanho={19} />
-                    {t(`resposta${previa}`)}
-                  </>
-                )}
-              </span>
             </div>
 
-            {/* Os dois lados moram na base do cartao: o polegar em cima e o
-                rotulo embaixo dele. Ficam dentro do cartao de proposito, entao
-                acompanham o arrasto e reforcam para onde a pessoa esta puxando. */}
-            <div className="palco-lados" aria-hidden="true">
-              <span className="palco-lado">
-                <Polegar nota={-1} tamanho={20} />
-                <em>&larr; {t("resposta-1")}</em>
-              </span>
-              <span className="palco-lado">
-                <Polegar nota={1} tamanho={20} />
-                <em>{t("resposta1")} &rarr;</em>
-              </span>
-            </div>
+            {/* A resposta que o arrasto daria, na base do cartao: o polegar uma
+                linha acima do texto. O espaco fica reservado mesmo quando ela
+                nao aparece, senao a afirmacao pula a cada arrasto. */}
+            <span className="previa" data-visivel={previa !== null} aria-hidden="true">
+              <Polegar nota={previa ?? 1} tamanho={22} />
+              <em>{t(`resposta${previa ?? 1}`)}</em>
+            </span>
           </div>
 
           <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>

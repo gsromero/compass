@@ -174,15 +174,17 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
   varre pixel a pixel para garantir.
 - **`touch-action: pan-y` no cartão.** Deixa a página rolar no vertical e entrega o horizontal ao
   gesto. Sem isso, arrastar de lado rolaria a página junto.
-- **Os rótulos dos dois lados ficam na BASE do cartão**, com o polegar uma linha acima do texto.
-  Ficam dentro do cartão de propósito: acompanham o arrasto e reforçam para onde a pessoa está
-  puxando. Já estiveram sobrepostos ao cartão (escondidos atrás da própria coisa que explicavam) e
-  depois acima dele.
+- **O cartão não tem rótulo fixo de lado nenhum.** Só a etiqueta da resposta que o arrasto daria,
+  na base do cartão, com o polegar uma linha acima do texto. Já houve rótulos fixos sobrepostos ao
+  cartão, depois acima dele e depois na base; nenhum era necessário, e todos competiam com a
+  afirmação, que é o que a pessoa precisa ler.
+- **A etiqueta fica sempre montada, e só muda de opacidade.** Entrando e saindo do DOM ela mudava a
+  altura em 21px e fazia a afirmação pular a cada arrasto. Reservar altura na mão seria chute que
+  quebra em outra fonte.
 
-  **Atenção à grade do `.palco`:** ela tem duas faixas, `1fr auto`, com o cartão esticando e a dica
-  colada embaixo. Eram três quando os rótulos ficavam acima; ao movê-los para dentro do cartão e
-  esquecer de ajustar a grade, o cartão pegou a faixa que não estica e encolheu de 564px para
-  211px.
+  **Atenção à grade do `.palco`:** duas faixas, `1fr auto`, com o cartão esticando e a dica colada
+  embaixo. Já teve três; sobrar uma faixa faz o cartão pegar a que não estica e encolher de 564px
+  para 211px.
 - **A ordem da tela é por frequência de uso:** cartão, dica, importância, "não sei", e por último a
   lista de botões. No celular a lista é a alternativa; no desktop mandam o mouse e o teclado.
 - **No modo cartão tudo é centralizado**, e no modo lista o conteúdo fica no meio vertical da tela
@@ -196,8 +198,8 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
 Um polegar para "concordo", dois para "concordo muito", e virados para baixo do lado de discordar.
 Desenhados à mão em SVG, porque a regra é não trazer biblioteca de ícone para dois traços.
 
-**Só no modo cartão**, onde ajudam a ler a direção do arrasto: na base do cartão e na prévia. Na
-lista não entram, porque lá o número da tecla e o rótulo já bastam e o ícone só apertava o botão.
+**Só na etiqueta do arrasto**, no modo cartão. Na lista não entram: lá o número da tecla e o rótulo
+já bastam, e o ícone só apertava o botão.
 
 **São decorativos, e por isso ficam com `aria-hidden`.** Quem carrega o sentido é o texto ao lado:
 ícone sozinho não é lido por leitor de tela e não é entendido do mesmo jeito por todo mundo.
