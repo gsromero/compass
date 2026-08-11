@@ -50,7 +50,9 @@ const dict = {
     teste_voltar: "Voltar",
     teste_sair: "Sair do teste",
     teste_dica_teclado: "Use as teclas de 1 a 4 para responder e Backspace para voltar",
-    teste_dica_arrasto: "Arraste o cartão para o lado. Quanto mais longe, mais forte a resposta.",
+    teste_dica_arrasto: "Arraste para o lado. Quanto mais longe, mais forte a resposta.",
+    teste_modo_lista: "Usar lista",
+    teste_modo_cartao: "Usar cartão",
     teste_nao_sei: "Não sei dizer",
     teste_nao_sei_ajuda:
       "Esta afirmação não entra na sua conta. Nem ela, nem a afirmação oposta que faz par com ela.",
@@ -195,7 +197,9 @@ const dict = {
     teste_voltar: "Back",
     teste_sair: "Leave the test",
     teste_dica_teclado: "Press 1 to 4 to answer, Backspace to go back",
-    teste_dica_arrasto: "Drag the card sideways. The further you go, the stronger the answer.",
+    teste_dica_arrasto: "Drag sideways. The further you go, the stronger the answer.",
+    teste_modo_lista: "Use the list",
+    teste_modo_cartao: "Use the card",
     teste_nao_sei: "I could not say",
     teste_nao_sei_ajuda:
       "This statement is left out of your score, and so is the opposite statement paired with it.",

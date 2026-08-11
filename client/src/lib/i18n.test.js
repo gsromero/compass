@@ -20,6 +20,8 @@ const CHAVES_DINAMICAS = [
   ...RESPOSTAS.map((nota) => `resposta${nota}`),
   "teste_nao_sei",
   "teste_dica_arrasto",
+  "teste_modo_lista",
+  "teste_modo_cartao",
   "teste_nao_sei_ajuda",
   ...EIXOS.map((eixo) => `eixo_${eixo}`),
   ...Object.values(EIXOS_META).flatMap((meta) => [`polo_${meta.neg}`, `polo_${meta.pos}`]),

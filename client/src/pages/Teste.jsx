@@ -13,9 +13,29 @@ const IMPORTANCIA_ORDEM = ["baixa", "normal", "alta"];
 const SEM_ARRASTO = { dx: 0, dy: 0, largura: 0, ativo: false };
 // Tempo do cartao voar para fora antes da proxima pergunta entrar.
 const VOO = 170;
+const KEY_MODO = "compass.modoResposta";
 
 function prefereMenosMovimento() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
+
+/**
+ * Cartao ou lista, nunca os dois.
+ *
+ * Mostrar os dois caminhos ao mesmo tempo polui a tela e deixa a experiencia
+ * pior do que qualquer um deles sozinho. Entao so um aparece, e da para trocar.
+ *
+ * O padrao segue o aparelho: no toque o arrasto e otimo, no mouse arrastar e
+ * pior que clicar. Quem discordar troca, e a escolha fica guardada.
+ */
+function modoInicial() {
+  try {
+    const salvo = localStorage.getItem(KEY_MODO);
+    if (salvo === "cartao" || salvo === "lista") return salvo;
+  } catch {
+    /* sem armazenamento: segue o aparelho */
+  }
+  return window.matchMedia?.("(pointer: coarse)").matches ? "cartao" : "lista";
 }
 
 export default function Teste() {
@@ -33,12 +53,21 @@ export default function Teste() {
   const [pronto, setPronto] = useState(false);
   const [arrasto, setArrasto] = useState(SEM_ARRASTO);
   const [saindoPara, setSaindoPara] = useState(0);
+  const [comoResponder, setComoResponder] = useState(modoInicial);
 
   const cartao = useRef(null);
   const inicio = useRef(null);
   const relogio = useRef(null);
 
   useEffect(() => () => clearTimeout(relogio.current), []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(KEY_MODO, comoResponder);
+    } catch {
+      /* armazenamento cheio nao pode impedir de responder */
+    }
+  }, [comoResponder]);
 
   // Retoma o teste guardado ou comeca um novo. Roda uma vez.
   useEffect(() => {
@@ -148,7 +177,8 @@ export default function Teste() {
     if (posicao + 1 < historico.length && respostas[idAtual]) setPosicao(posicao + 1);
   }, [posicao, historico, respostas, idAtual]);
 
-  // Teclado: 1 a 4 respondem, 0 e "nao sei", Backspace volta.
+  // Teclado: 1 a 4 respondem, 0 e "nao sei", Backspace volta. Funciona nos DOIS
+  // modos: no cartao ele e o caminho de quem nao usa dedo nem mouse.
   useEffect(() => {
     function aoTeclar(evento) {
       if (evento.metaKey || evento.ctrlKey || evento.altKey) return;
@@ -216,6 +246,7 @@ export default function Teste() {
     );
   }
 
+  const noCartao = comoResponder === "cartao";
   const respostaAtual = respostas[idAtual];
   const progresso = arrasto.ativo ? progressoDoArrasto(arrasto.dx, arrasto.largura) : 0;
   const previa = arrasto.ativo ? intencaoDoArrasto(arrasto.dx, arrasto.dy, arrasto.largura) : null;
@@ -227,20 +258,29 @@ export default function Teste() {
       : undefined;
 
   return (
-    <main className="coluna pilha-larga" style={{ paddingBlock: "20px 48px" }}>
+    <main className="coluna tela-teste">
       <div className="pilha" style={{ gap: "10px" }}>
         <div className="linha" style={{ justifyContent: "space-between" }}>
           <button type="button" className="botao-discreto" onClick={() => navigate("/")}>
             {t("teste_sair")}
           </button>
-          <span className="rotulo">{t("teste_progresso", respondidas, total)}</span>
+          <div className="linha" style={{ gap: "2px" }}>
+            <button
+              type="button"
+              className="botao-discreto"
+              onClick={() => setComoResponder(noCartao ? "lista" : "cartao")}
+            >
+              {t(noCartao ? "teste_modo_lista" : "teste_modo_cartao")}
+            </button>
+            <span className="rotulo">{t("teste_progresso", respondidas, total)}</span>
+          </div>
         </div>
         <div className="progresso">
           <i style={{ width: `${Math.min(100, (respondidas / total) * 100)}%` }} />
         </div>
       </div>
 
-      <div className="pilha-larga">
+      {noCartao ? (
         <div className="palco">
           <div className="palco-lados" aria-hidden="true">
             <span>&larr; {t("resposta-1")}</span>
@@ -265,10 +305,34 @@ export default function Teste() {
               {previa !== null ? t(`resposta${previa}`) : ""}
             </span>
           </div>
+
+          <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
         </div>
+      ) : (
+        <div key={idAtual} className="entrando pilha-larga">
+          <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+        </div>
+      )}
 
-        <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
+      {/* No modo cartao a lista fica invisivel, mas continua no DOM e VOLTA A
+          APARECER ao receber foco. E o unico caminho de quem usa leitor de tela
+          ou so o teclado, e esconder de vez seria trocar poluicao por exclusao. */}
+      <div className={`escala${noCartao ? " escala-oculta" : ""}`}>
+        {NOTAS.map((nota, i) => (
+          <button
+            key={nota}
+            type="button"
+            className="opcao"
+            aria-pressed={respostaAtual?.r === nota}
+            onClick={() => responder(nota)}
+          >
+            <kbd aria-hidden="true">{i + 1}</kbd>
+            <span>{t(`resposta${nota}`)}</span>
+          </button>
+        ))}
+      </div>
 
+      <div className="rodape-teste">
         <div className="pilha" style={{ gap: "8px" }}>
           <span className="rotulo">{t("teste_importancia")}</span>
           <div className="importancia">
@@ -295,49 +359,30 @@ export default function Teste() {
           </div>
         </div>
 
-        {/* "Nao sei" e discreto de proposito. O defeito da resposta do meio
-            nunca foi ela existir, foi ser o botao mais facil de apertar. */}
-        <button
-          type="button"
-          className="botao-discreto nao-sei"
-          aria-pressed={respostaAtual?.r === NAO_SEI}
-          title={t("teste_nao_sei_ajuda")}
-          onClick={() => responder(NAO_SEI)}
-        >
-          {t("teste_nao_sei")}
-        </button>
-
-        {/* A lista fica por ultimo: no celular ela e a alternativa, e no
-            desktop e o teclado e o mouse que mandam. Ela NAO pode sumir: e o
-            unico caminho para quem usa leitor de tela ou so o teclado. */}
-        <div className="escala">
-          {NOTAS.map((nota, i) => (
+        <div className="linha" style={{ justifyContent: "space-between" }}>
+          <div className="linha" style={{ gap: "10px" }}>
             <button
-              key={nota}
               type="button"
-              className="opcao"
-              aria-pressed={respostaAtual?.r === nota}
-              onClick={() => responder(nota)}
+              className="botao botao-secundario"
+              onClick={voltar}
+              disabled={posicao === 0}
             >
-              <kbd aria-hidden="true">{i + 1}</kbd>
-              <span>{t(`resposta${nota}`)}</span>
+              {t("teste_voltar")}
             </button>
-          ))}
+            {/* "Nao sei" e discreto de proposito. O defeito da resposta do meio
+                nunca foi ela existir, foi ser o botao mais facil de apertar. */}
+            <button
+              type="button"
+              className="botao-discreto nao-sei"
+              aria-pressed={respostaAtual?.r === NAO_SEI}
+              title={t("teste_nao_sei_ajuda")}
+              onClick={() => responder(NAO_SEI)}
+            >
+              {t("teste_nao_sei")}
+            </button>
+          </div>
+          {!noCartao && <span className="apoio dica-teclado">{t("teste_dica_teclado")}</span>}
         </div>
-      </div>
-
-      <div className="linha" style={{ justifyContent: "space-between" }}>
-        <button
-          type="button"
-          className="botao botao-secundario"
-          onClick={voltar}
-          disabled={posicao === 0}
-        >
-          {t("teste_voltar")}
-        </button>
-        <span className="apoio" style={{ fontSize: "13px" }}>
-          {t("teste_dica_teclado")}
-        </span>
       </div>
     </main>
   );

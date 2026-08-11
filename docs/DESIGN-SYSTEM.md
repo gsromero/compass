@@ -140,7 +140,22 @@ valores gravados no banco e na validação da API. Renomear a chave quebra os da
 legenda é neutro entre os temas ("quanto mais forte"), porque no claro a mancha escurece e no
 escuro ela clareia.
 
-## O cartão do questionário
+## O questionário tem dois modos, e nunca os dois ao mesmo tempo
+
+**Cartão** (arrastar) e **lista** (botões). Mostrar os dois juntos polui a tela e deixa a
+experiência pior do que qualquer um deles sozinho; foi assim na primeira versão e estava ruim.
+
+- **O padrão segue o aparelho**: `(pointer: coarse)` abre no cartão, o resto na lista. Arrastar com
+  o dedo é ótimo, arrastar com o mouse é pior que clicar.
+- **O botão de trocar fica no topo**, ao lado do progresso, e a escolha fica guardada no navegador.
+- **No modo cartão a lista continua no DOM**, invisível, e **reaparece ao receber foco**
+  (`.escala-oculta:focus-within`). Ela é o único caminho de quem usa leitor de tela ou só o
+  teclado; escondê-la de vez trocaria poluição por exclusão.
+- **O cartão ocupa a altura da tela** (`.tela-teste` em coluna, `.palco` com `flex: 1`). Todos os
+  cartões têm a mesma altura mesmo com afirmações curtas: num baralho que se arrasta, cartão que
+  muda de tamanho a cada pergunta fica inquieto.
+
+### O gesto
 
 Arrasta-se para o lado para responder: a direção diz se concorda, **a distância diz o quanto**.
 Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para decorar.

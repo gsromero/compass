@@ -91,6 +91,7 @@
 - [x] Pontuação por pares completos: par com "não sei" cai inteiro
 - [x] `lib/gesto.js` com testes: arrasto vira resposta, distância é intensidade
 - [x] Cartão arrastável, mantendo lista de botões e teclado
+- [x] Dois modos exclusivos (cartão e lista), com troca na tela e escolha guardada
 - [x] Agregados filtrando por versão do banco
 - [ ] **Se o piloto mostrar que muita gente usa "não sei"**, avaliar avisar na hora ("essa e a
       afirmação oposta vão sair da sua conta") em vez de só explicar depois
