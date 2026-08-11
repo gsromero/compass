@@ -197,6 +197,41 @@ export function totalPrevisto(perguntas, modo = "padrao") {
 }
 
 /**
+ * O quanto o resultado merece confianca, pela margem media dos eixos.
+ *
+ * Existe porque cair no centro por INDIFERENCA e cair no centro por
+ * CONTRADICAO dao o mesmo ponto no grafico, e sao coisas muito diferentes. A
+ * conta ja distinguia as duas pela margem; sem isto aqui, a tela nao contava.
+ */
+export function confianca(resultado) {
+  // Eixo sem nenhuma resposta tem margem maxima por definicao, e entrar na
+  // media faria qualquer teste parcial parecer nao confiavel. O que se mede
+  // aqui e a coerencia do que a pessoa RESPONDEU.
+  const medidos = EIXOS.filter((eixo) => resultado[eixo].n > 0);
+  if (medidos.length === 0) return "baixa";
+
+  const media = medidos.reduce((s, eixo) => s + resultado[eixo].margem, 0) / medidos.length;
+  if (media <= 1.6) return "alta";
+  if (media <= 3) return "media";
+  return "baixa";
+}
+
+/**
+ * True quando a pessoa deu a MESMA nota em tudo.
+ *
+ * E o caso que mais parece defeito e nao e: como metade das afirmacoes defende
+ * o contrario da outra metade, responder tudo igual se anula e o resultado cai
+ * no centro. E de proposito, e e o mecanismo que impede o teste de empurrar
+ * quem responde no automatico. Merece uma explicacao propria na tela.
+ */
+export function respondeuTudoIgual(respostas) {
+  const notas = Object.values(respostas)
+    .map((resposta) => resposta?.r)
+    .filter((r) => typeof r === "number");
+  return notas.length >= 6 && new Set(notas).size === 1;
+}
+
+/**
  * As respostas que mais puxaram um eixo, da maior para a menor.
  * E o que alimenta o "por que voce caiu aqui" na tela de resultado.
  */

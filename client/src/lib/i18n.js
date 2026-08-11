@@ -68,6 +68,12 @@ const dict = {
     res_margem: (m) => `margem de ${m}`,
     res_area_explicacao:
       "A área ao redor do ponto é a sua margem de erro. Ela é maior quando suas respostas se contradizem, e menor quando são coerentes entre si.",
+    res_confianca_baixa_titulo: "Este resultado diz pouco sobre você",
+    res_uniforme:
+      "Você deu a mesma nota em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É exatamente esse mecanismo que impede o teste de empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação e o resultado passa a significar alguma coisa.",
+    res_contraditorio:
+      "Suas respostas se contradizem bastante entre si, então a área de incerteza ficou grande e a posição no gráfico é pouco confiável. Isso não é defeito do teste: é ele admitindo que não conseguiu te medir bem, em vez de fingir uma posição.",
+    res_refazer_lendo: "Refazer com calma",
     res_mancha: "A mancha mostra onde caiu quem já respondeu. Quanto mais forte, mais gente ali.",
     res_eixos_secundarios: "Os outros quatro eixos",
     res_por_que: "Por que você caiu aqui",
@@ -190,6 +196,12 @@ const dict = {
     res_margem: (m) => `margin of ${m}`,
     res_area_explicacao:
       "The area around the dot is your margin of error. It grows when your answers contradict each other, and shrinks when they line up.",
+    res_confianca_baixa_titulo: "This result says little about you",
+    res_uniforme:
+      "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the center. That mechanism is exactly what stops the test from pushing anyone who answers on autopilot. Take it again reading each statement and the result starts to mean something.",
+    res_contraditorio:
+      "Your answers contradict each other quite a bit, so the uncertainty area came out large and the position on the chart is not reliable. That is not a flaw in the test: it is the test admitting it could not measure you well, instead of faking a position.",
+    res_refazer_lendo: "Take it again slowly",
     res_mancha: "The cloud shows where previous respondents landed. The stronger it is, the more people.",
     res_eixos_secundarios: "The other four axes",
     res_por_que: "Why you landed here",

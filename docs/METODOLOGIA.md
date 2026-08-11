@@ -120,9 +120,16 @@ Em `client/src/lib/equilibrio.test.js`, rodando no `npm run build`:
 
 O teste 2 é o que resume o projeto: **o Political Compass reprovaria nele.**
 
-Detalhe importante do teste 2: quem concorda com tudo cai no centro **com margem grande**, não com
-certeza. Cair no centro por indiferença e cair no centro por concordar com tudo são coisas
-diferentes, e o resultado sabe distinguir.
+Detalhe importante do teste 2: quem responde a mesma coisa em tudo cai no centro **com margem
+grande**, não com certeza. Cair no centro por indiferença e cair no centro por responder tudo igual
+são coisas diferentes, e a conta sabe distinguir.
+
+**E a tela precisa contar isso.** Quando a margem média fica alta, o resultado abre com um aviso
+dizendo que ele diz pouco, e no caso específico de resposta uniforme ele explica o mecanismo:
+metade das afirmações defende o contrário da outra metade, então responder tudo igual se anula.
+Sem esse aviso a pessoa cai no centro e conclui que o site está quebrado, quando na verdade é o
+teste funcionando como deveria. Isso não é detalhe de interface: é a diferença entre o mecanismo
+central do projeto ser percebido como qualidade ou como defeito.
 
 ### Relatório de equilíbrio, versão 1 do banco
 

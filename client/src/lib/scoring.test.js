@@ -1,7 +1,14 @@
 // A conta em si: posicao, margem de erro e quadrante.
 // O equilibrio do banco de perguntas e testado em equilibrio.test.js.
 import { describe, expect, it } from "vitest";
-import { contribuicoes, pontuarEixo, pontuar, quadrante } from "./scoring.js";
+import {
+  confianca,
+  contribuicoes,
+  pontuarEixo,
+  pontuar,
+  quadrante,
+  respondeuTudoIgual,
+} from "./scoring.js";
 
 // Banco minimo e simetrico, para testar a conta sem depender das perguntas reais.
 const PERGUNTAS = [
@@ -134,5 +141,45 @@ describe("pontuar", () => {
     expect(Object.keys(resultado)).toHaveLength(6);
     expect(resultado.costumes.n).toBe(0);
     expect(resultado.costumes.margem).toBe(10);
+  });
+});
+
+describe("confianca e resposta uniforme", () => {
+  // Este bloco existe por um caso real: o dono respondeu a mesma nota em tudo,
+  // caiu no centro e achou que era defeito. Nao era, mas a tela nao contava.
+  const banco = [
+    { id: "a", eixo: "economico", peso: -1, par: "p1" },
+    { id: "b", eixo: "economico", peso: 1, par: "p1" },
+    { id: "c", eixo: "autoridade", peso: -1, par: "p2" },
+    { id: "d", eixo: "autoridade", peso: 1, par: "p2" },
+    { id: "e", eixo: "costumes", peso: -1, par: "p3" },
+    { id: "f", eixo: "costumes", peso: 1, par: "p3" },
+  ];
+
+  it("responder a mesma nota em tudo e detectado", () => {
+    expect(respondeuTudoIgual(r({ a: -2, b: -2, c: -2, d: -2, e: -2, f: -2 }))).toBe(true);
+    expect(respondeuTudoIgual(r({ a: 2, b: 2, c: 2, d: 2, e: 2, f: 2 }))).toBe(true);
+  });
+
+  it("uma resposta diferente ja nao conta como uniforme", () => {
+    expect(respondeuTudoIgual(r({ a: -2, b: -2, c: -2, d: -2, e: -2, f: 1 }))).toBe(false);
+  });
+
+  it("poucas respostas nao viram diagnostico", () => {
+    // Duas respostas iguais sao coincidencia, nao padrao.
+    expect(respondeuTudoIgual(r({ a: -2, b: -2 }))).toBe(false);
+  });
+
+  it("quem responde tudo igual cai no centro E com confianca baixa", () => {
+    // As duas metades da afirmacao importam: o centro sozinho seria ambiguo.
+    const resultado = pontuar(banco, r({ a: -2, b: -2, c: -2, d: -2, e: -2, f: -2 }));
+    expect(resultado.economico.posicao).toBeCloseTo(0);
+    expect(confianca(resultado)).toBe("baixa");
+  });
+
+  it("quem responde de forma coerente cai fora do centro e com confianca melhor", () => {
+    const coerente = pontuar(banco, r({ a: 2, b: -2, c: 2, d: -2, e: 2, f: -2 }));
+    expect(Math.abs(coerente.economico.posicao)).toBeGreaterThan(5);
+    expect(confianca(coerente)).not.toBe("baixa");
   });
 });

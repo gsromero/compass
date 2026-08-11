@@ -4,7 +4,15 @@ import Bussola from "../components/Bussola.jsx";
 import BarraEixo from "../components/BarraEixo.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num } from "../lib/i18n.js";
-import { EIXOS, EIXOS_PRINCIPAIS, contribuicoes, pontuar, quadrante } from "../lib/scoring.js";
+import {
+  EIXOS,
+  EIXOS_PRINCIPAIS,
+  confianca,
+  contribuicoes,
+  pontuar,
+  quadrante,
+  respondeuTudoIgual,
+} from "../lib/scoring.js";
 import { EIXOS_META, VERSAO_BANCO, enunciado, perguntasDoIdioma } from "../lib/questions.js";
 import { decodificar } from "../lib/permalink.js";
 import { maisProximas } from "../lib/tradicoes.js";
@@ -34,6 +42,11 @@ export default function Resultado() {
   );
   const quad = resultado ? quadrante(resultado) : null;
   const proximas = resultado ? maisProximas(resultado) : [];
+  // Resultado pouco confiavel tem que se anunciar. Sem isto, quem responde
+  // tudo igual cai no centro e acha que o site quebrou, quando na verdade o
+  // teste esta funcionando exatamente como deveria.
+  const confiavel = resultado ? confianca(resultado) : "alta";
+  const tudoIgual = respostas ? respondeuTudoIgual(respostas) : false;
 
   // Manda a resposta anonima uma vez, e busca os numeros da populacao.
   useEffect(() => {
@@ -94,6 +107,16 @@ export default function Resultado() {
 
   return (
     <main className="coluna coluna-larga pilha-larga" style={{ paddingBlock: "36px 64px" }}>
+      {(confiavel === "baixa" || tudoIgual) && (
+        <div className="aviso aviso-forte pilha" style={{ gap: "8px" }}>
+          <strong>{t("res_confianca_baixa_titulo")}</strong>
+          <p>{t(tudoIgual ? "res_uniforme" : "res_contraditorio")}</p>
+          <Link to="/" className="botao" style={{ justifySelf: "start", marginTop: "4px" }}>
+            {t("res_refazer_lendo")}
+          </Link>
+        </div>
+      )}
+
       <div className="pilha">
         <span className="rotulo">{t("res_titulo")}</span>
         <div className="grade grade-2" style={{ alignItems: "center", gap: "26px" }}>

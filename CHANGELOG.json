@@ -1,5 +1,28 @@
 [
   {
+    "version": "1.1",
+    "date": "2026-08-10T23:05:00",
+    "author": "claude",
+    "summary": "Tema claro por padrao, bussola redesenhada e aviso quando o resultado nao e confiavel.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/tema.jsx",
+        "client/src/components/Bussola.jsx",
+        "client/src/lib/scoring.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/index.css",
+        "docs/DESIGN-SYSTEM.md"
+      ],
+      "technical": "Saiu prefers-color-scheme; o tema virou atributo data-tema no <html>, padrao claro sempre. A mancha da populacao passou de um ponto por celula para celulas com feGaussianBlur, porque ponto espalhado se le como sujeira e nao como densidade; ganhou legenda. A elipse da margem virou so contorno tracejado, para nao competir com a mancha. Novas funcoes confianca() e respondeuTudoIgual() em scoring.js: quem responde a mesma nota em tudo cai no centro por construcao, e agora a tela explica o porque em vez de parecer defeito. confianca() ignora eixos sem resposta, senao qualquer teste parcial pareceria nao confiavel.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono",
+        "og:image estatica por quadrante",
+        "criar o projeto no Pages e apontar o dominio"
+      ]
+    }
+  },
+  {
     "version": "1.0",
     "date": "2026-08-10T22:30:00",
     "author": "claude",
@@ -54,7 +77,9 @@
     "author": "claude",
     "summary": "As 48 perguntas, com a fonte de cada uma registrada, e a bateria de testes que prova que o teste nao e tendencioso.",
     "details": {
-      "commits": ["e74ddd7"],
+      "commits": [
+        "e74ddd7"
+      ],
       "files": [
         "client/src/data/questions.json",
         "client/src/lib/scoring.js",
@@ -74,8 +99,15 @@
     "author": "claude",
     "summary": "Projeto criado: estrutura de pastas e documentacao base, seguindo o padrao do vintage e do BBB.",
     "details": {
-      "commits": ["3123d16"],
-      "files": ["package.json", "CLAUDE.md", "docs/ARQUITETURA.md", "wrangler.jsonc"],
+      "commits": [
+        "3123d16"
+      ],
+      "files": [
+        "package.json",
+        "CLAUDE.md",
+        "docs/ARQUITETURA.md",
+        "wrangler.jsonc"
+      ],
       "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18, backend em Pages Functions, banco D1 com binding DB.",
       "pending": []
     }

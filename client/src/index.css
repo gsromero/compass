@@ -486,6 +486,17 @@ button {
   font-size: 14.5px;
 }
 
+/* Aviso de resultado pouco confiavel. Usa a tinta, e nao uma cor de alerta:
+   nao e erro nem culpa de ninguem, e o teste sendo honesto sobre o que sabe. */
+.aviso-forte {
+  border-style: solid;
+  border-color: var(--ink);
+  background: var(--raised);
+  color: var(--ink);
+  padding: 18px 20px;
+  border-radius: var(--raio);
+}
+
 /* --- tabela -------------------------------------------------------------- */
 
 .rolagem {
