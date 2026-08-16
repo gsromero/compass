@@ -1,0 +1,24 @@
+[
+  {
+    "version": "0.2",
+    "date": "2026-08-10T21:00:00",
+    "author": "claude",
+    "summary": "As 48 perguntas, com a fonte de cada uma registrada, e a bateria de testes que prova que o teste nao e tendencioso.",
+    "details": {
+      "commits": [
+        "e74ddd7"
+      ],
+      "files": [
+        "client/src/data/questions.json",
+        "client/src/lib/scoring.js",
+        "client/src/lib/questions.js",
+        "client/src/lib/equilibrio.test.js",
+        "client/src/lib/scoring.test.js",
+        "docs/FONTES.md",
+        "docs/METODOLOGIA.md"
+      ],
+      "technical": "Questionario mestre do World Values Survey Onda 8 lido item por item; 38 perguntas adaptadas com codigo do item conferido, 10 de redacao propria a partir de construtos do ISSP National Identity e do New Ecological Paradigm, porque o licenciamento dessas escalas para uso aberto e ambiguo. Equilibrio por construcao: 4 itens de cada lado por eixo, pesos espelhados, agrupados em pares que o modo adaptativo so pergunta inteiros. Bateria verificada por sabotagem: inverter o peso de um item derruba 10 testes.",
+      "pending": []
+    }
+  }
+]

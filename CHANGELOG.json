@@ -1,5 +1,38 @@
 [
   {
+    "version": "4.0",
+    "date": "2026-08-16T18:55:00",
+    "author": "claude",
+    "summary": "Revisao completa do site no celular, o topo ganhou menu hamburguer e seletor de idioma segmentado, e o site foi ao ar pela primeira vez.",
+    "details": {
+      "commits": [
+        "99f60f4",
+        "8db2477",
+        "b313403",
+        "a94ef3b"
+      ],
+      "files": [
+        "client/src/index.css",
+        "client/src/App.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/lib/i18n.test.js",
+        "client/src/lib/lang.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/PENDENCIAS.md"
+      ],
+      "technical": "Auditoria em 375px e 320px achou o topo quebrando em tres linhas (114px, botao de tema orfao), alvos de toque de 34px, e a tabela de afirmacoes cortando texto sem avisar que rolava. Corrigido com topo em duas linhas, um bloco (pointer: coarse) padronizando alvo minimo em 40-48px, e sombra de rolagem em CSS puro (quatro camadas de fundo, duas presas na caixa e duas que andam com o conteudo) na classe .rolagem. Na sequencia o topo voltou a nao caber com Inicio, Sobre e Metodologia por extenso: esses tres saem para um menu hamburguer no celular, e idioma/tema continuam sempre visiveis por serem escolha de estado. O botao de idioma trocou de ciclo por clique para controle segmentado (PT-BR | EN-US) nos dois tamanhos de tela. Dois bugs de especificidade de CSS apareceram no caminho: '.linha' e '.botao-discreto' (utilitarios com display:flex/inline-flex) empatavam em especificidade com as classes novas que escondem esses elementos e venciam a cascata por virem depois no arquivo. Corrigido com seletores mais especificos em vez de reordenar o arquivo. Fechamento: banco de producao migrado (estava vazio), projeto 'compass' criado no Cloudflare Pages e primeiro deploy publicado.",
+      "pending": [
+        "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
+        "revisao das 48 afirmacoes pelo dono",
+        "piloto com 4 a 6 pessoas antes de divulgar o link",
+        "og:image estatica por quadrante"
+      ]
+    }
+  },
+  {
     "version": "3.0",
     "date": "2026-08-11T02:30:00",
     "author": "claude",
@@ -118,28 +151,6 @@
         "aplicar a migration no banco de producao",
         "validacao empirica (analise fatorial) quando houver respostas reais"
       ]
-    }
-  },
-  {
-    "version": "0.2",
-    "date": "2026-08-10T21:00:00",
-    "author": "claude",
-    "summary": "As 48 perguntas, com a fonte de cada uma registrada, e a bateria de testes que prova que o teste nao e tendencioso.",
-    "details": {
-      "commits": [
-        "e74ddd7"
-      ],
-      "files": [
-        "client/src/data/questions.json",
-        "client/src/lib/scoring.js",
-        "client/src/lib/questions.js",
-        "client/src/lib/equilibrio.test.js",
-        "client/src/lib/scoring.test.js",
-        "docs/FONTES.md",
-        "docs/METODOLOGIA.md"
-      ],
-      "technical": "Questionario mestre do World Values Survey Onda 8 lido item por item; 38 perguntas adaptadas com codigo do item conferido, 10 de redacao propria a partir de construtos do ISSP National Identity e do New Ecological Paradigm, porque o licenciamento dessas escalas para uso aberto e ambiguo. Equilibrio por construcao: 4 itens de cada lado por eixo, pesos espelhados, agrupados em pares que o modo adaptativo so pergunta inteiros. Bateria verificada por sabotagem: inverter o peso de um item derruba 10 testes.",
-      "pending": []
     }
   }
 ]

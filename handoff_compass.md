@@ -1,3 +1,34 @@
+## 2026-08-16, claude
+
+**O que foi feito:** Revisão completa do site no celular (o dono relatou "tudo está muito ruim,
+principalmente o header"), depois o topo ganhou menu hamburguer e um seletor de idioma segmentado,
+e por fim o site foi ao ar pela primeira vez.
+
+**A revisão de celular:** auditoria automatizada em 375px e 320px achou o topo em três linhas
+(114px, botão de tema órfão), alvos de toque de 34px em vez de 44px, e a tabela de afirmações
+cortando o texto sem avisar que rolava para o lado. Corrigido com topo em duas linhas, um bloco
+`(pointer: coarse)` padronizando alvo mínimo, e sombra de rolagem em CSS puro na classe `.rolagem`.
+
+**O topo, de novo:** com os três links por extenso (Início, Sobre, Metodologia) mais idioma e tema,
+o topo voltou a não caber no celular. Os três links saíram para um menu hamburguer; idioma e tema
+continuam sempre visíveis, por serem escolha de estado e não navegação. O idioma trocou de um ciclo
+por clique para um controle segmentado (PT-BR | EN-US), nos dois tamanhos de tela.
+
+**Dois bugs de especificidade de CSS**, achados só ao testar no navegador: `.linha` e
+`.botao-discreto` (utilitários que dão `display:flex`/`inline-flex`) empatavam em especificidade
+com as classes novas que escondem esses elementos, e venciam a cascata por virem depois no arquivo.
+O CSS parecia certo lendo o código; só quebrou ao renderizar. Corrigido com seletores mais
+específicos (`.topo-direita .topo-links`, `button.topo-hamburguer`), não reordenando o arquivo.
+
+**O site foi ao ar:** banco de produção migrado (existia mas estava vazio), projeto `compass`
+criado no Cloudflare Pages, primeiro deploy publicado e testado (`/`, `/sobre`, `/metodologia` e
+`/api/agregados` respondendo contra o banco real). **Falta só conectar o domínio
+`compass.gsromerolab.com`**, passo manual no painel da Cloudflare que o dono ainda não fez.
+
+**Para o próximo agente:** o dono ainda não revisou as 48 afirmações procurando tom tendencioso, e
+não fez o piloto com 4 a 6 pessoas. Nenhum dos dois bloqueia o site estar no ar, mas os dois
+deveriam acontecer antes de divulgar o link amplamente. Ver `docs/PENDENCIAS.md`.
+
 ## 2026-08-11, claude
 
 **O que foi feito:** O questionário virou um cartão que se arrasta, e no caminho apareceu um bug

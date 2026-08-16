@@ -77,7 +77,10 @@
 - [x] Página **Sobre** com a lista completa de referências
 - [x] Página de metodologia com os pesos abertos
 - [ ] `og:image` estática por quadrante
-- [ ] Projeto no Pages e domínio `compass.gsromerolab.com` (**autorização do dono**)
+- [x] Projeto no Pages criado e primeiro deploy publicado em `compass-429.pages.dev` (2026-08-16,
+      autorizado pelo dono). Banco de produção migrado.
+- [ ] Conectar o domínio `compass.gsromerolab.com` ao projeto `compass` no Pages: passo manual,
+      painel Cloudflare → Pages → compass → Custom domains → Add → digitar o domínio
 
 ---
 
