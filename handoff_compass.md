@@ -25,6 +25,20 @@ criado no Cloudflare Pages, primeiro deploy publicado e testado (`/`, `/sobre`, 
 `/api/agregados` respondendo contra o banco real). **Falta só conectar o domínio
 `compass.gsromerolab.com`**, passo manual no painel da Cloudflare que o dono ainda não fez.
 
+**Depois do ar, o dono pediu três ajustes de layout**, cada um testado num deploy de prévia (URL
+separada, sem afetar produção) antes de aprovar:
+
+1. **Coluna larga demais de vazio nas laterais.** As duas larguras de container (42rem leitura,
+   58rem dados) viraram uma só, `--coluna: 75rem` (1200px), usada em toda página.
+2. **Header e rodapé de ponta a ponta.** Eles saíram de dentro de `.coluna`: agora o fundo e a
+   borda vão até a borda da tela, só o conteúdo interno mantém a margem lateral de 20px.
+3. **Header do celular em duas linhas.** Virou uma linha só até 320px: o seletor de idioma perdeu
+   padding horizontal (não a altura do alvo de toque) só nesse breakpoint.
+
+No caminho, os três cards de "diferença" da Home saíram (repetiam o que a página Sobre já explica),
+e a escolha de modo (Rápido/Padrão/Completo) virou três colunas lado a lado e mais altas em vez de
+lista empilhada. Aprovado e publicado em produção.
+
 **Para o próximo agente:** o dono ainda não revisou as 48 afirmações procurando tom tendencioso, e
 não fez o piloto com 4 a 6 pessoas. Nenhum dos dois bloqueia o site estar no ar, mas os dois
 deveriam acontecer antes de divulgar o link amplamente. Ver `docs/PENDENCIAS.md`.

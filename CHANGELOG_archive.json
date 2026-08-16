@@ -1,5 +1,54 @@
 [
   {
+    "version": "1.0",
+    "date": "2026-08-10T22:30:00",
+    "author": "claude",
+    "summary": "O site funcionando de ponta a ponta: questionario, resultado com margem de erro, card para redes sociais e comparacao com quem ja respondeu.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/index.css",
+        "client/src/App.jsx",
+        "client/src/main.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/lib/lang.jsx",
+        "client/src/lib/compass.js",
+        "client/src/lib/permalink.js",
+        "client/src/lib/sessao.js",
+        "client/src/lib/tradicoes.js",
+        "client/src/lib/agregados.js",
+        "client/src/lib/shareCard.js",
+        "client/src/lib/shareImage.js",
+        "client/src/lib/fluxo.test.js",
+        "client/src/data/tradicoes.json",
+        "client/src/components/Bussola.jsx",
+        "client/src/components/BarraEixo.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Teste.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "client/src/pages/Tradicoes.jsx",
+        "client/public/_redirects",
+        "client/public/_headers",
+        "functions/api/respostas.js",
+        "functions/api/agregados.js",
+        "migrations/0001_init.sql",
+        "docs/DESIGN-SYSTEM.md",
+        "wrangler.jsonc"
+      ],
+      "technical": "Interface monocromatica de proposito: cor so nos dados do grafico, porque vermelho/azul/verde ja tem leitura partidaria e um botao colorido faria a interface parecer torcer. Os quatro quadrantes sao gerados em OKLCH com mesma leveza e mesmo croma, variando so o tom, para nenhum ficar mais forte que outro. Zero biblioteca de UI: grafico em SVG a mao, animacao em CSS, card 1080x1080 em Canvas 2D. A margem de erro tem dois usos, desenhar a elipse e decidir quando parar de perguntar. O link do resultado carrega as respostas codificadas em 4 bits cada, entao funciona sem banco. PEGADINHA: o flag --d1 do wrangler pages dev trata o valor como ID do banco, nao como nome; por isso dev:pages usa o UUID.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono, procurando tom que empurre para algum lado",
+        "aprovacao visual do dono",
+        "og:image estatica por quadrante",
+        "criar o projeto no Pages e apontar compass.gsromerolab.com",
+        "aplicar a migration no banco de producao",
+        "validacao empirica (analise fatorial) quando houver respostas reais"
+      ]
+    }
+  },
+  {
     "version": "0.2",
     "date": "2026-08-10T21:00:00",
     "author": "claude",

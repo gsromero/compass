@@ -1,5 +1,34 @@
 [
   {
+    "version": "5.0",
+    "date": "2026-08-16T21:20:00",
+    "author": "claude",
+    "summary": "Container unico de 1200px, topo e rodape de ponta a ponta, Home mais enxuta, e o site aprovado e publicado em producao.",
+    "details": {
+      "commits": [
+        "894711f"
+      ],
+      "files": [
+        "client/src/index.css",
+        "client/src/App.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/lib/i18n.test.js",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "client/src/pages/Resultado.jsx",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/PENDENCIAS.md"
+      ],
+      "technical": "As duas larguras de container (42rem leitura, 58rem dados) viraram uma, --coluna:75rem (1200px). Topo e rodape saem de dentro de '.coluna': ocupam a largura inteira da tela (fundo e borda de ponta a ponta), o conteudo interno mantem os mesmos 20px de margem lateral que a coluna central usava. Na Home, os tres cards de 'diferenca' saem (redundantes com a pagina Sobre) e a escolha de modo vira tres colunas lado a lado e mais altas (min-height:96px) em vez de lista empilhada, voltando a empilhar abaixo de 30rem. O topo do celular ganhou mais um ajuste: cabe numa linha so ate 320px, com '.topo-controles .segmentado button' reduzindo so o padding horizontal (nao a altura do alvo de toque) nesse breakpoint, seletor mais especifico de proposito para vencer a cascata do bloco (pointer:coarse) sem repetir os bugs de especificidade do commit anterior. Cada mudanca foi testada num deploy de preview (URL separada de producao) antes de aprovada. i18n: chaves home_diferenca_1/2/3 (e _titulo) removidas dos dois idiomas e do teste, por ficarem sem uso.",
+      "pending": [
+        "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
+        "revisao das 48 afirmacoes pelo dono",
+        "piloto com 4 a 6 pessoas antes de divulgar o link",
+        "og:image estatica por quadrante"
+      ]
+    }
+  },
+  {
     "version": "4.0",
     "date": "2026-08-16T18:55:00",
     "author": "claude",
@@ -101,55 +130,6 @@
         "revisao das 48 afirmacoes pelo dono",
         "og:image estatica por quadrante",
         "criar o projeto no Pages e apontar o dominio"
-      ]
-    }
-  },
-  {
-    "version": "1.0",
-    "date": "2026-08-10T22:30:00",
-    "author": "claude",
-    "summary": "O site funcionando de ponta a ponta: questionario, resultado com margem de erro, card para redes sociais e comparacao com quem ja respondeu.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/index.css",
-        "client/src/App.jsx",
-        "client/src/main.jsx",
-        "client/src/lib/i18n.js",
-        "client/src/lib/lang.jsx",
-        "client/src/lib/compass.js",
-        "client/src/lib/permalink.js",
-        "client/src/lib/sessao.js",
-        "client/src/lib/tradicoes.js",
-        "client/src/lib/agregados.js",
-        "client/src/lib/shareCard.js",
-        "client/src/lib/shareImage.js",
-        "client/src/lib/fluxo.test.js",
-        "client/src/data/tradicoes.json",
-        "client/src/components/Bussola.jsx",
-        "client/src/components/BarraEixo.jsx",
-        "client/src/pages/Home.jsx",
-        "client/src/pages/Teste.jsx",
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Sobre.jsx",
-        "client/src/pages/Metodologia.jsx",
-        "client/src/pages/Tradicoes.jsx",
-        "client/public/_redirects",
-        "client/public/_headers",
-        "functions/api/respostas.js",
-        "functions/api/agregados.js",
-        "migrations/0001_init.sql",
-        "docs/DESIGN-SYSTEM.md",
-        "wrangler.jsonc"
-      ],
-      "technical": "Interface monocromatica de proposito: cor so nos dados do grafico, porque vermelho/azul/verde ja tem leitura partidaria e um botao colorido faria a interface parecer torcer. Os quatro quadrantes sao gerados em OKLCH com mesma leveza e mesmo croma, variando so o tom, para nenhum ficar mais forte que outro. Zero biblioteca de UI: grafico em SVG a mao, animacao em CSS, card 1080x1080 em Canvas 2D. A margem de erro tem dois usos, desenhar a elipse e decidir quando parar de perguntar. O link do resultado carrega as respostas codificadas em 4 bits cada, entao funciona sem banco. PEGADINHA: o flag --d1 do wrangler pages dev trata o valor como ID do banco, nao como nome; por isso dev:pages usa o UUID.",
-      "pending": [
-        "revisao das 48 afirmacoes pelo dono, procurando tom que empurre para algum lado",
-        "aprovacao visual do dono",
-        "og:image estatica por quadrante",
-        "criar o projeto no Pages e apontar compass.gsromerolab.com",
-        "aplicar a migration no banco de producao",
-        "validacao empirica (analise fatorial) quando houver respostas reais"
       ]
     }
   }

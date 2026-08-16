@@ -40,10 +40,11 @@
 ## Fase 2: Telas
 
 - [x] `docs/DESIGN-SYSTEM.md` de verdade
-- [x] Revisão do site inteiro no celular, medida em 375px e 320px: topo em duas linhas, alvo de
-      toque de 44px, tabela larga que avisa que rola
-- [ ] **Aprovação visual do dono**, testando o site rodando. O dono autorizou seguir sem mockup
-      prévio para chegar antes na parte de testar; se a direção visual não agradar, ajustar aqui
+- [x] Revisão do site inteiro no celular, medida em 375px e 320px: topo com menu hamburguer numa
+      linha só, alvo de toque de 44px, tabela larga que avisa que rola
+- [x] **Aprovação visual do dono**, testado em previews reais antes de publicar: container único de
+      1200px, topo e rodapé de ponta a ponta, cards de diferença removidos da Home, seletor de modo
+      lado a lado. Aprovado em 2026-08-16.
 
 ## Fase 3: Questionário
 
