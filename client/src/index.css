@@ -159,41 +159,83 @@ button {
 
 .topo {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  row-gap: 8px;
+  column-gap: 16px;
   padding-block: 18px;
   border-bottom: 1px solid var(--line);
 }
 
-/* No celular a barra do topo nao cabe em uma linha: o menu quebrava e o botao
-   de tema ficava orfao numa terceira. Duas linhas de proposito, com a marca em
-   cima e o menu embaixo ocupando a largura toda, o que tambem da area de toque
-   de verdade em vez dos 34px de antes. */
+.topo-direita {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Seletor com o elemento junto da classe (nao so ".topo-hamburguer") de
+   proposito: e a mesma armadilha do ".topo-links" acima. ".botao-discreto"
+   tambem da display ao mesmo botao, empata em especificidade, e vem depois no
+   arquivo, entao ganharia da cascata e o botao apareceria em toda largura de
+   tela. So existe no celular: em telas largas os links ficam sempre visiveis,
+   entao o botao nunca aparece (ver media query abaixo). */
+button.topo-hamburguer {
+  display: none;
+}
+
+.topo-hamburguer span[aria-hidden] {
+  font-size: 16px;
+}
+
+/* Abaixo dos links, so quando o menu esta aberto: e a lista completa de novo,
+   igual a versao de dentro do `nav` escondido, para quem usa teclado ou leitor
+   de tela ter o mesmo caminho independente do tamanho da tela. */
+.topo-menu-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.topo-menu-mobile .botao-discreto {
+  justify-content: flex-start;
+  padding: 10px 8px;
+}
+
+/* No celular a barra do topo nao cabe em uma linha com Inicio, Sobre e
+   Metodologia por extenso: por isso eles saem para um menu hamburguer, e so
+   idioma e tema continuam sempre visiveis, por serem escolhas de estado (nao
+   navegacao) que a pessoa espera achar sem abrir nada. */
 @media (max-width: 30rem) {
   .topo {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    /* Quase nada em cima: o espaco que faltava virou area de toque da marca
-       logo abaixo, em vez de padding do cabecalho. Custa 9px de altura e
-       transforma um alvo de 26px num de 44px. */
-    padding-block: 1px 4px;
+    padding-block: 10px 12px;
   }
 
   .topo .marca {
-    align-self: flex-start;
     padding-block: 9px;
   }
 
-  .topo nav {
-    justify-content: space-between;
-    gap: 2px;
-    flex-wrap: nowrap;
+  /* Duas classes de proposito: ".topo-links" sozinho empata em especificidade
+     com ".linha" (que da display:flex a mesma nav), e ".linha" vem depois no
+     arquivo, entao venceria a cascata e a nav continuaria visivel. */
+  .topo-direita .topo-links {
+    display: none;
   }
 
-  .topo .botao-discreto {
-    padding-inline: 6px;
+  .topo-direita {
+    flex-basis: 100%;
+    justify-content: flex-end;
+    gap: 14px;
+  }
+
+  button.topo-hamburguer {
+    display: inline-flex;
+  }
+
+  .topo-menu-mobile {
+    flex-basis: 100%;
   }
 }
 
@@ -644,6 +686,48 @@ button {
   border-color: var(--ink);
   color: var(--ink);
   font-weight: 560;
+}
+
+/* Controle segmentado: usado hoje so pelo idioma, PT-BR contra EN-US. Ao
+   contrario do chip (borda muda quando marcado), aqui o lado escolhido vira
+   bloco solido, porque sao so duas opcoes mutuamente exclusivas e precisa
+   ficar obvio qual esta ativa sem precisar comparar bordas. */
+.segmentado {
+  display: inline-flex;
+  border: 1px solid var(--line-forte);
+  border-radius: var(--raio-pequeno);
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmentado button {
+  border: none;
+  background: none;
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 5px 10px;
+  border-radius: calc(var(--raio-pequeno) - 3px);
+  cursor: pointer;
+  transition: background var(--transicao), color var(--transicao);
+}
+
+.segmentado button[aria-pressed="true"] {
+  background: var(--acao);
+  color: var(--acao-tinta);
+}
+
+.segmentado button:hover:not([aria-pressed="true"]) {
+  background: var(--raised);
+  color: var(--ink);
+}
+
+@media (pointer: coarse) {
+  .segmentado button {
+    min-height: 40px;
+    padding-inline: 12px;
+  }
 }
 
 /* --- resultado ----------------------------------------------------------- */

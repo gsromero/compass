@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
 import { useTema } from "./lib/tema.jsx";
@@ -8,10 +9,48 @@ import Sobre from "./pages/Sobre.jsx";
 import Metodologia from "./pages/Metodologia.jsx";
 import Tradicoes from "./pages/Tradicoes.jsx";
 
+function SeletorIdioma() {
+  const { lang, setLang, t } = useLang();
+  return (
+    <div className="segmentado">
+      <button type="button" aria-pressed={lang === "pt"} onClick={() => setLang("pt")}>
+        {t("nav_idioma_pt")}
+      </button>
+      <button type="button" aria-pressed={lang === "en"} onClick={() => setLang("en")}>
+        {t("nav_idioma_en")}
+      </button>
+    </div>
+  );
+}
+
+function LinksPrincipais({ onNavegar }) {
+  const { t } = useLang();
+  return (
+    <>
+      <Link to="/" className="botao-discreto" onClick={onNavegar}>
+        {t("nav_inicio")}
+      </Link>
+      <Link to="/sobre" className="botao-discreto" onClick={onNavegar}>
+        {t("nav_sobre")}
+      </Link>
+      <Link to="/metodologia" className="botao-discreto" onClick={onNavegar}>
+        {t("nav_metodologia")}
+      </Link>
+    </>
+  );
+}
+
 function Topo() {
-  const { t, toggle } = useLang();
+  const { t } = useLang();
   const { tema, alternar } = useTema();
   const { pathname } = useLocation();
+  const [menuAberto, setMenuAberto] = useState(false);
+
+  // Trocou de pagina com o menu aberto (por um link dele ou pela seta do
+  // navegador): fecha, senao ele fica aberto sobre uma tela que nao e mais a
+  // que o abriu.
+  useEffect(() => setMenuAberto(false), [pathname]);
+
   // No questionario o topo some: a tela tem uma coisa para fazer e mais nada.
   if (pathname === "/teste") return null;
 
@@ -20,26 +59,44 @@ function Topo() {
       <Link to="/" className="marca">
         {t("marca")}
       </Link>
-      <nav className="linha">
-        <Link to="/sobre" className="botao-discreto">
-          {t("nav_sobre")}
-        </Link>
-        <Link to="/metodologia" className="botao-discreto">
-          {t("nav_metodologia")}
-        </Link>
-        <button type="button" className="botao-discreto" onClick={toggle}>
-          {t("nav_idioma")}
-        </button>
+
+      <div className="topo-direita">
+        <nav className="linha topo-links" aria-label={t("nav_principal")}>
+          <LinksPrincipais />
+        </nav>
+
+        <div className="linha topo-controles">
+          <SeletorIdioma />
+          <button
+            type="button"
+            className="botao-discreto"
+            onClick={alternar}
+            aria-label={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
+            title={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
+          >
+            {tema === "claro" ? "\u25D1" : "\u25D0"}
+          </button>
+        </div>
+
         <button
           type="button"
-          className="botao-discreto"
-          onClick={alternar}
-          aria-label={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
-          title={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
+          className="botao-discreto topo-hamburguer"
+          aria-expanded={menuAberto}
+          aria-controls="topo-menu-mobile"
+          onClick={() => setMenuAberto((aberto) => !aberto)}
         >
-          {tema === "claro" ? "\u25D1" : "\u25D0"}
+          <span aria-hidden="true">{menuAberto ? "\u2715" : "\u2630"}</span>
+          <span className="so-leitor">
+            {t(menuAberto ? "nav_menu_fechar" : "nav_menu_abrir")}
+          </span>
         </button>
-      </nav>
+      </div>
+
+      {menuAberto && (
+        <nav id="topo-menu-mobile" className="topo-menu-mobile" aria-label={t("nav_principal")}>
+          <LinksPrincipais onNavegar={() => setMenuAberto(false)} />
+        </nav>
+      )}
     </header>
   );
 }

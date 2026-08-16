@@ -21,14 +21,7 @@ export function LangProvider({ children }) {
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
   }, [lang]);
 
-  const value = useMemo(
-    () => ({
-      lang,
-      setLang,
-      toggle: () => setLang((prev) => (prev === "pt" ? "en" : "pt")),
-    }),
-    [lang],
-  );
+  const value = useMemo(() => ({ lang, setLang }), [lang]);
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }
