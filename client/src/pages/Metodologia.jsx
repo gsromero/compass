@@ -98,7 +98,7 @@ export default function Metodologia() {
   });
 
   return (
-    <main className="coluna coluna-larga pilha-larga" style={{ paddingBlock: "40px 64px" }}>
+    <main className="coluna pilha-larga" style={{ paddingBlock: "40px 64px" }}>
       <div className="pilha">
         <h1>{t("metodologia_titulo")}</h1>
         <p style={{ fontSize: "17px" }}>{texto.intro}</p>

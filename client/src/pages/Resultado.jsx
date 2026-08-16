@@ -107,7 +107,7 @@ export default function Resultado() {
     : [];
 
   return (
-    <main className="coluna coluna-larga pilha-larga" style={{ paddingBlock: "36px 64px" }}>
+    <main className="coluna pilha-larga" style={{ paddingBlock: "36px 64px" }}>
       {(confiavel === "baixa" || tudoIgual) && (
         <div className="aviso aviso-forte pilha" style={{ gap: "8px" }}>
           <strong>{t("res_confianca_baixa_titulo")}</strong>

@@ -50,7 +50,7 @@
 
   --raio: 14px;
   --raio-pequeno: 9px;
-  --coluna: 42rem;
+  --coluna: 75rem;
 
   --sombra: 0 1px 2px oklch(0.22 0.008 260 / 0.05), 0 8px 24px oklch(0.22 0.008 260 / 0.06);
   /* A sombra que avisa que a tabela continua para o lado. Precisa de token
@@ -153,11 +153,13 @@ button {
   padding-inline: 20px;
 }
 
-.coluna-larga {
-  max-width: 58rem;
-}
-
+/* Topo e rodape NAO usam ".coluna": eles ocupam a largura toda da tela (fundo
+   e borda de ponta a ponta), so o conteudo de dentro tem a mesma margem
+   lateral que a coluna usaria. O resto do site (".coluna") continua no
+   container central de 1200px. */
 .topo {
+  width: 100%;
+  padding-inline: 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -211,6 +213,7 @@ button.topo-hamburguer {
 @media (max-width: 30rem) {
   .topo {
     padding-block: 10px 12px;
+    column-gap: 10px;
   }
 
   .topo .marca {
@@ -225,13 +228,21 @@ button.topo-hamburguer {
   }
 
   .topo-direita {
-    flex-basis: 100%;
-    justify-content: flex-end;
-    gap: 14px;
+    gap: 6px;
+  }
+
+  /* Seletor mais especifico que ".segmentado button" (que ja tem
+     padding-inline:12px sob pointer:coarse) para garantir a vitoria na
+     cascata aqui, sem mexer no alvo de toque em outros lugares que usem o
+     mesmo controle. So o espaco horizontal encolhe; a altura minima de 40px
+     continua. */
+  .topo-controles .segmentado button {
+    padding-inline: 8px;
   }
 
   button.topo-hamburguer {
     display: inline-flex;
+    padding-inline: 4px;
   }
 
   .topo-menu-mobile {
@@ -247,6 +258,8 @@ button.topo-hamburguer {
 }
 
 .rodape {
+  width: 100%;
+  padding-inline: 20px;
   margin-top: auto;
   padding-block: 22px 28px;
   border-top: 1px solid var(--line);
@@ -614,6 +627,24 @@ button.topo-hamburguer {
 
 @media (max-width: 20rem) {
   .escala {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* So a escolha de modo na Home usa isto: as tres opcoes lado a lado, mais
+   altas que uma linha de lista comum. A escala de resposta do questionario
+   continua empilhada, sem essa classe. */
+.escala-modos {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.escala-modos .opcao {
+  align-items: flex-start;
+  min-height: 96px;
+}
+
+@media (max-width: 30rem) {
+  .escala-modos {
     grid-template-columns: 1fr;
   }
 }

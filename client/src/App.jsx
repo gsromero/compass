@@ -55,7 +55,7 @@ function Topo() {
   if (pathname === "/teste") return null;
 
   return (
-    <header className="coluna coluna-larga topo">
+    <header className="topo">
       <Link to="/" className="marca">
         {t("marca")}
       </Link>
@@ -107,7 +107,7 @@ function Rodape() {
   if (pathname === "/teste") return null;
 
   return (
-    <footer className="coluna coluna-larga rodape">
+    <footer className="rodape">
       <span>{t("rodape_privacidade")}</span>
       <a href="https://github.com/gsromero/compass" target="_blank" rel="noreferrer">
         {t("rodape_codigo")}

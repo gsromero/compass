@@ -28,15 +28,6 @@ const dict = {
     home_titulo: "Onde você está no espectro político",
     home_intro:
       "Um teste de 48 afirmações tiradas de pesquisas acadêmicas, com os pesos publicados e a margem de erro na tela.",
-    home_diferenca_1_titulo: "As perguntas vêm de pesquisa de verdade",
-    home_diferenca_1:
-      "As 48 afirmações derivam de instrumentos usados em pesquisa acadêmica, com o código do item registrado e conferível.",
-    home_diferenca_2_titulo: "O equilíbrio é provado, não prometido",
-    home_diferenca_2:
-      "Quem concorda com todas as afirmações cai no centro do gráfico. Isso é testado automaticamente a cada mudança.",
-    home_diferenca_3_titulo: "O resultado vem com margem de erro",
-    home_diferenca_3:
-      "O resultado vem com margem de erro, e com a lista das respostas que mais pesaram em cada eixo.",
     home_escolha_modo: "Quanto tempo você tem?",
     home_comecar: "Começar",
     home_retomar: "Continuar de onde parei",
@@ -184,15 +175,6 @@ const dict = {
     home_titulo: "Where you stand on the political spectrum",
     home_intro:
       "A test of 48 statements taken from academic surveys, with the weights published and the margin of error on screen.",
-    home_diferenca_1_titulo: "The questions come from real research",
-    home_diferenca_1:
-      "All 48 statements derive from instruments used in academic research, with the source item code recorded and checkable.",
-    home_diferenca_2_titulo: "The balance is proven, not promised",
-    home_diferenca_2:
-      "Anyone who agrees with every statement lands at the center of the chart. That is tested automatically on every change.",
-    home_diferenca_3_titulo: "The result comes with a margin of error",
-    home_diferenca_3:
-      "The result comes with a margin of error, and with the answers that weighed most on each axis.",
     home_escolha_modo: "How much time do you have?",
     home_comecar: "Start",
     home_retomar: "Pick up where I left off",

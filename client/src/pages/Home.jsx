@@ -30,18 +30,9 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grade grade-2">
-        {[1, 2, 3].map((n) => (
-          <div key={n} className="cartao pilha" style={{ gap: "6px" }}>
-            <strong style={{ fontSize: "15.5px" }}>{t(`home_diferenca_${n}_titulo`)}</strong>
-            <p className="apoio">{t(`home_diferenca_${n}`)}</p>
-          </div>
-        ))}
-      </div>
-
       <div className="pilha">
         <span className="rotulo">{t("home_escolha_modo")}</span>
-        <div className="escala">
+        <div className="escala escala-modos">
           {MODOS_ORDEM.map((chave) => (
             <button
               key={chave}

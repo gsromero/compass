@@ -28,7 +28,6 @@ const CHAVES_DINAMICAS = [
   ...Object.values(EIXOS_META).flatMap((meta) => [`polo_${meta.neg}`, `polo_${meta.pos}`]),
   ...Object.keys(MODOS).flatMap((modo) => [`modo_${modo}`, `modo_${modo}_desc`]),
   ...["baixa", "normal", "alta"].map((i) => `teste_importancia_${i}`),
-  ...[1, 2, 3].flatMap((n) => [`home_diferenca_${n}`, `home_diferenca_${n}_titulo`]),
   ...LAYOUTS.map((nome) => `res_layout_${nome}`),
   "fonte_adaptado",
   "fonte_construto",

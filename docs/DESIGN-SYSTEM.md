@@ -6,8 +6,9 @@
 ## A ideia
 
 Um instrumento de pesquisa, não um quiz de rede social. A pessoa está lendo afirmações sobre
-poder, dinheiro e moral, e a tela precisa dar a ela a calma de quem lê um documento. Daí a coluna
-estreita, o espaço em volta e a fonte serifada só nas afirmações.
+poder, dinheiro e moral, e a tela precisa dar a ela a calma de quem lê um documento. Daí o espaço
+em volta e a fonte serifada só nas afirmações. O container central (`.coluna`) tem 1200px em toda
+página; topo e rodapé são a exceção, de ponta a ponta na tela.
 
 ## A decisão central: a interface é monocromática
 
@@ -82,7 +83,7 @@ da tela mais vista do site.
 
 | Classe | Para quê |
 |---|---|
-| `.coluna` / `.coluna-larga` | Largura de leitura (42rem) e largura de dados (58rem) |
+| `.coluna` | Container central de todo conteúdo, 75rem (1200px), centralizado |
 | `.cartao` | Bloco de conteúdo com borda e fundo de painel |
 | `.botao` / `.botao-secundario` / `.botao-discreto` | Ação principal, secundária e de navegação |
 | `.opcao` | Item de escolha grande, usado na escala de resposta e nos modos. `aria-pressed` marca o escolhido |
