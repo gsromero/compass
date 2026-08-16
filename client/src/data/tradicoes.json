@@ -1,0 +1,161 @@
+{
+  "nota": "Posicoes nos seis eixos, de -10 a +10, na mesma escala do resultado. Sao posicoes tipicas de cada tradicao segundo a literatura, nao medias de pesquisa. Servem para aproximar, nao para rotular: o site diz 'mais proxima de', nunca 'voce e'. Estas posicoes tambem alimentam o teste de validade em lib/equilibrio.test.js.",
+  "tradicoes": [
+    {
+      "id": "social-democracia",
+      "eixos": { "economico": -6, "autoridade": -2, "fronteiras": -4, "costumes": -4, "ecologia": -4, "povo": -3 },
+      "nome": { "pt": "Social-democracia", "en": "Social democracy" },
+      "resumo": {
+        "pt": "Aceita a economia de mercado e tenta corrigir seus resultados por fora dela: imposto progressivo, serviços públicos universais e sindicatos fortes. A aposta é que dá para ter capitalismo com desigualdade baixa, desde que o Estado redistribua de forma permanente e negociada.",
+        "en": "Accepts a market economy and corrects its outcomes from outside it: progressive taxation, universal public services and strong unions. The bet is that capitalism can coexist with low inequality, as long as the state redistributes permanently and by negotiation."
+      },
+      "leituras": {
+        "pt": ["Eduard Bernstein, Socialismo Evolucionário", "Gøsta Esping-Andersen, As Três Economias Políticas do Estado de Bem-Estar"],
+        "en": ["Eduard Bernstein, Evolutionary Socialism", "Gøsta Esping-Andersen, The Three Worlds of Welfare Capitalism"]
+      }
+    },
+    {
+      "id": "socialismo-democratico",
+      "eixos": { "economico": -8, "autoridade": -1, "fronteiras": -5, "costumes": -5, "ecologia": -5, "povo": 0 },
+      "nome": { "pt": "Socialismo democrático", "en": "Democratic socialism" },
+      "resumo": {
+        "pt": "Vai além de corrigir o mercado: quer mudar quem é dono. Defende propriedade coletiva ou pública dos setores centrais da economia, conquistada por eleição e não por ruptura. A diferença para a social-democracia não é o método, é o destino.",
+        "en": "Goes beyond correcting the market: it wants to change who owns. It argues for collective or public ownership of the core sectors, won through elections rather than rupture. What separates it from social democracy is not the method but the destination."
+      },
+      "leituras": {
+        "pt": ["Michael Harrington, A Outra América", "Karl Polanyi, A Grande Transformação"],
+        "en": ["Michael Harrington, The Other America", "Karl Polanyi, The Great Transformation"]
+      }
+    },
+    {
+      "id": "socialismo-libertario",
+      "eixos": { "economico": -8, "autoridade": -9, "fronteiras": -8, "costumes": -7, "ecologia": -6, "povo": 5 },
+      "nome": { "pt": "Socialismo libertário", "en": "Libertarian socialism" },
+      "resumo": {
+        "pt": "Trata Estado e patrão como duas formas do mesmo problema, e recusa as duas. Propõe organização de baixo para cima: cooperativas, conselhos de trabalhadores, federações voluntárias. É a tradição que mais desconfia de qualquer poder concentrado, inclusive o que diz agir em nome dos trabalhadores.",
+        "en": "Treats the state and the boss as two versions of the same problem, and refuses both. It proposes bottom-up organisation: cooperatives, workers' councils, voluntary federations. This is the tradition most suspicious of any concentrated power, including power that claims to act for workers."
+      },
+      "leituras": {
+        "pt": ["Piotr Kropotkin, A Conquista do Pão", "Noam Chomsky, Sobre Anarquismo"],
+        "en": ["Peter Kropotkin, The Conquest of Bread", "Noam Chomsky, On Anarchism"]
+      }
+    },
+    {
+      "id": "socialismo-de-estado",
+      "eixos": { "economico": -9, "autoridade": 8, "fronteiras": -2, "costumes": -1, "ecologia": 2, "povo": -4 },
+      "nome": { "pt": "Socialismo de Estado", "en": "State socialism" },
+      "resumo": {
+        "pt": "Concentra no Estado a propriedade e o planejamento da economia, com um partido dirigindo a transição. Foi a forma que o socialismo assumiu em boa parte do século 20, e é a que mais divide a própria esquerda, por causa do custo em liberdade.",
+        "en": "Concentrates ownership and economic planning in the state, with a party steering the transition. This was the shape socialism took across much of the twentieth century, and it is the version that most divides the left itself, because of its cost in liberty."
+      },
+      "leituras": {
+        "pt": ["Vladimir Lênin, O Estado e a Revolução", "János Kornai, O Sistema Socialista"],
+        "en": ["Vladimir Lenin, The State and Revolution", "János Kornai, The Socialist System"]
+      }
+    },
+    {
+      "id": "liberalismo-classico",
+      "eixos": { "economico": 7, "autoridade": -5, "fronteiras": -5, "costumes": 0, "ecologia": 3, "povo": -2 },
+      "nome": { "pt": "Liberalismo clássico", "en": "Classical liberalism" },
+      "resumo": {
+        "pt": "Nasceu contra o poder absoluto: quer Estado limitado por lei, liberdades individuais protegidas e comércio livre entre pessoas e países. Desconfia do Estado sem querer aboli-lo: aceita governo desde que amarrado por lei.",
+        "en": "Born against absolute power: it wants a state limited by law, protected individual liberties and free trade between people and countries. It distrusts the state without wanting to abolish it: government is acceptable as long as it is bound by law."
+      },
+      "leituras": {
+        "pt": ["John Stuart Mill, Sobre a Liberdade", "Adam Smith, A Riqueza das Nações"],
+        "en": ["John Stuart Mill, On Liberty", "Adam Smith, The Wealth of Nations"]
+      }
+    },
+    {
+      "id": "libertarianismo",
+      "eixos": { "economico": 9, "autoridade": -8, "fronteiras": -3, "costumes": 1, "ecologia": 5, "povo": 2 },
+      "nome": { "pt": "Libertarianismo", "en": "Libertarianism" },
+      "resumo": {
+        "pt": "Leva o liberalismo ao limite: o Estado deveria fazer quase nada além de garantir contratos e segurança, e cada pessoa é dona de si e do que produz. Onde o liberal clássico quer o Estado amarrado, o libertário quer o Estado mínimo, e uma parte da corrente não quer Estado nenhum.",
+        "en": "Takes liberalism to its limit: the state should do almost nothing beyond enforcing contracts and providing security, and each person owns themselves and what they produce. Where the classical liberal wants the state bound, the libertarian wants it minimal, and one branch wants no state at all."
+      },
+      "leituras": {
+        "pt": ["Robert Nozick, Anarquia, Estado e Utopia", "Friedrich Hayek, O Caminho da Servidão"],
+        "en": ["Robert Nozick, Anarchy, State, and Utopia", "Friedrich Hayek, The Road to Serfdom"]
+      }
+    },
+    {
+      "id": "ordoliberalismo",
+      "eixos": { "economico": 4, "autoridade": -1, "fronteiras": -3, "costumes": 1, "ecologia": -1, "povo": -5 },
+      "nome": { "pt": "Ordoliberalismo", "en": "Ordoliberalism" },
+      "resumo": {
+        "pt": "Defende mercado, mas discorda que ele se organize sozinho. O Estado tem uma função forte e específica: escrever e fazer cumprir as regras da competição, quebrar monopólios e manter a moeda estável. É a base da economia social de mercado alemã.",
+        "en": "Defends the market but denies that it organises itself. The state has a strong and specific job: to write and enforce the rules of competition, break up monopolies and keep the currency stable. It is the basis of the German social market economy."
+      },
+      "leituras": {
+        "pt": ["Walter Eucken, Fundamentos da Política Econômica", "Wilhelm Röpke, A Crise Social do Nosso Tempo"],
+        "en": ["Walter Eucken, Principles of Economic Policy", "Wilhelm Röpke, The Social Crisis of Our Time"]
+      }
+    },
+    {
+      "id": "conservadorismo",
+      "eixos": { "economico": 4, "autoridade": 5, "fronteiras": 6, "costumes": 8, "ecologia": 3, "povo": -3 },
+      "nome": { "pt": "Conservadorismo tradicional", "en": "Traditional conservatism" },
+      "resumo": {
+        "pt": "Parte da ideia de que instituições que duraram séculos carregam um saber que ninguém projetou e ninguém consegue reconstruir do zero. Aceita mudança lenta e desconfia da mudança rápida planejada de cima. Prefere reforma a ruptura.",
+        "en": "Starts from the idea that institutions which lasted centuries carry knowledge no one designed and no one could rebuild from scratch. It accepts slow change and distrusts fast change planned from above. It prefers reform to rupture."
+      },
+      "leituras": {
+        "pt": ["Edmund Burke, Reflexões sobre a Revolução na França", "Michael Oakeshott, Racionalismo na Política"],
+        "en": ["Edmund Burke, Reflections on the Revolution in France", "Michael Oakeshott, Rationalism in Politics"]
+      }
+    },
+    {
+      "id": "democracia-crista",
+      "eixos": { "economico": 0, "autoridade": 2, "fronteiras": 2, "costumes": 6, "ecologia": 0, "povo": -2 },
+      "nome": { "pt": "Democracia cristã", "en": "Christian democracy" },
+      "resumo": {
+        "pt": "Recusa tanto o individualismo de mercado quanto o coletivismo de Estado, e coloca a família e as comunidades intermediárias no centro. O princípio organizador é a subsidiariedade: cada decisão deve ficar no nível mais próximo possível de quem ela afeta.",
+        "en": "Refuses both market individualism and state collectivism, placing the family and intermediate communities at the centre. Its organising principle is subsidiarity: every decision should sit at the level closest to the people it affects."
+      },
+      "leituras": {
+        "pt": ["Jacques Maritain, Humanismo Integral", "Encíclica Rerum Novarum"],
+        "en": ["Jacques Maritain, Integral Humanism", "Rerum Novarum encyclical"]
+      }
+    },
+    {
+      "id": "nacional-desenvolvimentismo",
+      "eixos": { "economico": -4, "autoridade": 4, "fronteiras": 8, "costumes": 3, "ecologia": 4, "povo": 3 },
+      "nome": { "pt": "Nacional-desenvolvimentismo", "en": "Developmental nationalism" },
+      "resumo": {
+        "pt": "Usa o Estado para construir uma economia nacional que o mercado sozinho não construiria: indústria protegida, empresas estatais em setores estratégicos e crédito dirigido. Foi a linha dominante em boa parte da América Latina e da Ásia no século 20.",
+        "en": "Uses the state to build a national economy the market alone would not build: protected industry, state companies in strategic sectors and directed credit. It was the dominant line across much of Latin America and Asia in the twentieth century."
+      },
+      "leituras": {
+        "pt": ["Celso Furtado, Formação Econômica do Brasil", "Ha-Joon Chang, Chutando a Escada"],
+        "en": ["Celso Furtado, The Economic Growth of Brazil", "Ha-Joon Chang, Kicking Away the Ladder"]
+      }
+    },
+    {
+      "id": "ecologismo-politico",
+      "eixos": { "economico": -5, "autoridade": -4, "fronteiras": -7, "costumes": -5, "ecologia": -9, "povo": 2 },
+      "nome": { "pt": "Ecologismo político", "en": "Political ecology" },
+      "resumo": {
+        "pt": "Trata o limite ecológico como o dado central da política, e não como um tema setorial. Daí saem duas conclusões incômodas para quase todo mundo: crescimento econômico infinito é impossível, e decisões precisam considerar quem ainda nem nasceu.",
+        "en": "Treats ecological limits as the central fact of politics rather than one policy area among others. Two conclusions follow that are uncomfortable for nearly everyone: infinite economic growth is impossible, and decisions must account for people not yet born."
+      },
+      "leituras": {
+        "pt": ["André Gorz, Ecologia e Liberdade", "Ailton Krenak, Ideias para Adiar o Fim do Mundo"],
+        "en": ["André Gorz, Ecology as Politics", "Kate Raworth, Doughnut Economics"]
+      }
+    },
+    {
+      "id": "populismo-autoritario",
+      "eixos": { "economico": 1, "autoridade": 8, "fronteiras": 8, "costumes": 6, "ecologia": 5, "povo": 7 },
+      "nome": { "pt": "Populismo autoritário", "en": "Authoritarian populism" },
+      "resumo": {
+        "pt": "Divide a sociedade entre um povo verdadeiro e uma elite que o traiu, e conclui que a vontade desse povo não deveria ser travada por tribunais, imprensa ou órgãos de controle. Trata de quem decide antes de tratar de economia, e por isso aparece à direita e à esquerda.",
+        "en": "Splits society between a real people and an elite that betrayed them, and concludes that the will of that people should not be checked by courts, press or oversight bodies. It is about who decides before it is about economics, which is why it appears on both the right and the left."
+      },
+      "leituras": {
+        "pt": ["Jan-Werner Müller, O que é Populismo?", "Cas Mudde, Populismo: uma brevíssima introdução"],
+        "en": ["Jan-Werner Müller, What Is Populism?", "Cas Mudde, Populism: A Very Short Introduction"]
+      }
+    }
+  ]
+}

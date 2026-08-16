@@ -1,31 +1,145 @@
 [
   {
-    "version": "0.1",
-    "date": "2026-08-10T17:30:00",
+    "version": "3.0",
+    "date": "2026-08-11T02:30:00",
     "author": "claude",
-    "summary": "Projeto criado: estrutura de pastas e documentacao base, seguindo o padrao do vintage e do BBB.",
+    "summary": "Todos os textos do site reescritos: as 48 afirmacoes perderam o tom de memorando, e as paginas Sobre e Metodologia ganharam a acentuacao que faltava.",
     "details": {
       "commits": [],
       "files": [
-        "package.json",
-        "client/package.json",
-        "client/vite.config.js",
-        ".gitignore",
-        "CLAUDE.md",
-        "AGENTS.md",
-        "docs/ARQUITETURA.md",
-        "docs/PENDENCIAS.md",
-        "docs/DESIGN-SYSTEM.md",
-        "handoff_compass.md",
-        "CHANGELOG.json"
+        "client/src/data/questions.json",
+        "client/src/lib/i18n.js",
+        "client/src/data/tradicoes.json",
+        "client/src/pages/Sobre.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "functions/api/_versao.js",
+        "docs/"
       ],
-      "technical": "Cloudflare Pages com pages_build_output_dir em client/dist, front Vite + React 18 + react-router-dom, backend em Pages Functions, banco D1 com binding DB. npm run build roda os testes antes de propósito: teste de equilibrio vermelho tem que impedir o deploy. Sem biblioteca de UI: SVG a mao, animacao em CSS, card social em Canvas 2D.",
+      "technical": "Auditoria contou os tiques antes de reescrever: 25 das 48 afirmacoes usavam 'deveria', 8 usavam 'mesmo que', 3 tinham a antitese 'X e nao Y'. Depois: deveria 0, mesmo que 3 (onde a concessao E o que se mede), antitese 0. Sentido preservado em todas, porque cada uma cita um item real e mudar o sentido tornaria a citacao falsa. Banco na versao 3 e _versao.js sincronizado; link antigo e recusado. Achado grave no caminho: as paginas Sobre e Metodologia renderizavam portugues SEM ACENTO ('O Compass e um teste politico'), porque o habito de escrever comentario sem acento vazou para as strings de tela. 36 travessoes removidos dos documentos, incluindo o README publico.",
       "pending": [
-        "git init e repositorio publico no GitHub (autorizacao do dono)",
-        "criar compass-db e compass-db-dev no D1 (autorizacao do dono)",
-        "wrangler.jsonc depende do database_id dos bancos",
-        "Fase 1 inteira: fontes, questionarios, perguntas, scoring e testes de equilibrio"
+        "revisao das afirmacoes pelo dono",
+        "melhorias de interface",
+        "og:image por quadrante",
+        "deploy"
       ]
+    }
+  },
+  {
+    "version": "2.0",
+    "date": "2026-08-11T01:00:00",
+    "author": "claude",
+    "summary": "Responder agora e arrastar o cartao (ou usar a lista, a escolha e da pessoa), e o 'nao sei' parou de virar confianca falsa.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/gesto.js",
+        "client/src/lib/gesto.test.js",
+        "client/src/lib/scoring.js",
+        "client/src/pages/Teste.jsx",
+        "client/src/index.css",
+        "functions/api/_versao.js",
+        "client/src/data/questions.json"
+      ],
+      "technical": "Escala de 4 pontos (RESPOSTAS) mais NAO_SEI separado, e VALORES para o link. pontuarEixo passou a montar itens POR PAR: par com 'nao sei' ou pela metade e descartado inteiro, porque meio par nao cancela o termo de aquiescencia. Antes, quem dizia 'nao sei' de um lado do par e 'concordo' do outro ia para +2,5; agora vai para 0 com margem 10. A escala estava copiada em tres arquivos e foi colapsada em scoring.js. versao do banco subiu para 2, entao link antigo e recusado em vez de decodificar errado. Agregados filtram por versao (os indices ja tinham versao na frente desde o inicio, para um filtro que nunca fora escrito) e ignoram r=0 na media por quadrante. Gesto: decisao pura em lib/gesto.js, limiares em fracao da largura e nao em pixels, movimento vertical ignorado porque e rolagem, touch-action pan-y no cartao. Dois modos EXCLUSIVOS: cartao e lista, nunca os dois juntos, porque mostrar ambos poluia a tela. Padrao por (pointer: coarse), troca no topo, escolha no localStorage. No modo cartao a lista fica visualmente oculta mas no DOM e reaparece no :focus-within, para nao excluir leitor de tela nem teclado. O cartao ocupa a altura da tela via flex, com altura igual para todas as perguntas. Limiares do gesto passaram a ser fracao do ALCANCE (centro do cartao ate a borda da janela, com teto de 60% da largura do cartao) e nao da largura do cartao: presos ao cartao, a faixa do 'muito' inchava no desktop (152px contra 610px numa tela grande) porque ela nao tem fim e a janela cresce enquanto a coluna para em 42rem. Zona morta 0,14 e limiar forte 0,57, escolhido por f = (1 + m) / 2 para as duas faixas terem o mesmo tamanho.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono",
+        "og:image por quadrante",
+        "criar o projeto no Pages e apontar o dominio"
+      ]
+    }
+  },
+  {
+    "version": "1.1",
+    "date": "2026-08-10T23:05:00",
+    "author": "claude",
+    "summary": "Tema claro por padrao, bussola redesenhada e aviso quando o resultado nao e confiavel.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/tema.jsx",
+        "client/src/components/Bussola.jsx",
+        "client/src/lib/scoring.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/index.css",
+        "docs/DESIGN-SYSTEM.md"
+      ],
+      "technical": "Saiu prefers-color-scheme; o tema virou atributo data-tema no <html>, padrao claro sempre. A mancha da populacao passou de um ponto por celula para celulas com feGaussianBlur, porque ponto espalhado se le como sujeira e nao como densidade; ganhou legenda. A elipse da margem virou so contorno tracejado, para nao competir com a mancha. Novas funcoes confianca() e respondeuTudoIgual() em scoring.js: quem responde a mesma nota em tudo cai no centro por construcao, e agora a tela explica o porque em vez de parecer defeito. confianca() ignora eixos sem resposta, senao qualquer teste parcial pareceria nao confiavel.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono",
+        "og:image estatica por quadrante",
+        "criar o projeto no Pages e apontar o dominio"
+      ]
+    }
+  },
+  {
+    "version": "1.0",
+    "date": "2026-08-10T22:30:00",
+    "author": "claude",
+    "summary": "O site funcionando de ponta a ponta: questionario, resultado com margem de erro, card para redes sociais e comparacao com quem ja respondeu.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/index.css",
+        "client/src/App.jsx",
+        "client/src/main.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/lib/lang.jsx",
+        "client/src/lib/compass.js",
+        "client/src/lib/permalink.js",
+        "client/src/lib/sessao.js",
+        "client/src/lib/tradicoes.js",
+        "client/src/lib/agregados.js",
+        "client/src/lib/shareCard.js",
+        "client/src/lib/shareImage.js",
+        "client/src/lib/fluxo.test.js",
+        "client/src/data/tradicoes.json",
+        "client/src/components/Bussola.jsx",
+        "client/src/components/BarraEixo.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Teste.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "client/src/pages/Metodologia.jsx",
+        "client/src/pages/Tradicoes.jsx",
+        "client/public/_redirects",
+        "client/public/_headers",
+        "functions/api/respostas.js",
+        "functions/api/agregados.js",
+        "migrations/0001_init.sql",
+        "docs/DESIGN-SYSTEM.md",
+        "wrangler.jsonc"
+      ],
+      "technical": "Interface monocromatica de proposito: cor so nos dados do grafico, porque vermelho/azul/verde ja tem leitura partidaria e um botao colorido faria a interface parecer torcer. Os quatro quadrantes sao gerados em OKLCH com mesma leveza e mesmo croma, variando so o tom, para nenhum ficar mais forte que outro. Zero biblioteca de UI: grafico em SVG a mao, animacao em CSS, card 1080x1080 em Canvas 2D. A margem de erro tem dois usos, desenhar a elipse e decidir quando parar de perguntar. O link do resultado carrega as respostas codificadas em 4 bits cada, entao funciona sem banco. PEGADINHA: o flag --d1 do wrangler pages dev trata o valor como ID do banco, nao como nome; por isso dev:pages usa o UUID.",
+      "pending": [
+        "revisao das 48 afirmacoes pelo dono, procurando tom que empurre para algum lado",
+        "aprovacao visual do dono",
+        "og:image estatica por quadrante",
+        "criar o projeto no Pages e apontar compass.gsromerolab.com",
+        "aplicar a migration no banco de producao",
+        "validacao empirica (analise fatorial) quando houver respostas reais"
+      ]
+    }
+  },
+  {
+    "version": "0.2",
+    "date": "2026-08-10T21:00:00",
+    "author": "claude",
+    "summary": "As 48 perguntas, com a fonte de cada uma registrada, e a bateria de testes que prova que o teste nao e tendencioso.",
+    "details": {
+      "commits": [
+        "e74ddd7"
+      ],
+      "files": [
+        "client/src/data/questions.json",
+        "client/src/lib/scoring.js",
+        "client/src/lib/questions.js",
+        "client/src/lib/equilibrio.test.js",
+        "client/src/lib/scoring.test.js",
+        "docs/FONTES.md",
+        "docs/METODOLOGIA.md"
+      ],
+      "technical": "Questionario mestre do World Values Survey Onda 8 lido item por item; 38 perguntas adaptadas com codigo do item conferido, 10 de redacao propria a partir de construtos do ISSP National Identity e do New Ecological Paradigm, porque o licenciamento dessas escalas para uso aberto e ambiguo. Equilibrio por construcao: 4 itens de cada lado por eixo, pesos espelhados, agrupados em pares que o modo adaptativo so pergunta inteiros. Bateria verificada por sabotagem: inverter o peso de um item derruba 10 testes.",
+      "pending": []
     }
   }
 ]

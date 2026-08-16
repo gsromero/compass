@@ -1,0 +1,7 @@
+# Cloudflare Pages: cabecalhos da producao.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+
+# Os agregados ja vem com o proprio cache-control da funcao; nao sobrescrever aqui.

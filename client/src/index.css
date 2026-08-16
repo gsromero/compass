@@ -1,0 +1,994 @@
+/* Compass - fonte unica de UI. Ler docs/DESIGN-SYSTEM.md antes de mexer.
+   NUNCA escrever cor a mao fora deste arquivo.
+
+   A decisao central: a INTERFACE E MONOCROMATICA e a cor fica reservada
+   exclusivamente para os dados do grafico. Isso nao e estilo: e requisito de
+   produto. Vermelho, azul, verde e amarelo ja tem leitura partidaria pronta no
+   Brasil e nos EUA, e um botao colorido faria a interface parecer torcer por
+   algum lado. Aqui o unico destaque e o proprio contraste do texto.
+
+   As quatro cores dos quadrantes sao geradas em OKLCH com a MESMA leveza e o
+   MESMO croma, variando so o tom. E o jeito tecnicamente correto de garantir
+   que nenhum quadrante fique mais bonito, mais forte ou mais desejavel que
+   outro. Croma baixo de proposito: elas sao rotulo, nao torcida. */
+
+:root {
+  color-scheme: light;
+
+  /* Tinta e superficie */
+  --ink: oklch(0.22 0.008 260);
+  --ink-mid: oklch(0.48 0.008 260);
+  --ink-dim: oklch(0.62 0.008 260);
+  --bg: oklch(0.985 0.003 90);
+  --panel: oklch(1 0 0);
+  --raised: oklch(0.955 0.004 90);
+  --line: oklch(0.9 0.005 90);
+  --line-forte: oklch(0.8 0.006 90);
+
+  /* Acao: e a propria tinta, de proposito. Ver comentario do topo. */
+  --acao: var(--ink);
+  --acao-tinta: var(--bg);
+
+  /* Os quatro quadrantes. Mesmo L, mesmo C, tons a 90 graus de distancia. */
+  --q-igualdade-liberdade: oklch(0.7 0.145 155);
+  --q-igualdade-autoridade: oklch(0.7 0.145 65);
+  --q-mercado-liberdade: oklch(0.7 0.145 245);
+  --q-mercado-autoridade: oklch(0.7 0.145 335);
+
+  /* Dados: o ponto da pessoa e a mancha de quem ja respondeu */
+  --voce: var(--ink);
+  --populacao: oklch(0.38 0.008 260);
+
+  --erro: oklch(0.55 0.14 25);
+  --ok: oklch(0.55 0.1 150);
+
+  --fonte-ui:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Serifada para as afirmacoes: faz o cartao parecer documento, nao rede
+     social, e a pessoa le com mais calma. */
+  --fonte-texto: Georgia, "Times New Roman", "Noto Serif", serif;
+
+  --raio: 14px;
+  --raio-pequeno: 9px;
+  --coluna: 42rem;
+
+  --sombra: 0 1px 2px oklch(0.22 0.008 260 / 0.05), 0 8px 24px oklch(0.22 0.008 260 / 0.06);
+  /* A sombra que avisa que a tabela continua para o lado. Precisa de token
+     proprio: no claro ela e tinta, no escuro tinta some e ela vira luz. */
+  --sombra-rolagem: oklch(0.22 0.008 260 / 0.16);
+
+  --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* O tema CLARO e o padrao, e nao o que o sistema da pessoa esta usando.
+   Decisao do dono: o site tem que abrir claro para todo mundo, e o escuro
+   existe como escolha, guardada em lib/tema.jsx. Por isso aqui e um atributo
+   no <html>, e nao uma media query. */
+:root[data-tema="escuro"] {
+    color-scheme: dark;
+
+    --ink: oklch(0.94 0.005 260);
+    --ink-mid: oklch(0.72 0.008 260);
+    --ink-dim: oklch(0.56 0.008 260);
+    --bg: oklch(0.17 0.008 260);
+    --panel: oklch(0.21 0.009 260);
+    --raised: oklch(0.25 0.01 260);
+    --line: oklch(0.3 0.01 260);
+    --line-forte: oklch(0.4 0.012 260);
+
+    /* No escuro os quadrantes precisam de mais leveza para nao sumirem no
+       fundo, mas continuam iguais entre si, que e o que importa. */
+    --q-igualdade-liberdade: oklch(0.72 0.15 155);
+    --q-igualdade-autoridade: oklch(0.72 0.15 65);
+    --q-mercado-liberdade: oklch(0.72 0.15 245);
+    --q-mercado-autoridade: oklch(0.72 0.15 335);
+
+    --populacao: oklch(0.92 0.006 260);
+    --erro: oklch(0.68 0.14 25);
+    --ok: oklch(0.7 0.11 150);
+
+    --sombra: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
+    --sombra-rolagem: oklch(0.94 0.005 260 / 0.16);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fonte-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- estrutura ---------------------------------------------------------- */
+
+.pagina {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.coluna {
+  width: 100%;
+  max-width: var(--coluna);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.coluna-larga {
+  max-width: 58rem;
+}
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 8px;
+  column-gap: 16px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.topo-direita {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Seletor com o elemento junto da classe (nao so ".topo-hamburguer") de
+   proposito: e a mesma armadilha do ".topo-links" acima. ".botao-discreto"
+   tambem da display ao mesmo botao, empata em especificidade, e vem depois no
+   arquivo, entao ganharia da cascata e o botao apareceria em toda largura de
+   tela. So existe no celular: em telas largas os links ficam sempre visiveis,
+   entao o botao nunca aparece (ver media query abaixo). */
+button.topo-hamburguer {
+  display: none;
+}
+
+.topo-hamburguer span[aria-hidden] {
+  font-size: 16px;
+}
+
+/* Abaixo dos links, so quando o menu esta aberto: e a lista completa de novo,
+   igual a versao de dentro do `nav` escondido, para quem usa teclado ou leitor
+   de tela ter o mesmo caminho independente do tamanho da tela. */
+.topo-menu-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.topo-menu-mobile .botao-discreto {
+  justify-content: flex-start;
+  padding: 10px 8px;
+}
+
+/* No celular a barra do topo nao cabe em uma linha com Inicio, Sobre e
+   Metodologia por extenso: por isso eles saem para um menu hamburguer, e so
+   idioma e tema continuam sempre visiveis, por serem escolhas de estado (nao
+   navegacao) que a pessoa espera achar sem abrir nada. */
+@media (max-width: 30rem) {
+  .topo {
+    padding-block: 10px 12px;
+  }
+
+  .topo .marca {
+    padding-block: 9px;
+  }
+
+  /* Duas classes de proposito: ".topo-links" sozinho empata em especificidade
+     com ".linha" (que da display:flex a mesma nav), e ".linha" vem depois no
+     arquivo, entao venceria a cascata e a nav continuaria visivel. */
+  .topo-direita .topo-links {
+    display: none;
+  }
+
+  .topo-direita {
+    flex-basis: 100%;
+    justify-content: flex-end;
+    gap: 14px;
+  }
+
+  button.topo-hamburguer {
+    display: inline-flex;
+  }
+
+  .topo-menu-mobile {
+    flex-basis: 100%;
+  }
+}
+
+.marca {
+  font-weight: 640;
+  letter-spacing: -0.02em;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.rodape {
+  margin-top: auto;
+  padding-block: 22px 28px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 18px;
+}
+
+.rotulo {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+  color: var(--ink-dim);
+}
+
+.apoio {
+  color: var(--ink-mid);
+  font-size: 14.5px;
+}
+
+/* --- botoes -------------------------------------------------------------- */
+
+/* Serve tanto para <button> quanto para <Link>: quando e link, o sublinhado
+   padrao dos links vaza para dentro e o botao fica com cara de texto. */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--acao);
+  background: var(--acao);
+  color: var(--acao-tinta);
+  font-weight: 560;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity var(--transicao), transform var(--transicao);
+}
+
+.botao:hover {
+  opacity: 0.86;
+}
+
+.botao:active {
+  transform: translateY(1px);
+}
+
+.botao-secundario {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-forte);
+}
+
+.botao-secundario:hover {
+  background: var(--raised);
+  opacity: 1;
+}
+
+/* No menu do topo convivem <Link> ("Sobre", "Metodologia") e <button>
+   ("English", tema). Sem esta linha os dois primeiros vinham sublinhados e os
+   outros nao, e a barra parecia meio link e meio botao. */
+.botao-discreto {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  color: var(--ink-mid);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: var(--raio-pequeno);
+  text-decoration: none;
+}
+
+/* Dedo pede area maior que cursor. Sem isto os itens do menu tinham 34px e os
+   chips 32px, abaixo do que se acerta sem mirar. */
+@media (pointer: coarse) {
+  .botao-discreto {
+    min-height: 44px;
+  }
+
+  .chip {
+    min-height: 40px;
+    padding-inline: 14px;
+  }
+
+  .opcao {
+    min-height: 48px;
+  }
+
+  /* Link solto no meio do texto herda a altura da linha, e dedo nao acerta
+     21px. Estes dois casos sao os unicos links que existem fora de botao: o do
+     rodape e o titulo de cada referencia no Sobre. A folga vai por padding, e
+     nao por `min-height`, para o link continuar do tamanho do texto e so a
+     area de toque crescer. */
+  .rodape a,
+  .link-alvo {
+    display: inline-block;
+    padding-block: 10px;
+  }
+}
+
+.botao-discreto:hover {
+  color: var(--ink);
+  background: var(--raised);
+}
+
+.botao[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- cartoes ------------------------------------------------------------- */
+
+.cartao {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+  padding: 22px;
+}
+
+.cartao-destaque {
+  box-shadow: var(--sombra);
+}
+
+/* --- questionario -------------------------------------------------------- */
+
+.progresso {
+  height: 3px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progresso > i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  border-radius: 99px;
+  transition: width 320ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* --- cartao arrastavel --------------------------------------------------- */
+
+/* A tela do teste ocupa a altura toda: e o que permite o cartao crescer em vez
+   de sobrar espaco em baixo. */
+.tela-teste {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-block: 16px 20px;
+}
+
+.palco {
+  flex: 1;
+  display: grid;
+  /* Duas faixas: o cartao estica, a dica fica colada embaixo. Eram tres quando
+     os rotulos ficavam acima do cartao; com eles agora dentro do cartao, sobrar
+     uma faixa fazia o cartao pegar a linha que nao estica e encolher. */
+  grid-template-rows: 1fr auto;
+  gap: 10px;
+  min-height: 0;
+}
+
+.rodape-teste {
+  display: grid;
+  gap: 14px;
+  margin-top: auto;
+}
+
+/* Modo lista: o enunciado e as opcoes ficam no MEIO da tela, e nao colados no
+   topo. Duas margens automaticas (uma aqui e outra no rodape) dividem o espaco
+   livre em partes iguais, e o bloco do meio se centraliza sozinho. */
+.palco-lista {
+  display: grid;
+  gap: 26px;
+  margin-top: auto;
+}
+
+/* No cartao tudo e centralizado: a afirmacao, a previa e a dica. */
+.palco .cartao-pergunta,
+.palco .afirmacao,
+.palco .previa,
+.palco .dica-arrasto {
+  text-align: center;
+}
+
+.bloco-importancia {
+  justify-items: center;
+}
+
+.bloco-importancia .importancia {
+  justify-content: center;
+}
+
+/* Os polegares. Decorativos: quem carrega o sentido e o texto ao lado. */
+.polegares {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  flex: none;
+  color: var(--ink-mid);
+  vertical-align: -0.22em;
+}
+
+.opcao[aria-pressed="true"] .polegares,
+.previa .polegares {
+  color: inherit;
+}
+
+/* A afirmacao fica centrada no espaco que sobra acima dos rotulos. */
+.cartao-conteudo {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  min-height: 0;
+}
+
+
+.cartao-pergunta {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 18px;
+  min-height: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+  padding: 24px 22px;
+  box-shadow: var(--sombra);
+  cursor: grab;
+  /* pan-y deixa a pagina rolar no vertical e entrega o horizontal para o
+     gesto. Sem isto, arrastar de lado no celular rolaria a pagina junto. */
+  touch-action: pan-y;
+  user-select: none;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0.2, 1), opacity 180ms linear;
+}
+
+.cartao-pergunta .afirmacao {
+  font-size: clamp(23px, 5.2vw, 34px);
+}
+
+.cartao-pergunta.arrastando {
+  cursor: grabbing;
+  transition: none;
+}
+
+/* A demonstracao e animada quadro a quadro no JS, e nao por transicao de CSS:
+   a posicao precisa passar pela mesma funcao que decide a resposta de um
+   arrasto de verdade, para os rotulos aparecerem sozinhos e na ordem certa.
+   Por isso a transicao sai do caminho aqui. */
+.cartao-pergunta.demonstrando {
+  transition: none;
+}
+
+/* Enquanto o cartao voa para fora, a transicao volta a valer. */
+.cartao-pergunta.arrastando[style*="120%"],
+.cartao-pergunta.arrastando[style*="-120%"] {
+  transition: transform 170ms cubic-bezier(0.4, 0, 1, 1), opacity 170ms linear;
+}
+
+.previa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  /* A etiqueta fica SEMPRE montada e so muda de opacidade. Com ela entrando e
+     saindo do DOM, a afirmacao pulava 21px a cada arrasto, e reservar altura na
+     mao seria chute que quebra em outra fonte. */
+  font-size: 12px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  opacity: 0;
+  transition: opacity 120ms linear;
+}
+
+.previa em {
+  font-style: normal;
+}
+
+.previa .polegares {
+  color: var(--ink-mid);
+  vertical-align: baseline;
+}
+
+.previa[data-visivel="true"] {
+  opacity: 1;
+}
+
+.dica-arrasto {
+  font-size: 13px;
+  text-align: center;
+}
+
+.dica-teclado {
+  font-size: 13px;
+}
+
+@media (max-width: 30rem) {
+  .dica-teclado {
+    display: none;
+  }
+}
+
+.nao-sei {
+  justify-self: start;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nao-sei[aria-pressed="true"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (pointer: coarse) {
+  .dica-arrasto {
+    text-align: left;
+  }
+}
+
+.afirmacao {
+  font-family: var(--fonte-texto);
+  font-size: clamp(20px, 3.9vw, 27px);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* No modo cartao a lista fica invisivel mas continua acessivel, e REAPARECE ao
+   receber foco. Esconder de vez trocaria poluicao por exclusao: ela e o unico
+   caminho de quem usa leitor de tela ou so o teclado. */
+.escala-oculta {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.escala-oculta:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+}
+
+.escala {
+  display: grid;
+  gap: 7px;
+}
+
+@media (max-width: 20rem) {
+  .escala {
+    grid-template-columns: 1fr;
+  }
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: left;
+  cursor: pointer;
+  font-size: 15.5px;
+  transition: border-color var(--transicao), background var(--transicao);
+}
+
+.opcao:hover {
+  border-color: var(--line-forte);
+  background: var(--raised);
+}
+
+.opcao[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--raised);
+  font-weight: 560;
+}
+
+.opcao > kbd {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  font-family: var(--fonte-ui);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+}
+
+.opcao[aria-pressed="true"] > kbd {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+
+.importancia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 5px 11px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: border-color var(--transicao), color var(--transicao);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 560;
+}
+
+/* Controle segmentado: usado hoje so pelo idioma, PT-BR contra EN-US. Ao
+   contrario do chip (borda muda quando marcado), aqui o lado escolhido vira
+   bloco solido, porque sao so duas opcoes mutuamente exclusivas e precisa
+   ficar obvio qual esta ativa sem precisar comparar bordas. */
+.segmentado {
+  display: inline-flex;
+  border: 1px solid var(--line-forte);
+  border-radius: var(--raio-pequeno);
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmentado button {
+  border: none;
+  background: none;
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 5px 10px;
+  border-radius: calc(var(--raio-pequeno) - 3px);
+  cursor: pointer;
+  transition: background var(--transicao), color var(--transicao);
+}
+
+.segmentado button[aria-pressed="true"] {
+  background: var(--acao);
+  color: var(--acao-tinta);
+}
+
+.segmentado button:hover:not([aria-pressed="true"]) {
+  background: var(--raised);
+  color: var(--ink);
+}
+
+@media (pointer: coarse) {
+  .segmentado button {
+    min-height: 40px;
+    padding-inline: 12px;
+  }
+}
+
+/* --- resultado ----------------------------------------------------------- */
+
+.grafico {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.bussola {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: manipulation;
+}
+
+/* A mancha da populacao precisa se explicar: sem legenda ela parece defeito
+   do grafico, e nao o dado que e. */
+.grafico-legenda {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  line-height: 1.4;
+}
+
+.grafico-amostra-voce {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--voce) 14%, transparent),
+    color-mix(in oklab, var(--voce) 45%, transparent)
+  ) !important;
+}
+
+.grafico-amostra {
+  flex: none;
+  width: 30px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 99px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--populacao) 12%, transparent),
+    var(--populacao)
+  );
+}
+
+.barra-eixo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.barra-trilho {
+  position: relative;
+  height: 30px;
+  border-radius: var(--raio-pequeno);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.barra-centro {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-forte);
+}
+
+.barra-margem {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  background: var(--populacao);
+  opacity: 0.28;
+  border-radius: 4px;
+}
+
+.barra-ponto {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 3px;
+  border-radius: 99px;
+  background: var(--ink);
+  transform: translateX(-50%);
+}
+
+.barra-pontas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.grade {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 620px) {
+  .grade-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contribuicao {
+  display: grid;
+  gap: 4px;
+  padding-block: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.contribuicao:last-child {
+  border-bottom: none;
+}
+
+.fonte-tag {
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.aviso {
+  padding: 14px 16px;
+  border: 1px dashed var(--line-forte);
+  border-radius: var(--raio-pequeno);
+  color: var(--ink-mid);
+  font-size: 14.5px;
+}
+
+/* Aviso de resultado pouco confiavel. Usa a tinta, e nao uma cor de alerta:
+   nao e erro nem culpa de ninguem, e o teste sendo honesto sobre o que sabe. */
+.aviso-forte {
+  border-style: solid;
+  border-color: var(--ink);
+  background: var(--raised);
+  color: var(--ink);
+  padding: 18px 20px;
+  border-radius: var(--raio);
+}
+
+/* --- tabela -------------------------------------------------------------- */
+
+.rolagem {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+  /* Tabela de seis colunas nao cabe em 375px, e rolar de lado dentro da caixa
+     e a saida certa. O problema e que sem aviso o texto cortado na borda
+     parece defeito, e nao continuacao.
+
+     As quatro camadas abaixo sao o truque das sombras de rolagem: as duas
+     primeiras andam com o conteudo (`local`) e tapam a sombra quando a rolagem
+     chega no fim; as duas de baixo ficam presas na caixa (`scroll`). Resultado:
+     a sombra aparece so no lado que ainda tem coisa escondida, e some sozinha
+     quando nao ha o que rolar. Sem JavaScript e sem medir nada. */
+  background:
+    linear-gradient(to right, var(--bg) 40%, transparent) left center / 26px 100% no-repeat local,
+    linear-gradient(to left, var(--bg) 40%, transparent) right center / 26px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--sombra-rolagem), transparent) left center /
+      13px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--sombra-rolagem), transparent) right
+      center / 13px 100% no-repeat scroll;
+  background-color: var(--bg);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td.texto-longo {
+  white-space: normal;
+  min-width: 22rem;
+}
+
+/* No celular a afirmacao ocupa quase a tela inteira e sobra rolagem demais
+   para as outras colunas. Encolher a coluna do texto deixa a tabela com uma
+   proporcao andavel: da para ler a afirmacao inteira e ainda perceber que ha
+   colunas a direita. */
+@media (max-width: 30rem) {
+  th,
+  td {
+    padding: 9px 11px;
+  }
+
+  td.texto-longo {
+    min-width: 15rem;
+  }
+}
+
+/* --- utilidades ---------------------------------------------------------- */
+
+.pilha {
+  display: grid;
+  gap: 12px;
+}
+
+.pilha-larga {
+  display: grid;
+  gap: 26px;
+}
+
+.linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.entrando {
+  animation: entrar 260ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

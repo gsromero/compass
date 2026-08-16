@@ -5,13 +5,13 @@ com três diferenças que são a razão de ele existir:
 
 **1. As perguntas vêm de instrumentos de pesquisa reais.** Cada afirmação do teste é derivada de
 um item do World Values Survey, do ISSP, do European Social Survey, do LAPOP ou do Estudo
-Eleitoral Brasileiro — com o instrumento, a onda e o código do item registrados no próprio banco
+Eleitoral Brasileiro, com o instrumento, a onda e o código do item registrados no próprio banco
 de perguntas e publicados no site. O Political Compass nunca publicou de onde vêm as dele.
 
 **2. O equilíbrio é provado por teste automático, não afirmado.** Das 62 afirmações do Political
 Compass, 36 são codificadas para a direita e só 20 para a esquerda. Como as pessoas tendem a
 concordar com o que leem, quem responde no automático é empurrado para um lado pela construção do
-teste. Aqui existe uma bateria de testes que **quebra o build** se isso acontecer — incluindo o
+teste. Aqui existe uma bateria de testes que **quebra o build** se isso acontecer, incluindo o
 mais direto de todos: *um respondente que concorda com absolutamente tudo tem que cair no centro
 do gráfico*.
 
@@ -20,7 +20,7 @@ do gráfico*.
 compara com quem já respondeu, e em quais pontos você destoa de quem caiu no mesmo quadrante.
 
 Em português e inglês, com as perguntas adaptadas em cada idioma a partir dos questionários
-nacionais dos instrumentos de origem — não traduzidas uma da outra.
+nacionais dos instrumentos de origem, não traduzidas uma da outra.
 
 ## Estado
 
