@@ -91,6 +91,24 @@
 - Pages Functions não têm cron: agregado é sob demanda, guardado no cache.
 - O modo adaptativo pode reintroduzir viés se escolher só pela informação. Ele tem que manter o
   balanço de codificação, e existe teste simulando 10 mil sessões para provar.
+- **O site não tinha `ErrorBoundary` nenhum até 2026-08-17.** Qualquer exceção não tratada em
+  qualquer componente virava tela em branco, sem pista nenhuma. Agora `ErroLimite.jsx` (em torno de
+  `<Routes>`, dentro do header/rodapé) mostra uma mensagem e manda o erro pro console. Se aparecer
+  um erro de novo, é ali que ele vai estar.
+
+## Bug em produção: tela em branco ao terminar o teste completo (achado e corrigido em 2026-08-17)
+
+- [x] O dono relatou tela em branco ao terminar o modo completo (48 perguntas). Investigação não
+      reproduziu exceção na lógica de pontuação/codificação (simulado com 371 testes + sessões
+      completas de 48 respostas em vários padrões). Causa mais provável: alguma exceção de render
+      ainda não identificada, agravada por não existir `ErrorBoundary` nenhum no site.
+- [x] `ErroLimite.jsx` (novo): `ErrorBoundary` em torno de `<Routes>`, mostra mensagem e reseta ao
+      trocar de rota. Header e rodapé continuam de pé mesmo se uma página quebrar.
+- [x] Bug real encontrado no caminho, corrigido junto: `proximoPar` em `scoring.js` parava de
+      perguntar cedo no modo **completo** também (prometia "48 perguntas, precisão máxima" mas podia
+      parar em 24). Corrigido: o corte antecipado só vale para modos com limite finito.
+- [ ] **Se a tela em branco acontecer de novo**, agora o console do navegador vai ter o erro real.
+      Pedir pro dono abrir o DevTools e mandar o que aparecer em vermelho.
 
 ## Questionário por arrasto (feito em 2026-08-11)
 

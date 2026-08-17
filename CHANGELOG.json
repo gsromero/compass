@@ -1,5 +1,33 @@
 [
   {
+    "version": "6.0",
+    "date": "2026-08-17T00:45:00",
+    "author": "claude",
+    "summary": "Corrigido bug em producao (tela em branco ao terminar o teste completo) e adicionado o primeiro ErrorBoundary do site.",
+    "details": {
+      "commits": [
+        "6d5706f"
+      ],
+      "files": [
+        "client/src/components/ErroLimite.jsx",
+        "client/src/App.jsx",
+        "client/src/lib/scoring.js",
+        "client/src/lib/i18n.js",
+        "client/src/lib/fluxo.test.js",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md"
+      ],
+      "technical": "Dono relatou tela em branco ao terminar o modo completo (48 perguntas) em producao. Investigacao rodou os 371 testes existentes e simulou sessoes completas de 48 respostas em varios padroes (concordar com tudo, alternar extremos, aleatorio, nao sei em tudo) direto contra pontuar/codificar/decodificar: nada reproduziu excecao, a logica de pontuacao e do link esta correta. Causa do sintoma ser tela EM BRANCO (nao uma mensagem de erro): o site nao tinha nenhum ErrorBoundary, entao qualquer excecao de render nao tratada, em qualquer componente, derrubava a arvore inteira sem deixar rastro. ErroLimite.jsx (novo) envolve so <Routes> dentro de App.jsx, por fora de Topo/Rodape: pagina que quebra mostra mensagem no lugar dela mantendo cabecalho e rodape, e troca de rota reseta o limite via key={pathname}. componentDidCatch manda o erro completo pro console.error; sem telemetria nova, por decisao de privacidade do projeto (nada identifica quem respondeu). Verificado forcando um throw de proposito, confirmando mensagem/console/reset, e removendo antes do commit. Bug real achado no caminho, nao a causa da tela em branco mas corrigido junto: proximoPar em scoring.js parava de perguntar cedo no modo completo tambem (limite Infinity), apesar de modo_completo_desc prometer '48 perguntas, precisao maxima' — simulacao com resposta coerente parava em 24/48. Corrigido gateando o corte antecipado a modos com limite finito. Teste novo em fluxo.test.js cobrindo o caso, e confirmado tambem numa sessao completa de verdade no navegador (48 respostas, chegou no resultado sem erro).",
+      "pending": [
+        "se a tela em branco acontecer de novo, pedir print do console do navegador (agora vai ter o erro real)",
+        "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
+        "revisao das 48 afirmacoes pelo dono",
+        "piloto com 4 a 6 pessoas antes de divulgar o link",
+        "og:image estatica por quadrante"
+      ]
+    }
+  },
+  {
     "version": "5.0",
     "date": "2026-08-16T21:20:00",
     "author": "claude",
@@ -106,29 +134,6 @@
       "pending": [
         "revisao das 48 afirmacoes pelo dono",
         "og:image por quadrante",
-        "criar o projeto no Pages e apontar o dominio"
-      ]
-    }
-  },
-  {
-    "version": "1.1",
-    "date": "2026-08-10T23:05:00",
-    "author": "claude",
-    "summary": "Tema claro por padrao, bussola redesenhada e aviso quando o resultado nao e confiavel.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/lib/tema.jsx",
-        "client/src/components/Bussola.jsx",
-        "client/src/lib/scoring.js",
-        "client/src/pages/Resultado.jsx",
-        "client/src/index.css",
-        "docs/DESIGN-SYSTEM.md"
-      ],
-      "technical": "Saiu prefers-color-scheme; o tema virou atributo data-tema no <html>, padrao claro sempre. A mancha da populacao passou de um ponto por celula para celulas com feGaussianBlur, porque ponto espalhado se le como sujeira e nao como densidade; ganhou legenda. A elipse da margem virou so contorno tracejado, para nao competir com a mancha. Novas funcoes confianca() e respondeuTudoIgual() em scoring.js: quem responde a mesma nota em tudo cai no centro por construcao, e agora a tela explica o porque em vez de parecer defeito. confianca() ignora eixos sem resposta, senao qualquer teste parcial pareceria nao confiavel.",
-      "pending": [
-        "revisao das 48 afirmacoes pelo dono",
-        "og:image estatica por quadrante",
         "criar o projeto no Pages e apontar o dominio"
       ]
     }

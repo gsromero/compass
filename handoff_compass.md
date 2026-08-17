@@ -1,3 +1,36 @@
+## 2026-08-17, claude
+
+**O que foi feito:** o dono relatou, ao vivo, que terminou o teste no modo completo (48 perguntas)
+e caiu numa tela em branco em vez do resultado. Investiguei o caminho inteiro (`Teste.jsx` →
+`scoring.js` → `permalink.js` → `Resultado.jsx`), rodei os 371 testes e simulei sessões completas
+de 48 respostas em vários padrões direto contra o código real. Nada disso reproduziu uma exceção.
+
+**O achado que explica a tela em branco, mesmo sem reproduzir a causa exata:** o site não tinha
+NENHUM `ErrorBoundary`. `main.jsx` ia direto de `StrictMode` para `App`, então qualquer exceção de
+render, em qualquer componente, em qualquer página, virava tela em branco sem pista nenhuma — o
+React desmonta a árvore toda e não sobra nada. Não consegui reproduzir a exceção sem o navegador e
+as respostas reais do dono, então tratei os dois lados: consertei o que já sabia que estava errado,
+e instrumentei o site para que, se acontecer de novo, a causa apareça.
+
+**`ErroLimite.jsx` (novo, `client/src/components`)**: `ErrorBoundary` em volta de `<Routes>` dentro
+de `App.jsx`, por fora de `Topo`/`Rodape` — uma página que quebra mostra mensagem no lugar dela, mas
+cabeçalho e rodapé continuam de pé, e trocar de rota reseta o limite (`key={pathname}`). O erro
+completo vai para `console.error`; sem telemetria nova, por decisão de privacidade do projeto.
+Testado forçando um `throw` de propósito numa página, confirmando a mensagem, o console e o reset
+ao navegar, e removendo o `throw` depois.
+
+**Bug real encontrado no caminho, corrigido junto**: `proximoPar` em `scoring.js` parava de
+perguntar cedo no modo **completo** também, apesar de prometer "48 perguntas, precisão máxima".
+Simulei um padrão de resposta coerente e o completo parou em 24/48. Corrigido: o corte antecipado
+por confiança suficiente só vale para modos com limite finito (`limite !== Infinity`). Testado com
+um teste novo em `fluxo.test.js` e confirmado no navegador de verdade, terminando o modo completo
+com um padrão que antes cortaria cedo: 48 respostas, chegou no resultado sem erro.
+
+**Para o próximo agente:** se a tela em branco acontecer de novo, o `ErrorBoundary` agora existe, e
+o console do navegador vai ter o erro real (mensagem + stack). Pedir pro dono abrir o DevTools e
+mandar o que aparecer em vermelho é o caminho mais rápido para a causa raiz de verdade, porque a
+lógica de pontuação e codificação já está provada correta por simulação.
+
 ## 2026-08-16, claude
 
 **O que foi feito:** Revisão completa do site no celular (o dono relatou "tudo está muito ruim,
@@ -75,50 +108,3 @@ tem 174 linhas da 1 e 130 da 2, e o total reportado é 130).
    dentro do JSX, ela deixa de ser testada e passa a quebrar sem ninguém ver.
 
 A lista de botões e o teclado NÃO podem sumir: são o único caminho para leitor de tela e teclado.
-
-## 2026-08-10, claude
-
-**O que foi feito:** O site inteiro, da fundação ao fluxo completo rodando.
-
-Fase 0: repositório público em github.com/gsromero/compass, estrutura no padrão do vintage e do
-BBB, bancos `compass-db` e `compass-db-dev` criados no D1.
-
-Fase 1, a que define o valor do projeto: li o questionário mestre do World Values Survey Onda 8
-item por item (extraído do PDF com PDFKit via Swift, porque não havia extrator instalado) e
-escrevi 48 afirmações, 38 adaptadas de itens com código conferido e 10 de redação própria a partir
-de construtos. Bateria de equilíbrio com 320 testes, rodando no `npm run build`.
-
-Fases 2 a 6: design system, i18n pt/en, questionário com teclado, swipe, autosave e escolha
-adaptativa, tela de resultado com bússola em SVG, elipse de incerteza, "por que você caiu aqui"
-com a fonte de cada pergunta, tradições mais próximas, card social em Canvas, backend anônimo em
-D1 com agregados em cache, e as páginas Sobre, Metodologia e Tradições.
-
-**Estado atual:** Roda de ponta a ponta. Testado com `wrangler pages dev` e banco local: 121
-respostas sintéticas gravadas, agregados devolvendo distribuição, mapa de calor e média por
-pergunta por quadrante, e a validação recusando eixo fora de escala, quadrante inventado e nota
-fora da faixa. Build limpo, 82 kB de JS comprimido.
-
-Ainda não foi ao ar: falta criar o projeto no Pages e apontar o domínio, e falta a revisão visual
-e de conteúdo do dono.
-
-**Para o próximo agente:** Três coisas que não são óbvias e quebram o projeto se ignoradas.
-
-1. **`npm run build` roda os testes antes de propósito.** A bateria de equilíbrio é a razão de
-   existir do site, não burocracia. O teste central é "quem concorda com tudo cai no centro", que
-   é o defeito documentado do Political Compass (36 itens codificados à direita contra 20 à
-   esquerda). Verifiquei que a bateria tem dentes sabotando um peso: 10 testes caíram.
-
-2. **O equilíbrio depende dos pares.** Cada eixo tem 4 pares de afirmações com pesos espelhados, e
-   o modo adaptativo só pergunta pares inteiros e só para em fronteira de par. Se alguém mexer
-   nisso para "otimizar" a escolha de perguntas, o viés volta pela porta dos fundos. Existe teste
-   simulando 2000 sessões para pegar exatamente isso.
-
-3. **`adaptado` × `construto` é distinção jurídica, não de estilo.** Escala psicométrica com
-   direitos (NEP, VSA, SDO7, Fundamentos Morais) entra só como construto, com redação própria.
-   Tem teste que barra a marcação errada.
-
-Pegadinha de ambiente: o flag `--d1 DB=<valor>` do `wrangler pages dev` trata o valor como **ID**
-do banco, não como nome. Por isso o `dev:pages` usa o UUID do `compass-db-dev`; com o nome, ele
-cria um banco local vazio separado e as gravações falham com "nao consegui gravar".
-
-O plano completo está em `/Users/gsromero/.claude/plans/cheerful-crunching-finch.md`.
