@@ -135,4 +135,16 @@ describe("o modo adaptativo termina", () => {
     }));
     expect(Object.keys(coerente).length).toBeLessThan(MODOS.padrao.pares * 2);
   });
+
+  it("o modo completo NUNCA acaba antes do limite, mesmo com resposta coerente", () => {
+    // O completo promete "48 perguntas, precisao maxima". O mesmo padrao de
+    // resposta que faz o padrao parar cedo (teste acima) nao pode fazer o
+    // completo parar cedo tambem, senao a promessa do modo e mentira.
+    const perguntas = perguntasDoIdioma("pt");
+    const coerente = sessao(perguntas, "completo", (p) => ({
+      r: p.peso < 0 ? 2 : -2,
+      m: 1,
+    }));
+    expect(Object.keys(coerente).length).toBe(perguntas.length);
+  });
 });

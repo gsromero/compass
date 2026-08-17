@@ -144,6 +144,8 @@ const dict = {
     // estados
     erro_titulo: "Alguma coisa quebrou",
     erro_tentar: "Tentar de novo",
+    erro_limite_corpo:
+      "Isso não deveria ter acontecido. Voltar ao início e começar de novo costuma resolver.",
     carregando: "Carregando",
     nao_encontrado: "Não encontramos essa página",
     voltar_inicio: "Voltar ao início",
@@ -280,6 +282,7 @@ const dict = {
 
     erro_titulo: "Something broke",
     erro_tentar: "Try again",
+    erro_limite_corpo: "This should not have happened. Going back to the start and trying again usually fixes it.",
     carregando: "Loading",
     nao_encontrado: "We could not find that page",
     voltar_inicio: "Back to the start",

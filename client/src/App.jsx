@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
 import { useTema } from "./lib/tema.jsx";
+import ErroLimite from "./components/ErroLimite.jsx";
 import Home from "./pages/Home.jsx";
 import Teste from "./pages/Teste.jsx";
 import Resultado from "./pages/Resultado.jsx";
@@ -132,16 +133,18 @@ export default function App() {
   return (
     <div className="pagina">
       <Topo />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/teste" element={<Teste />} />
-        <Route path="/resultado/:codigo" element={<Resultado />} />
-        <Route path="/sobre" element={<Sobre />} />
-        <Route path="/metodologia" element={<Metodologia />} />
-        <Route path="/tradicoes" element={<Tradicoes />} />
-        <Route path="/tradicoes/:id" element={<Tradicoes />} />
-        <Route path="*" element={<NaoEncontrado />} />
-      </Routes>
+      <ErroLimite>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/teste" element={<Teste />} />
+          <Route path="/resultado/:codigo" element={<Resultado />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/metodologia" element={<Metodologia />} />
+          <Route path="/tradicoes" element={<Tradicoes />} />
+          <Route path="/tradicoes/:id" element={<Tradicoes />} />
+          <Route path="*" element={<NaoEncontrado />} />
+        </Routes>
+      </ErroLimite>
       <Rodape />
     </div>
   );

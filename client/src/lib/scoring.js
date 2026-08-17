@@ -204,12 +204,14 @@ export function proximoPar(perguntas, respostas, modo = "padrao") {
   }
 
   // Todo eixo ja tem base minima e nenhum esta indefinido: acabou antes do
-  // limite, que e a promessa do modo adaptativo.
+  // limite, que e a promessa do modo adaptativo. NAO vale para o completo
+  // (limite Infinity): ele promete "48 perguntas, precisao maxima", e parar
+  // cedo ali quebraria a propria promessa do modo.
   const todosResolvidos = EIXOS.every(
     (eixo) =>
       paresPorEixo[eixo] >= MINIMO_PARES_POR_EIXO && resultado[eixo].margem <= LIMIAR_MARGEM,
   );
-  if (todosResolvidos) return null;
+  if (todosResolvidos && limite !== Infinity) return null;
 
   const candidatos = [...pares.entries()].filter(([, par]) => parIntocado(par, respostas));
   if (candidatos.length === 0) return null;

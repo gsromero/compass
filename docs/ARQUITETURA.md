@@ -51,6 +51,14 @@ GET /api/agregados  →  percentil, mapa de calor, "onde você destoa"
 | `respostas.js` | `POST`. Valida faixa e tipo de tudo, grava uma linha em `respostas` e as linhas de `itens` **em lote**. Não guarda nada que identifique quem respondeu |
 | `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta |
 
+## Erro de render (`client/src/components/ErroLimite.jsx`)
+
+`ErrorBoundary` em torno de `<Routes>` dentro de `App.jsx`, por fora dele ficam `Topo`/`Rodape`: uma
+página que quebra mostra uma mensagem no lugar dela, mas o cabeçalho e o rodapé continuam de pé, e
+navegar para outra rota reseta o limite (`key={pathname}`). Antes disto o site não tinha nenhum, e
+qualquer exceção de render em qualquer componente virava tela em branco sem pista nenhuma. O erro
+completo vai para `console.error`; não existe telemetria no projeto por decisão de privacidade.
+
 ## Testes
 
 Ficam junto do arquivo testado (`scoring.test.js` ao lado de `scoring.js`). A bateria de
