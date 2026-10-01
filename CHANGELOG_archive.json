@@ -1,5 +1,29 @@
 [
   {
+    "version": "8.1",
+    "date": "2026-10-01T19:00:00",
+    "author": "claude",
+    "summary": "Turnstile protege a gravacao de respostas; pagina Sobre explica a verificacao.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/turnstile.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "client/src/index.css",
+        "functions/api/respostas.js",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md",
+        "CLAUDE.md"
+      ],
+      "technical": "Widget Managed criado pelo dono; segredo TURNSTILE_SECRET_KEY gravado por ele no ambiente de producao do Pages. Cliente: script explicito carregado so quando ha resposta a enviar, appearance interaction-only, action 'resposta', token vai no corpo do POST. Servidor: siteverify com FormData (secret, response), sem remoteip; sem segredo ou token invalido, 403 antes de qualquer gravacao. Localhost usa a chave de teste 1x00000000000000000000AA e o segredo de teste no .dev.vars (gitignored). Verificado local: sem token 403, fluxo completo 201 e +1 linha, F5 0 envios.",
+      "pending": [
+        "og:image por quadrante (decisao do dono)",
+        "registrar modo de resposta (decisao do dono)"
+      ]
+    }
+  },
+  {
     "version": "8.0",
     "date": "2026-10-01T16:30:00",
     "author": "claude",

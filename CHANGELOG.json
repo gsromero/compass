@@ -1,5 +1,25 @@
 [
   {
+    "version": "10.3",
+    "date": "2026-10-01T19:30:00",
+    "author": "claude",
+    "summary": "Resultado que nao mede nada (tudo igual ou contraditorio demais) nao aparece nem e gravado: tela borrada com aviso no meio e so a opcao de refazer.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/components/ResultadoBloqueado.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/index.css",
+        "docs/METODOLOGIA.md",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/ARQUITETURA.md"
+      ],
+      "technical": "bloqueado = confianca baixa || respondeuTudoIgual. No efeito de envio, bloqueado so limpa o state e nao chama Turnstile nem /api/respostas. ResultadoBloqueado: alertdialog fixo, backdrop-filter, foco no botao, inert no main, body sem rolagem. Refazer limpa a sessao e abre /teste (completo se havia 48 respostas, senao padrao). Visitante: titulo e texto proprios, botao Comecar o teste. .aviso-forte removido.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.2",
     "date": "2026-10-01T18:30:00",
     "author": "claude",
@@ -112,30 +132,6 @@
       "pending": [
         "confirmar Turnstile real num teste completo em producao",
         "10a rodada do BLS quando sair"
-      ]
-    }
-  },
-  {
-    "version": "8.1",
-    "date": "2026-10-01T19:00:00",
-    "author": "claude",
-    "summary": "Turnstile protege a gravacao de respostas; pagina Sobre explica a verificacao.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/lib/turnstile.js",
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Sobre.jsx",
-        "client/src/index.css",
-        "functions/api/respostas.js",
-        "docs/ARQUITETURA.md",
-        "docs/PENDENCIAS.md",
-        "CLAUDE.md"
-      ],
-      "technical": "Widget Managed criado pelo dono; segredo TURNSTILE_SECRET_KEY gravado por ele no ambiente de producao do Pages. Cliente: script explicito carregado so quando ha resposta a enviar, appearance interaction-only, action 'resposta', token vai no corpo do POST. Servidor: siteverify com FormData (secret, response), sem remoteip; sem segredo ou token invalido, 403 antes de qualquer gravacao. Localhost usa a chave de teste 1x00000000000000000000AA e o segredo de teste no .dev.vars (gitignored). Verificado local: sem token 403, fluxo completo 201 e +1 linha, F5 0 envios.",
-      "pending": [
-        "og:image por quadrante (decisao do dono)",
-        "registrar modo de resposta (decisao do dono)"
       ]
     }
   }

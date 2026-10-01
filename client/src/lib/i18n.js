@@ -94,9 +94,12 @@ const dict = {
     res_margem: (m) => `margem de ${m}`,
     res_area_explicacao:
       "A área ao redor do ponto é a sua margem de erro. Ela é maior quando suas respostas se contradizem, e menor quando são coerentes entre si.",
-    res_confianca_baixa_titulo: "Este resultado diz pouco sobre você",
-    res_uniforme: "Você deu a mesma resposta em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É assim que o teste evita empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação, e o resultado passa a dizer alguma coisa.",
-    res_contraditorio: "Suas respostas se contradizem bastante, e por isso a margem de erro no gráfico ficou grande. O teste não conseguiu medir bem a sua posição, e prefere dizer isso a inventar uma.",
+    res_bloqueio_titulo: "Não deu para medir a sua posição",
+    res_bloqueio_nao_conta: "Estas respostas não foram guardadas e não entram em nenhum número do site.",
+    res_bloqueio_vis_titulo: "Este link não tem um resultado para mostrar",
+    res_bloqueio_vis_texto: "Quem fez este teste deu respostas que não permitem medir uma posição política. Faça o seu, com calma, e veja onde você fica.",
+    res_uniforme: "Você deu a mesma resposta em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É assim que o teste evita empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação para ver o seu resultado.",
+    res_contraditorio: "Suas respostas se contradizem bastante, e com isso o teste não conseguiu medir a sua posição. Em vez de inventar uma, ele pede que você refaça com calma, lendo cada afirmação.",
     res_refazer_lendo: "Refazer com calma",
     res_esquerda_direita:
       "Esquerda e direita aqui são a dimensão econômica: mais igualdade e mais Estado de um lado, mais mercado e menos Estado do outro.",
@@ -402,9 +405,12 @@ const dict = {
     res_margem: (m) => `margin of ${m}`,
     res_area_explicacao:
       "The area around the dot is your margin of error. It grows when your answers contradict each other, and shrinks when they line up.",
-    res_confianca_baixa_titulo: "This result says little about you",
-    res_uniforme: "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the centre. That is how the test avoids pushing anyone who answers on autopilot. Take it again reading each statement, and the result starts to mean something.",
-    res_contraditorio: "Your answers contradict each other a lot, so the margin of error on the chart came out large. The test could not measure your position well, and would rather say so than invent one.",
+    res_bloqueio_titulo: "We could not measure your position",
+    res_bloqueio_nao_conta: "These answers were not saved and do not count in any number on the site.",
+    res_bloqueio_vis_titulo: "This link has no result to show",
+    res_bloqueio_vis_texto: "Whoever took this test gave answers that do not allow measuring a political position. Take yours, slowly, and see where you stand.",
+    res_uniforme: "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the centre. That is how the test avoids pushing anyone who answers on autopilot. Take it again reading each statement to see your result.",
+    res_contraditorio: "Your answers contradict each other a lot, so the test could not measure your position. Rather than invent one, it asks you to take it again slowly, reading each statement.",
     res_refazer_lendo: "Take it again slowly",
     res_esquerda_direita:
       "Left and right here mean the economic dimension: more equality and more state on one side, more market and less state on the other.",
