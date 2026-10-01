@@ -1,5 +1,26 @@
 [
   {
+    "version": "10.2",
+    "date": "2026-10-01T18:30:00",
+    "author": "claude",
+    "summary": "Pagina inicial com previa viva do resultado (bussola de verdade passeando por quatro exemplos) e verificacao da Cloudflare no canto da tela, sumindo depois do sucesso.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/components/AmostraResultado.jsx",
+        "client/src/components/Bussola.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/index.css",
+        "client/src/lib/i18n.js",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/ARQUITETURA.md"
+      ],
+      "technical": "Bussola ganhou prop amostra: sem legenda e chave, escala sempre visivel, grupo Voce desenhado no centro e levado por transform (CSS anima 1100ms; rx/ry por style). AmostraResultado alterna EXEMPLOS a cada 3600ms, texto troca 550ms depois com fade. BussolaAmostra.jsx removido. .caixa-verificacao virou fixed no canto inferior direito e recebe hidden 1,5 s depois do token.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.1",
     "date": "2026-10-02T03:00:00",
     "author": "claude",
@@ -115,41 +136,6 @@
       "pending": [
         "og:image por quadrante (decisao do dono)",
         "registrar modo de resposta (decisao do dono)"
-      ]
-    }
-  },
-  {
-    "version": "8.0",
-    "date": "2026-10-01T16:30:00",
-    "author": "claude",
-    "summary": "As seis propostas de interface aprovadas em mockup: manchete e atalhos no resultado, cartao com baralho e polegares, peso antes das respostas, sua resposta no por que, inicio enxuto, Tradicoes no menu.",
-    "details": {
-      "commits": [
-        "d0ece15",
-        "073782f"
-      ],
-      "files": [
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Teste.jsx",
-        "client/src/pages/Home.jsx",
-        "client/src/App.jsx",
-        "client/src/components/AtalhosSecoes.jsx",
-        "client/src/components/BussolaAmostra.jsx",
-        "client/src/components/BarraEixo.jsx",
-        "client/src/lib/manchete.js",
-        "client/src/lib/manchete.test.js",
-        "client/src/lib/i18n.js",
-        "client/src/lib/i18n.test.js",
-        "client/src/index.css",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/ARQUITETURA.md",
-        "docs/PENDENCIAS.md"
-      ],
-      "technical": "Pesquisa na Mobbin (Headway, Tubi, Instagram, Paired, Liven, Noom, Oura, Obvious, Premier League, Visitors) e mockup em artefato Design aprovado pelo dono. manchete.js decide intensidade (cortes 1/3/7) e polo; texto no i18n. AtalhosSecoes usa IntersectionObserver e scrollIntoView sem hash na URL (o href da pagina e o link compartilhado). Modo cartao ganhou .polegares-resposta (botoes reais) e perdeu .escala-oculta; .baralho::before/::after com transform-origin na base. .peso antes das respostas nos dois modos (responder avanca, entao peso depois nunca era usado). .tela-teste max-width 42rem, .palco max-height 27rem. Home: .seletor-modo e .amostra com BussolaAmostra (ponto no centro). Menu e rodape de uma lista LINKS. Verificado com wrangler pages dev local, Chrome headless via CDP em 390 e 1366px, pt/en, claro/escuro; fluxo inteiro pelos polegares grava 1 linha.",
-      "pending": [
-        "registrar modo de resposta (cartao ou lista), precisa de autorizacao e migration",
-        "Turnstile esperando as chaves",
-        "og:image por quadrante"
       ]
     }
   }

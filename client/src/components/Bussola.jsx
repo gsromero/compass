@@ -69,6 +69,7 @@ export default function Bussola({
   populacao = null,
   proximas = [],
   etiqueta = null,
+  amostra = false,
 }) {
   const { t, lang, pick } = useLang();
   const id = useId();
@@ -88,6 +89,11 @@ export default function Bussola({
   const rx = (resultado.economico.margem / 20) * LADO;
   const ry = (resultado.autoridade.margem / 20) * LADO;
   const celulas = populacao?.celulas ?? [];
+  // Na amostra da pagina inicial o ponto troca de lugar a cada poucos
+  // segundos: o grupo "Voce" e desenhado no centro e levado ate a posicao por
+  // transform, que o CSS anima. Fora dela, desenha direto na posicao.
+  const px = amostra ? CX : vx;
+  const py = amostra ? CY : vy;
   const topo = new Set(proximas.map((p) => p.tradicao.id));
 
   // Etiqueta "Voce": em cima e a esquerda da margem de erro, e vira para o
@@ -111,7 +117,7 @@ export default function Bussola({
   const longe = (a, b) => Math.abs(a - b) > 26;
 
   return (
-    <figure className="bussola-cartao">
+    <figure className={amostra ? "bussola-cartao bussola-amostra-viva" : "bussola-cartao"}>
       <svg
         className="bussola"
         viewBox={`0 0 ${LARGURA} ${ALTURA}`}
@@ -220,12 +226,12 @@ export default function Bussola({
             <g key={v}>
               <line x1={X(v)} y1={Y(-10)} x2={X(v)} y2={Y(-10) + 5} stroke="var(--line-forte)" />
               <line x1={X(-10) - 5} y1={Y(v)} x2={X(-10)} y2={Y(v)} stroke="var(--line-forte)" />
-              {longe(X(v), vx) && (
+              {(amostra || longe(X(v), vx)) && (
                 <text x={X(v)} y={Y(-10) + 18} textAnchor="middle">
                   {v > 0 ? `+${v}` : v < 0 ? `−${-v}` : "0"}
                 </text>
               )}
-              {longe(Y(v), vy) && (
+              {(amostra || longe(Y(v), vy)) && (
                 <text x={X(-10) - 9} y={Y(v) + 3.5} textAnchor="end">
                   {v > 0 ? `+${v}` : v < 0 ? `−${-v}` : "0"}
                 </text>
@@ -288,8 +294,16 @@ export default function Bussola({
             de erro e o ponto. Tudo num grupo so, que desliza do centro. */}
         <g
           className="bussola-voce"
-          style={{ transform: chegou ? "none" : `translate(${CX - vx}px, ${CY - vy}px)` }}
+          style={{
+            transform: amostra
+              ? `translate(${vx - CX}px, ${vy - CY}px)`
+              : chegou
+                ? "none"
+                : `translate(${CX - vx}px, ${CY - vy}px)`,
+          }}
         >
+          {!amostra && (
+          <>
           <line
             x1={vx}
             y1={vy}
@@ -312,24 +326,34 @@ export default function Bussola({
           />
           <ValorNaBorda x={vx} y={Y(-10) + 14} texto={numSinal(lang, econ)} />
           <ValorNaBorda x={X(-10) - 22} y={vy} texto={numSinal(lang, aut)} />
-          <circle cx={vx} cy={vy} r={Math.max(rx, ry) + 10} fill="var(--voce)" fillOpacity="0.07" />
+          </>
+          )}
+          <circle cx={px} cy={py} r={Math.max(rx, ry) + 10} fill="var(--voce)" fillOpacity="0.07" />
           <ellipse
-            cx={vx}
-            cy={vy}
+            cx={px}
+            cy={py}
             rx={Math.max(rx, 3)}
             ry={Math.max(ry, 3)}
+            style={amostra ? { rx: Math.max(rx, 3), ry: Math.max(ry, 3) } : undefined}
             fill="none"
             stroke="var(--voce)"
             strokeOpacity="0.7"
             strokeWidth="1.5"
             strokeDasharray="4 3"
           />
-          <circle cx={vx} cy={vy} r="7.5" fill="var(--voce)" stroke="var(--panel)" strokeWidth="3" />
+          <circle cx={px} cy={py} r="7.5" fill="var(--voce)" stroke="var(--panel)" strokeWidth="3" />
           <g>
-            <rect x={voceX} y={voceY} width={larguraEtiqueta} height="20" rx="10" fill="var(--ink)" />
+            <rect
+              x={voceX - vx + px}
+              y={voceY - vy + py}
+              width={larguraEtiqueta}
+              height="20"
+              rx="10"
+              fill="var(--ink)"
+            />
             <text
-              x={voceX + larguraEtiqueta / 2}
-              y={voceY + 14}
+              x={voceX - vx + px + larguraEtiqueta / 2}
+              y={voceY - vy + py + 14}
               textAnchor="middle"
               fontSize="11"
               fontWeight="700"
@@ -341,6 +365,8 @@ export default function Bussola({
         </g>
       </svg>
 
+      {!amostra && (
+      <>
       <figcaption className="bussola-legenda">
         <span className="bussola-legenda-item">
           <svg width="18" height="12" aria-hidden="true">
@@ -388,6 +414,8 @@ export default function Bussola({
         </button>
       </div>
       {comTradicoes && <p className="bussola-aviso">{t("bus_tradicoes_aviso")}</p>}
+      </>
+      )}
     </figure>
   );
 }

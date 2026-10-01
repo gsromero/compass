@@ -2,10 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLang } from "../lib/lang.jsx";
 import { carregar, limpar, quantasRespondidas } from "../lib/sessao.js";
-import BussolaAmostra from "../components/BussolaAmostra.jsx";
+import AmostraResultado from "../components/AmostraResultado.jsx";
 import SeletorModo from "../components/SeletorModo.jsx";
-
-const AMOSTRA = ["posicao", "eixos", "fontes", "tradicoes"];
 
 export default function Home() {
   const { t } = useLang();
@@ -63,19 +61,9 @@ export default function Home() {
         )}
       </div>
 
-      {/* Mostra o que a pessoa recebe no fim, em vez de explicar: os cartoes de
-          diferenciais que ficavam aqui sairam em agosto por repetir o Sobre. */}
-      <aside className="amostra">
-        <BussolaAmostra />
-        <div className="pilha" style={{ gap: "8px" }}>
-          <span className="rotulo">{t("home_amostra_titulo")}</span>
-          <ul>
-            {AMOSTRA.map((chave) => (
-              <li key={chave}>{t(`home_amostra_${chave}`)}</li>
-            ))}
-          </ul>
-        </div>
-      </aside>
+      {/* Mostra o que a pessoa recebe no fim, em vez de explicar: uma previa
+          viva do resultado, com a bussola de verdade passeando por exemplos. */}
+      <AmostraResultado />
     </main>
   );
 }

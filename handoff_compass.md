@@ -16,6 +16,11 @@
    leque, "Mostre onde você caiu", WhatsApp com frase pronta, linha do cadeado. O dono vetou
    "Desafie alguém" (política não é desafio) e pediu altura fixa ao trocar de formato.
 
+7. **Depois, publicado à parte (branch `feat/capa-viva`, autorização do dono):** página inicial com
+   prévia viva do resultado (mockup "Compass: nova página inicial", opção B) e a verificação da
+   Cloudflare no canto da tela, sumindo 1,5 s depois do sucesso (antes abria um vão entre a capa e
+   os atalhos).
+
 **Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
 formatos, sem rolagem lateral).
 
