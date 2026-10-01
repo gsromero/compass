@@ -158,7 +158,8 @@
 - [x] Card social: faixa da margem vazava da barra no extremo (+10). Corrigido em `shareCard.js`
 - [ ] Quando a 10ª rodada do BLS (2025) for publicada: baixar, rodar `node scripts/partidos-bls.mjs`
       e trocar a rodada; ela terá União Brasil e PRD com nome próprio
-- [ ] Antes do deploy: aplicar `0003_via_resposta.sql` em produção
+- [x] `0003_via_resposta.sql` aplicada em produção e tudo publicado (2026-10-01)
+- [ ] Confirmar em produção: um teste completo passando pelo Turnstile real e `itens.via` preenchido
 - [ ] No piloto: observar quem usa cada modo e se o arrasto deu resposta diferente da pretendida
 
 ## Depois do lançamento

@@ -1,8 +1,10 @@
 ## 2026-10-01 (madrugada), claude
 
 **O que foi feito:** tudo que o dono aprovou em mockup, na branch `feat/turnstile-modo-resposta`,
-junto do Turnstile e da `via` já prontos. **Sem commit e sem deploy: o dono quer publicar tudo
-junto.**
+junto do Turnstile e da `via` já prontos. **Publicado no mesmo dia, tudo junto, com autorização do
+dono:** 0003 aplicada em produção antes do deploy; conferido em compass.gsromerolab.com (prévia
+por quadrante via `curl`, link quebrado com a prévia geral, POST sem token recusado, resultado,
+vitrine e partidos renderizando sem erro, 0 POST ao abrir link).
 
 1. **Página de partidos** (`/partidos`): BLS 2021, 20 partidos, mínimo de 10 notas (PV e Rede de
    fora, 1 nota cada; o dono pediu que o PCdoB entrasse, e com 10 ele entra). Fusões conferidas
@@ -20,7 +22,9 @@ achados só ao renderizar e corrigidos: cartões de eixo estourando em duas colu
 "↓ Liberdade" encostando no nome do quadrante, e a etiqueta "Você" saindo do desenho com margem
 grande.
 
-**Para publicar:** `npm run db:migrate:prod` (aplica a 0003) ANTES de `npm run deploy`.
+**Ainda não confirmado em produção:** o Turnstile com a chave real num teste completo (exige
+gravar uma resposta de verdade; o dono pode fazer o próprio teste e conferir se `itens.via` veio
+preenchido) e a prévia aparecendo no WhatsApp.
 
 ## 2026-10-01 (noite), claude
 
