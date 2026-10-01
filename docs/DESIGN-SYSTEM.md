@@ -348,6 +348,14 @@ no centro: um ponto parado num quadrante sugeriria um lado, mas passando pelos q
 peso não sugere nenhum. A manchete reserva duas linhas para o cartão não mudar de altura. Com
 `prefers-reduced-motion`, fica parada no primeiro exemplo.
 
+## Prévia de link (WhatsApp, X)
+
+1200x630, fundo `COR.fundo`, a bússola num cartão branco à esquerda (mesma receita do site e do
+card) e o texto à direita em Inter. **Resultado**: "Meu resultado no Compass", a frase do resultado,
+os dois números com leitura e o rodapé "E você, onde cai?". **Geral** (`og.png`): a bússola com
+quatro pontos de exemplo, um por quadrante, e "Onde você cai?" grande. Mockup aprovado em
+2026-10-01 (opção B), depois trocado pelo desenho na hora com o resultado real.
+
 ## Resultado que não mede nada
 
 `ResultadoBloqueado.jsx` (`.bloqueio`): quando a confiança é baixa ou a resposta foi toda igual,

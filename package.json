@@ -12,9 +12,13 @@
     "deploy": "npm run build && wrangler pages deploy client/dist --project-name compass --branch main",
     "db:migrate:dev": "wrangler d1 migrations apply compass-db-dev --env preview --local",
     "db:migrate:remote:dev": "wrangler d1 migrations apply compass-db-dev --env preview --remote",
-    "db:migrate:prod": "wrangler d1 migrations apply compass-db --remote"
+    "db:migrate:prod": "wrangler d1 migrations apply compass-db --remote",
+    "og:geral": "node scripts/og-geral.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.120.1"
+  },
+  "dependencies": {
+    "@resvg/resvg-wasm": "^2.6.2"
   }
 }

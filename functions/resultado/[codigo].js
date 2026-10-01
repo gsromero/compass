@@ -10,7 +10,10 @@
 // Importa do client de proposito (permalink, scoring e questions.json): a conta
 // tem que ser a MESMA da tela, e sao modulos puros, sem DOM.
 
-import { quadranteDoCodigo } from "../../client/src/lib/previa.js";
+import { resultadoDoCodigo } from "../../client/src/lib/previa.js";
+import { quadrante } from "../../client/src/lib/scoring.js";
+import { EIXOS_META } from "../../client/src/lib/questions.js";
+import { frase } from "../../client/src/lib/shareCard.js";
 
 const NOMES = {
   "igualdade-liberdade": "Esquerda e Liberdade",
@@ -23,16 +26,19 @@ export async function onRequestGet({ request, env, params }) {
   const url = new URL(request.url);
   const pagina = await env.ASSETS.fetch(new URL("/", url));
 
+  let resultado = null;
   let quad = null;
   try {
-    quad = quadranteDoCodigo(params.codigo);
+    resultado = resultadoDoCodigo(params.codigo);
+    quad = resultado ? quadrante(resultado) : null;
   } catch {
     // Qualquer surpresa na conta nao pode derrubar a pagina: fica a previa geral.
   }
   if (!quad || !NOMES[quad]) return pagina;
 
-  const imagem = `${url.origin}/og/${quad}.png`;
-  const titulo = `Meu resultado no Compass: ${NOMES[quad]}`;
+  // A imagem e desenhada na hora com o resultado da pessoa (functions/og/r).
+  const imagem = `${url.origin}/og/r/${params.codigo}.png`;
+  const titulo = `Meu resultado no Compass: ${frase(resultado, "pt", EIXOS_META)}`;
   const troca = (valor) => ({
     element(el) {
       el.setAttribute("content", valor);

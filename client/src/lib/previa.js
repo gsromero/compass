@@ -12,9 +12,15 @@ import { pontuar, quadrante } from "./scoring.js";
 
 const PERGUNTAS = perguntasDoIdioma("pt");
 
-/** @returns {string | null} o id do quadrante, ou null se o codigo nao vale */
-export function quadranteDoCodigo(codigo) {
+/** @returns {object | null} o resultado (como na tela), ou null se o codigo nao vale */
+export function resultadoDoCodigo(codigo) {
   const respostas = decodificar(PERGUNTAS, codigo, VERSAO_BANCO);
   if (!respostas) return null;
-  return quadrante(pontuar(PERGUNTAS, respostas));
+  return pontuar(PERGUNTAS, respostas);
+}
+
+/** @returns {string | null} o id do quadrante, ou null se o codigo nao vale */
+export function quadranteDoCodigo(codigo) {
+  const resultado = resultadoDoCodigo(codigo);
+  return resultado ? quadrante(resultado) : null;
 }

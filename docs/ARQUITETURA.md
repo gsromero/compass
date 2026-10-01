@@ -82,8 +82,15 @@ escala. A página não liga partido a tradição. O ponto "Você" só aparece vi
 `functions/resultado/[codigo].js` atende `/resultado/:codigo`: busca o `index.html` em
 `env.ASSETS`, calcula o quadrante com `lib/previa.js` (que usa `permalink`, `scoring` e
 `questions.json`, módulos puros, importados do client de propósito para a conta ser a mesma da
-tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. Imagens em
-`client/public/og/<quadrante>.png`. Código inválido: devolve o `index.html` intacto.
+tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. A imagem (`og:image`) aponta para
+`/og/r/<codigo>.png`, e o título usa a frase do resultado.
+
+`functions/og/r/[codigo].js`: desenha a prévia de link com o resultado real da pessoa (frase, dois
+números, bússola com ponto e margem). SVG de `lib/previaImagem.js` virando PNG no `@resvg/resvg-wasm`
+(única dependência das Functions, autorizada pelo dono em 2026-10-01). A fonte Inter vem de
+`client/public/og/fontes/` via `env.ASSETS`, fora do bundle. Cache de um ano (`caches.default` e
+`cache-control`), porque o código determina o resultado para sempre. Código inválido: 302 para
+`/og.png`. A prévia geral `client/public/og.png` sai do mesmo desenho: `npm run og:geral`. Código inválido: devolve o `index.html` intacto.
 
 ## Componentes novos de 2026-10-01
 
@@ -95,6 +102,7 @@ tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. Imagens em
 | `components/VitrineCards.jsx` | Os três modelos do card de compartilhar em leque, gerados com o próprio `montarCard` depois da primeira pintura, mais formato, chave da tradição e as ações (`children`) |
 | `components/Icones.jsx` | Ícones de linha dos botões de compartilhar (traço em `currentColor`) |
 | `components/SeletorModo.jsx` | Padrão e Completo numa linha (o Rápido saiu da escolha em 2026-10). Usado no início e no convite do visitante |
+| `lib/previaImagem.js` | SVG 1200x630 da prévia de link (`svgDoResultado`, `svgGeral`). Puro, sem DOM: roda na Function e no script. Cores, frase e leituras vêm de `shareCard.js` (exportadas de lá). Texto medido por estimativa de largura da Inter |
 | `components/ResultadoBloqueado.jsx` | Aviso no meio da tela, com o resultado borrado atrás, quando o teste não mediu nada (confiança baixa ou tudo igual). Só deixa refazer |
 | `components/AmostraResultado.jsx` | A prévia viva do resultado na página inicial: quatro exemplos, um por quadrante, com a `Bussola` em modo `amostra` (sem legenda nem chave; o ponto desliza por `transform`) |
 

@@ -1,5 +1,29 @@
 [
   {
+    "version": "10.4",
+    "date": "2026-10-01T20:30:00",
+    "author": "claude",
+    "summary": "Previa de link com o resultado real da pessoa (frase, numeros e bussola), nova previa geral 'Onde voce cai?' e correcao do erro ao arrastar cartoes no iPhone.",
+    "details": {
+      "commits": [],
+      "files": [
+        "functions/og/r/[codigo].js",
+        "functions/resultado/[codigo].js",
+        "client/src/lib/previaImagem.js",
+        "client/src/lib/previa.js",
+        "client/src/lib/shareCard.js",
+        "client/src/lib/i18n.js",
+        "client/public/og.png",
+        "client/public/og/fontes/",
+        "scripts/og-geral.mjs",
+        "package.json",
+        "client/src/pages/Teste.jsx"
+      ],
+      "technical": "@resvg/resvg-wasm 2.6.2 nas Functions (autorizado). SVG puro em lib/previaImagem.js; Inter 500/700/800 em client/public/og/fontes via env.ASSETS; cache de um ano. Testado em deploy de previa: 0,4 a 1,3 s na primeira, 0,2 s em cache. Imagens fixas por quadrante removidas. Teste.jsx: aoMover calculava dx/dy dentro do updater de setArrasto, que no WebKit rodava depois do pointerup (inicio.current null); reproduzido no WebKit do Playwright e corrigido.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.3",
     "date": "2026-10-01T19:30:00",
     "author": "claude",
@@ -98,40 +122,6 @@
       "technical": "Removidos tema.jsx, botao e bloco :root[data-tema=escuro]. Secao comparar so com agregados.suficiente; atalhos de 4 combinacoes pre-montadas. shareCard reescrito: LAYOUTS quadrado/story/minimo, cores sRGB derivadas dos tokens OKLCH, bussola em canvas com degrade, pilulas e etiqueta posicionada pela margem; frase e leituras via manchete.js; comTradicao so no story. meusResultados (localStorage) marcado em Teste.terminar; Resultado decide visitante = !state.doTeste && !eMeuResultado(codigo). Teste.jsx: compass.modoResposta.{mouse,toque}, padrao lista no mouse e cartao no toque, chave antiga removida. i18n: textos revistos em pt e en; nivel_* para os cartoes de eixo; eixo_povo = Quem decide.",
       "pending": [
         "comparacao dono x visitante (segunda etapa, opcional)"
-      ]
-    }
-  },
-  {
-    "version": "9.0",
-    "date": "2026-10-01T23:30:00",
-    "author": "claude",
-    "summary": "Redesenho do resultado e da bussola, pagina de partidos (BLS 2021), previa de link por quadrante, Turnstile e via de resposta.",
-    "details": {
-      "commits": [
-        "2202720",
-        "242bb55"
-      ],
-      "files": [
-        "client/src/components/Bussola.jsx",
-        "client/src/components/BarraEixo.jsx",
-        "client/src/components/CabecalhoSecao.jsx",
-        "client/src/components/MiniBussola.jsx",
-        "client/src/components/VitrineCards.jsx",
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Partidos.jsx",
-        "client/src/data/partidos-bls.json",
-        "scripts/partidos-bls.mjs",
-        "client/src/lib/previa.js",
-        "functions/resultado/[codigo].js",
-        "client/public/og/",
-        "client/src/lib/shareCard.js",
-        "client/src/lib/i18n.js",
-        "client/src/index.css"
-      ],
-      "technical": "Bussola reescrita em SVG proprio (viewBox 400): degrade por quadrante, escala, polos em pilulas internas, linhas-guia com valores, etiqueta Voce posicionada pela margem real, tradicoes opcionais com role=switch, entrada animada. BarraEixo vira regua (CSS de fundo) com variante destaque. Resultado em faixas full-bleed (.faixa com 100vw, .pagina overflow-x clip). Partidos: script gera JSON de medias com minimo 10 notas a partir do BLS9 (gitignored), pagina HTML/CSS acessivel. Previa: Function com HTMLRewriter sobre env.ASSETS, lib/previa.js reaproveita a conta do client. Card: faixa da margem recortada nas duas pontas.",
-      "pending": [
-        "confirmar Turnstile real num teste completo em producao",
-        "10a rodada do BLS quando sair"
       ]
     }
   }

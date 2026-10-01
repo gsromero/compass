@@ -389,11 +389,12 @@ export default function Teste() {
 
   function aoMover(evento) {
     if (!inicio.current) return;
-    setArrasto((atual) => ({
-      ...atual,
-      dx: evento.clientX - inicio.current.x,
-      dy: evento.clientY - inicio.current.y,
-    }));
+    // A conta sai AGORA, fora do updater: o React roda o updater depois, e no
+    // Safari do iPhone o dedo ja podia ter soltado (inicio.current = null),
+    // o que derrubava a pagina inteira em "Algo deu errado".
+    const dx = evento.clientX - inicio.current.x;
+    const dy = evento.clientY - inicio.current.y;
+    setArrasto((atual) => ({ ...atual, dx, dy }));
   }
 
   function aoSoltar(evento) {
