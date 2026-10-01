@@ -5,7 +5,10 @@
     "author": "claude",
     "summary": "So tema claro, comparacao escondida ate ter dados, cards claros em tres formatos e convite para quem abre o link de outra pessoa. Revisao de textos e modo de resposta por tipo de aparelho.",
     "details": {
-      "commits": [],
+      "commits": [
+        "6c8fb89",
+        "cad0ce3"
+      ],
       "files": [
         "client/src/lib/shareCard.js",
         "client/src/components/VitrineCards.jsx",
@@ -22,7 +25,6 @@
       ],
       "technical": "Removidos tema.jsx, botao e bloco :root[data-tema=escuro]. Secao comparar so com agregados.suficiente; atalhos de 4 combinacoes pre-montadas. shareCard reescrito: LAYOUTS quadrado/story/minimo, cores sRGB derivadas dos tokens OKLCH, bussola em canvas com degrade, pilulas e etiqueta posicionada pela margem; frase e leituras via manchete.js; comTradicao so no story. meusResultados (localStorage) marcado em Teste.terminar; Resultado decide visitante = !state.doTeste && !eMeuResultado(codigo). Teste.jsx: compass.modoResposta.{mouse,toque}, padrao lista no mouse e cartao no toque, chave antiga removida. i18n: textos revistos em pt e en; nivel_* para os cartoes de eixo; eixo_povo = Quem decide.",
       "pending": [
-        "publicar quando o dono pedir",
         "comparacao dono x visitante (segunda etapa, opcional)"
       ]
     }
