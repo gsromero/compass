@@ -58,6 +58,19 @@ const dict = {
     teste_importancia_alta: "Muito",
     teste_calculando: "Montando seu resultado",
 
+    // demografia (opcional, antes da primeira pergunta)
+    teste_demografia_titulo: "Antes de começar",
+    teste_demografia_idade: "Faixa etária (opcional)",
+    teste_demografia_genero: "Gênero (opcional)",
+    teste_demografia_intro:
+      "Duas perguntas opcionais, só para comparar grupos nos números gerais do site. Não mudam o seu resultado e não identificam você.",
+    teste_demografia_continuar: "Continuar",
+    teste_demografia_pular: "Pular",
+    demografia_genero_feminino: "Feminino",
+    demografia_genero_masculino: "Masculino",
+    demografia_genero_outro: "Outro",
+    demografia_genero_nao_informado: "Prefiro não informar",
+
     // A chave inclui o sinal da nota (-2 a 2), porque e assim que a tela pede.
     "resposta-2": "Discordo muito",
     "resposta-1": "Discordo",
@@ -91,7 +104,9 @@ const dict = {
     res_tradicoes: "Tradições mais próximas de você",
     res_tradicoes_intro:
       "Proximidade medida nos seis eixos. Estar perto de uma tradição não significa concordar com ela em tudo.",
-    res_proximidade: (p) => `${p}% de proximidade`,
+    // Posicao, e nao porcentagem: a distancia nos seis eixos dava 64% a 86%
+    // de "proximidade" com TODAS as tradicoes para quem esta no centro.
+    res_proximidade: (n) => (n === 1 ? "A mais próxima" : `${n}ª mais próxima`),
     res_compartilhar: "Compartilhar",
     res_baixar: "Baixar imagem",
     res_copiar_link: "Copiar link",
@@ -102,6 +117,13 @@ const dict = {
     res_layout_cartaz: "Cartaz",
     res_layout_minimo: "Mínimo",
     res_ver_metodologia: "Ver como a conta é feita",
+    res_link_antigo_titulo: "Este link é de uma versão anterior do teste",
+    res_link_antigo_corpo:
+      "As afirmações mudaram desde que este resultado foi feito, então ele não pode ser mostrado com as perguntas de hoje. Refaça o teste para ver onde você está agora.",
+    res_link_invalido_titulo: "Este link de resultado não abriu",
+    res_link_invalido_corpo:
+      "O endereço pode ter sido cortado ao copiar. Confira se ele veio inteiro, ou faça o teste para ter o seu.",
+    res_fazer_teste: "Fazer o teste",
 
     // populacao
     pop_titulo: "Comparado com quem já respondeu",
@@ -154,6 +176,8 @@ const dict = {
     sobre_titulo: "Sobre",
     metodologia_titulo: "Metodologia",
     tradicoes_titulo: "Tradições ideológicas",
+    teste_titulo_aba: "Teste",
+    titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adaptado do item",
     fonte_construto: "redação própria, baseada em",
   },
@@ -206,6 +230,18 @@ const dict = {
     teste_importancia_alta: "A lot",
     teste_calculando: "Building your result",
 
+    teste_demografia_titulo: "Before you start",
+    teste_demografia_idade: "Age range (optional)",
+    teste_demografia_genero: "Gender (optional)",
+    teste_demografia_intro:
+      "Two optional questions, only to compare groups in the site's overall numbers. They do not change your result and do not identify you.",
+    teste_demografia_continuar: "Continue",
+    teste_demografia_pular: "Skip",
+    demografia_genero_feminino: "Female",
+    demografia_genero_masculino: "Male",
+    demografia_genero_outro: "Other",
+    demografia_genero_nao_informado: "Prefer not to say",
+
     "resposta-2": "Strongly disagree",
     "resposta-1": "Disagree",
     resposta1: "Agree",
@@ -237,7 +273,8 @@ const dict = {
     res_tradicoes: "Traditions closest to you",
     res_tradicoes_intro:
       "Distance measured across all six axes. Being close to a tradition does not mean agreeing with all of it.",
-    res_proximidade: (p) => `${p}% close`,
+    res_proximidade: (n) =>
+      n === 1 ? "Closest" : `${n}${{ 2: "nd", 3: "rd" }[n] ?? "th"} closest`,
     res_compartilhar: "Share",
     res_baixar: "Download image",
     res_copiar_link: "Copy link",
@@ -248,6 +285,13 @@ const dict = {
     res_layout_cartaz: "Poster",
     res_layout_minimo: "Minimal",
     res_ver_metodologia: "See how the scoring works",
+    res_link_antigo_titulo: "This link is from an earlier version of the test",
+    res_link_antigo_corpo:
+      "The statements have changed since this result was made, so it cannot be shown against today's questions. Take the test again to see where you stand now.",
+    res_link_invalido_titulo: "This result link did not open",
+    res_link_invalido_corpo:
+      "The address may have been cut off when it was copied. Check that it came through whole, or take the test to get your own.",
+    res_fazer_teste: "Take the test",
 
     pop_titulo: "Compared with everyone who answered",
     pop_insuficiente: (n, minimo) =>
@@ -290,6 +334,8 @@ const dict = {
     sobre_titulo: "About",
     metodologia_titulo: "Methodology",
     tradicoes_titulo: "Ideological traditions",
+    teste_titulo_aba: "Test",
+    titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adapted from item",
     fonte_construto: "own wording, based on",
   },

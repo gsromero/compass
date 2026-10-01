@@ -228,6 +228,7 @@ Ser honesto sobre isso é parte do método.
 ## Privacidade
 
 Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na
-próxima visita. O que fica guardado é o vetor de respostas solto, usado só para os números da
-população. O link do seu resultado carrega o resultado inteiro codificado na URL, e por isso
-funciona sem consultar o banco.
+próxima visita. O que fica guardado é o vetor de respostas solto, usado para os números da
+população, e faixa etária e gênero, só quando a pessoa escolhe informar: é uma etapa opcional antes
+da primeira pergunta, não muda o resultado, e dá pra pular sem preencher nada. O link do seu
+resultado carrega o resultado inteiro codificado na URL, e por isso funciona sem consultar o banco.

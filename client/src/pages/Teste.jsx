@@ -11,6 +11,7 @@ import {
 } from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
+import { FAIXAS_ETARIAS, GENEROS } from "../lib/demografia.js";
 import Polegar from "../components/Polegar.jsx";
 
 // A escala vem de scoring.js. Nunca escrever a mao aqui.
@@ -89,6 +90,12 @@ export default function Teste() {
   // Deslocamento da demonstracao, em pixels. null quando ela nao esta rodando.
   const [demoX, setDemoX] = useState(null);
   const [comoResponder, setComoResponder] = useState(modoInicial);
+  // Etapa opcional antes da primeira pergunta. Comeca fechada (true) so
+  // quando retoma um teste em andamento: quem esta retomando ja passou por
+  // ela no inicio.
+  const [demografiaFeita, setDemografiaFeita] = useState(false);
+  const [faixaEtaria, setFaixaEtaria] = useState(null);
+  const [genero, setGenero] = useState(null);
 
   const cartao = useRef(null);
   const inicio = useRef(null);
@@ -143,6 +150,11 @@ export default function Teste() {
       setHistorico(historicoGuardado);
       setPosicao(Math.max(0, Math.min(alvo, historicoGuardado.length - 1)));
       setImportancia(nomeDaImportancia(respostasGuardadas[historicoGuardado[alvo]]?.m));
+      // Quem retoma ja passou pela etapa de demografia no inicio: nao pergunta
+      // de novo, so preserva o que foi escolhido (ou pulado) na primeira vez.
+      setFaixaEtaria(guardada.demografia?.faixaEtaria ?? null);
+      setGenero(guardada.demografia?.genero ?? null);
+      setDemografiaFeita(true);
     } else {
       limpar();
       const escolhido = state?.modo ?? "padrao";
@@ -157,8 +169,8 @@ export default function Teste() {
   // Salva a cada mudanca: fechar o navegador no meio nao pode custar o teste.
   useEffect(() => {
     if (!pronto) return;
-    salvar({ modo, respostas, historico });
-  }, [pronto, modo, respostas, historico]);
+    salvar({ modo, respostas, historico, demografia: { faixaEtaria, genero } });
+  }, [pronto, modo, respostas, historico, faixaEtaria, genero]);
 
   const idAtual = historico[posicao];
   const perguntaAtual = perguntas.find((p) => p.id === idAtual);
@@ -168,9 +180,18 @@ export default function Teste() {
   const terminar = useCallback(
     (finais) => {
       limpar();
-      navigate(`/resultado/${codificar(perguntas, finais, VERSAO_BANCO)}`, { replace: true });
+      const codigo = codificar(perguntas, finais, VERSAO_BANCO);
+      // Idade e genero NAO entram no codigo do link (ele so guarda respostas,
+      // e precisa continuar curto e reconstruindo o mesmo resultado pra
+      // sempre). Viajam so nesta navegacao, pro envio anonimo unico que a
+      // tela de resultado faz ao montar. `doTeste` e o que autoriza esse
+      // envio: abrir o mesmo link depois nao grava de novo.
+      navigate(`/resultado/${codigo}`, {
+        replace: true,
+        state: { doTeste: true, faixaEtaria, genero },
+      });
     },
-    [navigate, perguntas],
+    [navigate, perguntas, faixaEtaria, genero],
   );
 
   const responder = useCallback(
@@ -370,6 +391,71 @@ export default function Teste() {
     return (
       <main className="coluna pilha" style={{ paddingBlock: "64px" }}>
         <p className="apoio">{t("teste_calculando")}</p>
+      </main>
+    );
+  }
+
+  if (!demografiaFeita) {
+    return (
+      <main className="coluna pilha" style={{ paddingBlock: "48px 64px" }}>
+        <button
+          type="button"
+          className="botao-discreto"
+          onClick={() => navigate("/")}
+          style={{ justifySelf: "start" }}
+        >
+          {t("teste_sair")}
+        </button>
+
+        <div className="pilha" style={{ gap: "6px" }}>
+          <h1 style={{ fontSize: "26px" }}>{t("teste_demografia_titulo")}</h1>
+          <p className="apoio">{t("teste_demografia_intro")}</p>
+        </div>
+
+        <div className="pilha" style={{ gap: "8px" }}>
+          <span className="rotulo">{t("teste_demografia_idade")}</span>
+          <div className="importancia">
+            {FAIXAS_ETARIAS.map((faixa) => (
+              <button
+                key={faixa}
+                type="button"
+                className="chip"
+                aria-pressed={faixaEtaria === faixa}
+                onClick={() => setFaixaEtaria(faixaEtaria === faixa ? null : faixa)}
+              >
+                {faixa}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="pilha" style={{ gap: "8px" }}>
+          <span className="rotulo">{t("teste_demografia_genero")}</span>
+          <div className="importancia">
+            {GENEROS.map((g) => (
+              <button
+                key={g}
+                type="button"
+                className="chip"
+                aria-pressed={genero === g}
+                onClick={() => setGenero(genero === g ? null : g)}
+              >
+                {t(`demografia_genero_${g}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="botao"
+          style={{ justifySelf: "start" }}
+          onClick={() => setDemografiaFeita(true)}
+        >
+          {t(
+            faixaEtaria || genero ? "teste_demografia_continuar" : "teste_demografia_pular",
+          )}
+        </button>
       </main>
     );
   }

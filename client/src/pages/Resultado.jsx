@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Bussola from "../components/Bussola.jsx";
 import BarraEixo from "../components/BarraEixo.jsx";
 import Radar from "../components/Radar.jsx";
@@ -15,7 +15,7 @@ import {
   respondeuTudoIgual,
 } from "../lib/scoring.js";
 import { EIXOS_META, VERSAO_BANCO, enunciado, perguntasDoIdioma } from "../lib/questions.js";
-import { decodificar } from "../lib/permalink.js";
+import { decodificar, versaoDoCodigo } from "../lib/permalink.js";
 import { maisProximas } from "../lib/tradicoes.js";
 import { carregarAgregados, enviarResposta, ondeDestoa, percentil } from "../lib/agregados.js";
 import { LAYOUTS, montarCard } from "../lib/shareCard.js";
@@ -25,6 +25,8 @@ const SECUNDARIOS = EIXOS.filter((eixo) => !EIXOS_PRINCIPAIS.includes(eixo));
 
 export default function Resultado() {
   const { codigo } = useParams();
+  const { state, pathname } = useLocation();
+  const navigate = useNavigate();
   const { t, lang, pick } = useLang();
 
   const perguntas = useMemo(() => perguntasDoIdioma(lang), [lang]);
@@ -36,6 +38,7 @@ export default function Resultado() {
   const [agregados, setAgregados] = useState(null);
   const [layout, setLayout] = useState(LAYOUTS[0]);
   const [copiado, setCopiado] = useState(false);
+  const enviado = useRef(false);
 
   const resultado = useMemo(
     () => (respostas ? pontuar(perguntas, respostas) : null),
@@ -49,17 +52,34 @@ export default function Resultado() {
   const confiavel = resultado ? confianca(resultado) : "alta";
   const tudoIgual = respostas ? respondeuTudoIgual(respostas) : false;
 
-  // Manda a resposta anonima uma vez, e busca os numeros da populacao.
+  // Manda a resposta anonima UMA vez, e so quando a pessoa acabou de terminar
+  // o teste (o `state.doTeste` que Teste.jsx poe na navegacao). Abrir um link
+  // compartilhado, ou recarregar, NAO grava: sem isso cada amigo que abre o
+  // seu link virava uma copia das suas respostas nos agregados.
+  //
+  // O state do react-router vive no history do navegador e SOBREVIVE a um F5,
+  // por isso ele e apagado logo depois do envio. O ref segura o StrictMode,
+  // que roda este efeito duas vezes em desenvolvimento.
   useEffect(() => {
-    if (!resultado || !respostas) return;
-    let vivo = true;
+    if (!resultado || !respostas || !state?.doTeste || enviado.current) return;
+    enviado.current = true;
     enviarResposta({
       versao: VERSAO_BANCO,
       idioma: lang,
       quadrante: quad,
       eixos: Object.fromEntries(EIXOS.map((e) => [e, Number(resultado[e].posicao.toFixed(3))])),
       itens: Object.entries(respostas).map(([id, r]) => ({ id, r: r.r })),
+      faixaEtaria: state.faixaEtaria ?? null,
+      genero: state.genero ?? null,
     });
+    navigate(pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [codigo]);
+
+  // Os numeros da populacao: para qualquer um que abra a tela.
+  useEffect(() => {
+    if (!resultado) return;
+    let vivo = true;
     carregarAgregados().then((dados) => vivo && setAgregados(dados));
     return () => {
       vivo = false;
@@ -68,12 +88,15 @@ export default function Resultado() {
   }, [codigo]);
 
   if (!respostas || !resultado) {
+    // Versao diferente da atual: o link era bom, o teste e que mudou.
+    const versao = versaoDoCodigo(codigo);
+    const tipo = versao !== null && versao !== (VERSAO_BANCO & 0xff) ? "antigo" : "invalido";
     return (
       <main className="coluna pilha" style={{ paddingBlock: "64px" }}>
-        <h1>{t("erro_titulo")}</h1>
-        <p className="apoio">{t("nao_encontrado")}</p>
+        <h1>{t(`res_link_${tipo}_titulo`)}</h1>
+        <p className="apoio">{t(`res_link_${tipo}_corpo`)}</p>
         <Link to="/" className="botao" style={{ justifySelf: "start" }}>
-          {t("voltar_inicio")}
+          {t("res_fazer_teste")}
         </Link>
       </main>
     );
@@ -187,12 +210,12 @@ export default function Resultado() {
         <h2 style={{ fontSize: "20px" }}>{t("res_tradicoes")}</h2>
         <p className="apoio">{t("res_tradicoes_intro")}</p>
         <div className="pilha">
-          {proximas.map(({ tradicao, distancia }) => (
+          {proximas.map(({ tradicao }, i) => (
             <div key={tradicao.id} className="cartao pilha" style={{ gap: "6px" }}>
               <div className="linha" style={{ justifyContent: "space-between" }}>
                 <strong style={{ fontSize: "16.5px" }}>{pick(tradicao.nome)}</strong>
                 <span className="fonte-tag">
-                  {t("res_proximidade", num(lang, (1 - distancia) * 100, 0))}
+                  {t("res_proximidade", i + 1)}
                 </span>
               </div>
               <p className="apoio">{pick(tradicao.resumo)}</p>

@@ -95,7 +95,7 @@ const TEXTO = {
     ],
     privacidade_t: "Privacidade",
     privacidade:
-      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na próxima visita. Fica guardado só o vetor de respostas solto, usado para os números de comparação. O link do seu resultado carrega o resultado inteiro codificado na própria URL, e por isso funciona sem consultar banco nenhum.",
+      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na próxima visita. Fica guardado o vetor de respostas solto, usado para os números de comparação, e faixa etária e gênero, só se você escolher informar: é opcional, pode pular, e não muda o seu resultado. O link do seu resultado carrega o resultado inteiro codificado na própria URL, e por isso funciona sem consultar banco nenhum.",
     ver_metodologia: "Ver a conta completa",
   },
   en: {
@@ -124,7 +124,7 @@ const TEXTO = {
     ],
     privacidade_t: "Privacy",
     privacidade:
-      "Nothing identifies who answered: no IP, no browser, no account, no identifier that comes back on the next visit. Only the bare answer vector is stored, used for the comparison numbers. Your result link carries the entire result encoded in the URL itself, which is why it works without consulting any database.",
+      "Nothing identifies who answered: no IP, no browser, no account, no identifier that comes back on the next visit. The bare answer vector is stored, used for the comparison numbers, along with age range and gender, only if you choose to share them: it is optional, you can skip it, and it does not change your result. Your result link carries the entire result encoded in the URL itself, which is why it works without consulting any database.",
     ver_metodologia: "See the full scoring",
   },
 };

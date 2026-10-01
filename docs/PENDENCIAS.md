@@ -77,7 +77,10 @@
 - [x] ~12 páginas de tradições ideológicas
 - [x] Página **Sobre** com a lista completa de referências
 - [x] Página de metodologia com os pesos abertos
-- [ ] `og:image` estática por quadrante
+- [x] Prévia de link: `og:image` única (`client/public/og.png`, ponto no centro de propósito, para
+      não sugerir quadrante), favicon e descrições com acento. Feito em 2026-10-01
+- [ ] `og:image` por quadrante no link de resultado: exige uma Function que reescreva o HTML de
+      `/resultado/:codigo` (o site é SPA, o robô do WhatsApp não roda JS)
 - [x] Projeto no Pages criado e primeiro deploy publicado em `compass-429.pages.dev` (2026-08-16,
       autorizado pelo dono). Banco de produção migrado.
 - [ ] Conectar o domínio `compass.gsromerolab.com` ao projeto `compass` no Pages: passo manual,
@@ -120,6 +123,20 @@
 - [x] Agregados filtrando por versão do banco
 - [ ] **Se o piloto mostrar que muita gente usa "não sei"**, avaliar avisar na hora ("essa e a
       afirmação oposta vão sair da sua conta") em vez de só explicar depois
+
+## Revisão geral (2026-10-01)
+
+- [x] Abrir link compartilhado ou recarregar o resultado gravava a resposta de novo no banco
+- [x] Mancha da população com as células deslocadas (lado negativo puxado para o centro)
+- [x] POST aceitava pergunta inventada, repetida e quadrante incoerente
+- [x] "% de proximidade" das tradições exagerada (centro dava 64 a 86% com todas): virou posição
+- [x] Link de versão antiga mostrava "Alguma coisa quebrou"
+- [x] Tela de idade e gênero sem explicação e sem "Pular"
+- [x] Título da aba por página e rolagem ao topo ao trocar de página
+- [x] `criado_em` só com o dia; idioma e tema não derrubam o site com armazenamento bloqueado
+- [ ] **Antes do próximo deploy**: aplicar `0002_demografia.sql` em produção
+      (`npm run db:migrate:prod`, com autorização do dono). Sem ela, toda gravação falha
+- [ ] Proteção contra robô no POST (ex.: Turnstile). Dependência nova: só com autorização do dono
 
 ## Depois do lançamento
 

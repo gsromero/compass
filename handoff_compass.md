@@ -1,3 +1,31 @@
+## 2026-10-01, claude
+
+**O que foi feito:** revisão geral do site a pedido do dono, e depois correção de tudo que ela
+achou, na branch `fix/revisao-geral` (sem commit, aguardando o dono). A etapa de idade e gênero, que
+estava pronta mas sem commit direto na `main` e sem registro aqui, veio junto para a branch.
+
+**Os três que estragavam dados em silêncio:**
+1. Abrir um link de resultado compartilhado, ou recarregar, gravava a resposta de novo. Agora só
+   grava com `state.doTeste` (posto por `Teste.jsx`), e o state é apagado após o envio, porque ele
+   sobrevive ao F5 (a ARQUITETURA dizia o contrário, corrigido).
+2. A mancha da população usava `CAST(eixo / 2)`, que trunca para o zero: -1,9 era desenhado em +1.
+   Agora usa a mesma faixa da distribuição, centros -9 a +9.
+3. O POST aceitava qualquer id de pergunta. Agora confere contra `_perguntas.js`, recusa repetição e
+   quadrante incoerente com o sinal dos eixos (zero aceita os dois lados, por causa do arredondamento).
+
+**O resto:** tradições por posição (1ª, 2ª, 3ª) em vez de "% de proximidade"; mensagem própria para
+link de versão antiga e link quebrado; explicação e "Pular" na tela de demografia; título da aba e
+rolagem ao topo por página; `og.png`, favicon e meta tags com acento; `criado_em` só com o dia;
+`lang.jsx` e `tema.jsx` não derrubam mais o site com armazenamento bloqueado.
+
+**Verificado de verdade:** 374 testes, build, POSTs à mão contra `wrangler pages dev` com o D1 local,
+e o fluxo inteiro num Chrome sem janela via DevTools Protocol: o teste grava 1 linha, F5 e "amigo
+abrindo o link" gravam 0, tradições e mensagens nos dois idiomas, aba e rolagem certas, sem erro no
+console.
+
+**Para o próximo agente:** antes de publicar esta branch, `0002_demografia.sql` precisa estar em
+produção, senão toda gravação dá 500. Turnstile ficou de fora (dependência nova, falta autorização).
+
 ## 2026-08-17, claude
 
 **O que foi feito:** o dono relatou, ao vivo, que terminou o teste no modo completo (48 perguntas)
@@ -75,36 +103,3 @@ lista empilhada. Aprovado e publicado em produção.
 **Para o próximo agente:** o dono ainda não revisou as 48 afirmações procurando tom tendencioso, e
 não fez o piloto com 4 a 6 pessoas. Nenhum dos dois bloqueia o site estar no ar, mas os dois
 deveriam acontecer antes de divulgar o link amplamente. Ver `docs/PENDENCIAS.md`.
-
-## 2026-08-11, claude
-
-**O que foi feito:** O questionário virou um cartão que se arrasta, e no caminho apareceu um bug
-mais importante que a mudança de interface.
-
-**O bug:** "não sei" e "sou moderado" dividiam o mesmo valor (`r: 0`), e a conta tratava os dois
-como "minha posição é o centro". Resultado mensurável: quem respondia "não sei" nas 8 afirmações
-de um eixo saía com margem 0,65, a MESMA de quem respondia tudo de forma coerente e convicta.
-
-**O conserto, em duas partes.** A escala virou 4 pontos e "não sei" virou uma opção separada que
-não entra na conta. E a pontuação passou a ser feita por PAR: um par com um "não sei" é descartado
-inteiro. Essa segunda parte não é zelo, é necessária: "não sei" fora da conta vira um "pular", e
-pular metade de um par deixa o viés de aquiescência entrar (`(t+a)(-w)` não cancela o `a`).
-Medido: pela regra antiga, quem dizia "não sei" de um lado do par e "concordo" do outro era
-empurrado para +2,5; agora cai para 0 com margem máxima.
-
-**Estado atual:** 363 testes. Arrasto verificado no navegador nos quatro sentidos de intensidade,
-mais os casos de cancelar e de rolagem. Teclado sozinho leva ao resultado. Link da versão 1 é
-recusado em vez de abrir com respostas trocadas. Agregados contam só a versão 2 (o banco de dev
-tem 174 linhas da 1 e 130 da 2, e o total reportado é 130).
-
-**Para o próximo agente:** três coisas que quebram em silêncio se ignoradas.
-
-1. **`VERSAO` em `functions/api/_versao.js` tem que bater com o `versao` do `questions.json`.** Não
-   dá para importar o JSON do client dentro das Functions; a sincronia é manual. Fora de sincronia,
-   os agregados param de contar as respostas novas sem erro nenhum.
-2. **A escala mora só em `scoring.js`.** Já esteve copiada em `permalink.js` e `Teste.jsx`, e uma
-   cópia defasada faria o mesmo link decodificar para outras respostas.
-3. **A decisão do gesto mora em `lib/gesto.js`, não no componente.** Se alguém mover a lógica para
-   dentro do JSX, ela deixa de ser testada e passa a quebrar sem ninguém ver.
-
-A lista de botões e o teclado NÃO podem sumir: são o único caminho para leitor de tela e teclado.

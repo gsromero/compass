@@ -80,3 +80,18 @@ export function decodificar(perguntas, codigo, versao) {
     return null;
   }
 }
+
+/**
+ * A versao do banco gravada no codigo, ou null se ele nem decodifica. Serve
+ * para a tela distinguir "link de uma versao anterior do teste" de "link
+ * quebrado": as duas coisas fazem `decodificar` devolver null, mas pedem
+ * mensagens diferentes.
+ */
+export function versaoDoCodigo(codigo) {
+  try {
+    const bytes = deBase64Url(codigo);
+    return bytes.length > 0 ? bytes[0] : null;
+  } catch {
+    return null;
+  }
+}
