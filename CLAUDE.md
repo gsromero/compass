@@ -163,8 +163,8 @@ Ler o handoff recente **antes de começar**.
   respostas individuais anônimas, baixados com cadastro. O termo de uso proíbe expor respondente:
   por isso partido com menos de 10 notas não aparece. Só `client/src/data/partidos-bls.json`
   (médias) vai para o repo, gerado por `scripts/partidos-bls.mjs`.
-- **Uma Function importa do client de propósito:** `functions/resultado/[codigo].js` usa
-  `lib/previa.js` (permalink, scoring e `questions.json`) para a prévia do link calcular o mesmo
+- **Functions importam do client de propósito:** `functions/resultado/[codigo].js` e
+  `functions/og/r/[codigo].js` usam `lib/previa.js`, `lib/previaImagem.js` e `lib/shareCard.js` (permalink, scoring e `questions.json`) para a prévia do link calcular o mesmo
   quadrante que a tela. Funciona porque são módulos puros, sem DOM. Não importar daí nada que
   toque `window` ou `document`.
 - **O `state` da navegação sobrevive ao F5.** O react-router guarda no `history` do navegador.

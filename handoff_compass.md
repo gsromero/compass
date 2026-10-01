@@ -26,6 +26,13 @@
    no navegador: dono bloqueado sem Turnstile nem POST; resultado normal ainda grava; visitante vê
    texto próprio; o botão abre /teste.
 
+9. **Banco de produção zerado** a pedido do dono (eram testes dele): 11 respostas e 384 itens.
+   `criado_em` só guarda o dia, então não dá para cortar por hora.
+10. **Erro "Algo deu errado" ao arrastar cartões no iPhone**: corrigido (`aoMover` em `Teste.jsx`).
+    Reproduzido com o WebKit do Playwright (instalado só no scratchpad, fora do projeto).
+11. **Prévia de link desenhada na hora** com o resultado real (`functions/og/r`, `@resvg/resvg-wasm`,
+    autorizado) e nova prévia geral "Onde você cai?" (`npm run og:geral`).
+
 **Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
 formatos, sem rolagem lateral).
 

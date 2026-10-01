@@ -140,6 +140,11 @@ const dict = {
 
     // bussola
     bus_voce: "Você",
+    // Imagem de previa de link (lib/previaImagem.js).
+    og_convite: "E você, onde cai?",
+    og_meu_resultado: "Meu resultado no Compass",
+    og_geral_titulo: "Onde você cai?",
+    og_geral_sub: "48 afirmações de pesquisas acadêmicas, com a fonte de cada uma e a margem de erro.",
     bus_margem: "margem de erro",
     bus_populacao: "onde caiu quem já respondeu",
     bus_tradicoes: "Mostrar as tradições no gráfico",
@@ -447,6 +452,10 @@ const dict = {
     res_atalho_compartilhar: "Share",
 
     bus_voce: "You",
+    og_convite: "And you, where do you land?",
+    og_meu_resultado: "My Compass result",
+    og_geral_titulo: "Where do you land?",
+    og_geral_sub: "48 statements from academic surveys, with the source of each one and the margin of error.",
     bus_margem: "margin of error",
     bus_populacao: "where previous respondents landed",
     bus_tradicoes: "Show the traditions on the chart",

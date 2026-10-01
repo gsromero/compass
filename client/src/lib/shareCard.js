@@ -28,8 +28,9 @@ const FONTE_TEXTO = 'Georgia, "Times New Roman", serif';
 
 // O card e imagem: vai para fora do site e nao herda o CSS de ninguem. Por
 // isso as cores sao fixas aqui, e e a unica excecao a regra de "nunca cor a
-// mao". Sao os tokens do index.css convertidos de OKLCH para sRGB.
-const COR = {
+// mao". Sao os tokens do index.css convertidos de OKLCH para sRGB. A imagem
+// de previa de link (lib/previaImagem.js) usa as mesmas.
+export const COR = {
   fundo: "#fbfaf8",
   painel: "#ffffff",
   linha: "#dfdeda",
@@ -82,14 +83,14 @@ function quebrar(ctx, texto, largura, tamanho, peso, maxLinhas) {
   return { linhas: [texto], tamanho: 28 };
 }
 
-function frase(resultado, lang, eixosMeta) {
+export function frase(resultado, lang, eixosMeta) {
   const [econ, aut] = partesDaManchete(resultado, eixosMeta).map((p) =>
     t(lang, `manchete_${p.eixo}_${p.intensidade}`, t(lang, `polo_${p.polo}`)),
   );
   return t(lang, "res_manchete", econ, aut);
 }
 
-function leitura(resultado, eixo, lang, eixosMeta) {
+export function leitura(resultado, eixo, lang, eixosMeta) {
   const { posicao } = resultado[eixo];
   const polo = t(lang, `polo_${posicao > 0 ? eixosMeta[eixo].pos : eixosMeta[eixo].neg}`);
   return t(lang, `leitura_${intensidade(posicao)}`, polo);
