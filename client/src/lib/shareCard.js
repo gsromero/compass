@@ -1,47 +1,57 @@
-// Card 1080x1080 do resultado, para redes sociais.
-// Desenho 100% Canvas 2D, sem dependencia. Mesmo padrao do BBB.
+// O card de compartilhar, desenhado em Canvas 2D, sem dependencia.
 //
-// GOTCHA herdado do BBB, e que vale de novo aqui: FUNDO SEMPRE SOLIDO.
-// Transparencia vira preto no Instagram.
+// Tres formatos: "quadrado" (1080x1080, WhatsApp e feed), "story" (1080x1920,
+// Instagram e status) e "minimo" (1080x1080, so a frase e a bussola). Tema
+// claro, igual ao site (mockup aprovado em 2026-10-01).
 //
-// A geometria da bussola vem de lib/compass.js, a mesma que a tela usa, para
-// o card e o site nunca mostrarem posicoes diferentes.
+// GOTCHA herdado do BBB: FUNDO SEMPRE SOLIDO. Transparencia vira preto no
+// Instagram.
+//
+// A frase do resultado e as leituras vem das MESMAS funcoes da tela
+// (lib/manchete.js), para o card nunca dizer outra coisa que o site.
 
-import { linhasDaGrade, paraCoordenada, paraRaios } from "./compass.js";
-import { EIXOS } from "./scoring.js";
-import { t } from "./i18n.js";
+import { EIXOS, EIXOS_PRINCIPAIS } from "./scoring.js";
+import { intensidade, partesDaManchete } from "./manchete.js";
+import { numSinal, t } from "./i18n.js";
 
-const LADO = 1080;
-const FONTE_UI =
-  '-apple-system, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+export const LAYOUTS = ["quadrado", "story", "minimo"];
+
+const TAMANHOS = {
+  quadrado: { largura: 1080, altura: 1080 },
+  story: { largura: 1080, altura: 1920 },
+  minimo: { largura: 1080, altura: 1080 },
+};
+
+const FONTE_UI = '-apple-system, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const FONTE_TEXTO = 'Georgia, "Times New Roman", serif';
 
-export const LAYOUTS = ["classico", "cartaz", "minimo"];
-
-// O card e imagem: ela vai para fora do site e nao herda o tema de ninguem.
-// Por isso as cores sao fixas aqui, e nao tokens do CSS. E a unica excecao a
-// regra de "nunca cor a mao", e ela existe porque o destino nao e a tela.
-const TEMA = {
-  fundo: "#12151a",
-  painel: "#1a1f26",
-  linha: "#2b323c",
-  linhaForte: "#3d4653",
-  tinta: "#eef2f6",
-  tintaMedia: "#9aa6b4",
+// O card e imagem: vai para fora do site e nao herda o CSS de ninguem. Por
+// isso as cores sao fixas aqui, e e a unica excecao a regra de "nunca cor a
+// mao". Sao os tokens do index.css convertidos de OKLCH para sRGB.
+const COR = {
+  fundo: "#fbfaf8",
+  painel: "#ffffff",
+  linha: "#dfdeda",
+  linhaForte: "#bfbeb9",
+  tinta: "#181b1e",
+  tintaMedia: "#5b5e62",
   quadrantes: {
-    "igualdade-liberdade": "#4e8f6d",
-    "igualdade-autoridade": "#8f7d3f",
-    "mercado-liberdade": "#4d6f9c",
-    "mercado-autoridade": "#8f5a7d",
+    "igualdade-liberdade": "#41b875",
+    "igualdade-autoridade": "#db8925",
+    "mercado-liberdade": "#41a6f2",
+    "mercado-autoridade": "#d579c2",
   },
 };
 
-function fonte(peso, tamanho, familia = FONTE_UI) {
-  return `${peso} ${tamanho}px ${familia}`;
+const fonte = (peso, tamanho, familia = FONTE_UI) => `${peso} ${tamanho}px ${familia}`;
+
+function comAlfa(hex, alfa) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alfa})`;
 }
 
 function retanguloRedondo(ctx, x, y, largura, altura, raio) {
-  const r = Math.min(raio, largura / 2, altura / 2);
+  const r = Math.max(0, Math.min(raio, largura / 2, altura / 2));
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.arcTo(x + largura, y, x + largura, y + altura, r);
@@ -51,242 +61,369 @@ function retanguloRedondo(ctx, x, y, largura, altura, raio) {
   ctx.closePath();
 }
 
-function encolherPara(ctx, texto, larguraMax, tamanhoBase, peso, familia) {
-  let tamanho = tamanhoBase;
-  while (tamanho > 16) {
-    ctx.font = fonte(peso, tamanho, familia);
-    if (ctx.measureText(texto).width <= larguraMax) break;
-    tamanho -= 2;
+/** Quebra o texto em linhas que cabem na largura, encolhendo se passar do maximo. */
+function quebrar(ctx, texto, largura, tamanho, peso, maxLinhas) {
+  for (let t = tamanho; t >= 28; t -= 4) {
+    ctx.font = fonte(peso, t);
+    const linhas = [];
+    let atual = "";
+    for (const palavra of texto.split(" ")) {
+      const tentativa = atual ? `${atual} ${palavra}` : palavra;
+      if (ctx.measureText(tentativa).width <= largura || !atual) atual = tentativa;
+      else {
+        linhas.push(atual);
+        atual = palavra;
+      }
+    }
+    linhas.push(atual);
+    if (linhas.length <= maxLinhas) return { linhas, tamanho: t };
   }
-  return tamanho;
+  return { linhas: [texto], tamanho: 28 };
 }
 
-/** Desenha a bussola dentro de um quadrado de lado `tamanho` em (x, y). */
-function desenharBussola(ctx, { x, y, tamanho, resultado, quadrante, lang }) {
-  const borda = tamanho * 0.1;
-  const fim = tamanho - borda;
-  const meio = tamanho / 2;
+function frase(resultado, lang, eixosMeta) {
+  const [econ, aut] = partesDaManchete(resultado, eixosMeta).map((p) =>
+    t(lang, `manchete_${p.eixo}_${p.intensidade}`, t(lang, `polo_${p.polo}`)),
+  );
+  return t(lang, "res_manchete", econ, aut);
+}
+
+function leitura(resultado, eixo, lang, eixosMeta) {
+  const { posicao } = resultado[eixo];
+  const polo = t(lang, `polo_${posicao > 0 ? eixosMeta[eixo].pos : eixosMeta[eixo].neg}`);
+  return t(lang, `leitura_${intensidade(posicao)}`, polo);
+}
+
+/**
+ * A bussola, igual a do site: quadrantes em degrade, nome de cada quadrante,
+ * polos na horizontal dentro do grafico, a margem de erro e o ponto. Sem os
+ * numeros da escala: no card eles so poluiriam.
+ * `lado` e o tamanho do QUADRADO do grafico; `e` e a escala dos detalhes.
+ */
+function desenharBussola(ctx, { x, y, lado, e, resultado, quadrante, lang }) {
+  const folga = 26 * e;
+  const X = (v) => x + folga + ((v + 10) / 20) * lado;
+  const Y = (v) => y + folga + ((10 - v) / 20) * lado;
+  const cx = X(0);
+  const cy = Y(0);
 
   ctx.save();
-  ctx.translate(x, y);
-
-  const cantos = [
-    { id: "igualdade-autoridade", cx: borda, cy: borda },
-    { id: "mercado-autoridade", cx: meio, cy: borda },
-    { id: "igualdade-liberdade", cx: borda, cy: meio },
-    { id: "mercado-liberdade", cx: meio, cy: meio },
-  ];
-  for (const canto of cantos) {
-    ctx.globalAlpha = canto.id === quadrante ? 0.4 : 0.28;
-    ctx.fillStyle = TEMA.quadrantes[canto.id];
-    ctx.fillRect(canto.cx, canto.cy, meio - borda, meio - borda);
+  retanguloRedondo(ctx, X(-10), Y(10), lado, lado, 8 * e);
+  ctx.clip();
+  for (const [id, qx, qy] of [
+    ["igualdade-autoridade", -10, 10],
+    ["mercado-autoridade", 10, 10],
+    ["igualdade-liberdade", -10, -10],
+    ["mercado-liberdade", 10, -10],
+  ]) {
+    const forte = id === quadrante;
+    const g = ctx.createLinearGradient(cx, cy, X(qx), Y(qy));
+    g.addColorStop(0, comAlfa(COR.quadrantes[id], forte ? 0.12 : 0.08));
+    g.addColorStop(1, comAlfa(COR.quadrantes[id], forte ? 0.56 : 0.46));
+    ctx.fillStyle = g;
+    ctx.fillRect(Math.min(cx, X(qx)), Math.min(cy, Y(qy)), lado / 2, lado / 2);
   }
-  ctx.globalAlpha = 1;
-
-  for (const linha of linhasDaGrade(tamanho)) {
-    ctx.strokeStyle = linha.central ? TEMA.linhaForte : TEMA.linha;
-    ctx.lineWidth = linha.central ? 2.5 : 1.2;
+  ctx.strokeStyle = comAlfa(COR.painel, 0.55);
+  ctx.lineWidth = 1.2 * e;
+  for (const v of [-7.5, -5, -2.5, 2.5, 5, 7.5]) {
     ctx.beginPath();
-    ctx.moveTo(linha.pos, borda);
-    ctx.lineTo(linha.pos, fim);
-    ctx.moveTo(borda, linha.pos);
-    ctx.lineTo(fim, linha.pos);
+    ctx.moveTo(X(v), Y(10));
+    ctx.lineTo(X(v), Y(-10));
+    ctx.moveTo(X(-10), Y(v));
+    ctx.lineTo(X(10), Y(v));
     ctx.stroke();
   }
+  ctx.restore();
 
-  const ponto = paraCoordenada(resultado.economico.posicao, resultado.autoridade.posicao, tamanho);
-  const raios = paraRaios(resultado.economico.margem, resultado.autoridade.margem, tamanho);
-
+  ctx.strokeStyle = COR.linhaForte;
+  ctx.lineWidth = 1.5 * e;
   ctx.beginPath();
-  ctx.ellipse(ponto.x, ponto.y, raios.rx, raios.ry, 0, 0, Math.PI * 2);
-  ctx.fillStyle = TEMA.tinta;
-  ctx.globalAlpha = 0.16;
+  ctx.moveTo(cx, Y(10));
+  ctx.lineTo(cx, Y(-10));
+  ctx.moveTo(X(-10), cy);
+  ctx.lineTo(X(10), cy);
+  ctx.stroke();
+  retanguloRedondo(ctx, X(-10), Y(10), lado, lado, 8 * e);
+  ctx.lineWidth = 1.4 * e;
+  ctx.stroke();
+
+  // Nome de cada quadrante, no canto de fora.
+  ctx.font = fonte(650, 9 * e);
+  ctx.fillStyle = COR.tintaMedia;
+  ctx.textBaseline = "alphabetic";
+  const quad = (chave) => t(lang, chave).toLocaleUpperCase(lang);
+  ctx.textAlign = "left";
+  ctx.fillText(quad("quadrante_igualdade_autoridade"), X(-10) + 10 * e, Y(10) + 18 * e);
+  ctx.fillText(quad("quadrante_igualdade_liberdade"), X(-10) + 10 * e, Y(-10) - 10 * e);
+  ctx.textAlign = "right";
+  ctx.fillText(quad("quadrante_mercado_autoridade"), X(10) - 10 * e, Y(10) + 18 * e);
+  ctx.fillText(quad("quadrante_mercado_liberdade"), X(10) - 10 * e, Y(-10) - 10 * e);
+
+  // Os quatro polos, dentro do grafico, na horizontal.
+  const pilula = (texto, px, py, ancora) => {
+    ctx.font = fonte(700, 12 * e);
+    const largura = ctx.measureText(texto).width + 16 * e;
+    const x0 = ancora === "inicio" ? px : ancora === "fim" ? px - largura : px - largura / 2;
+    ctx.fillStyle = comAlfa(COR.painel, 0.92);
+    retanguloRedondo(ctx, x0, py - 12 * e, largura, 18.5 * e, 9.25 * e);
+    ctx.fill();
+    ctx.fillStyle = COR.tinta;
+    ctx.textAlign = "center";
+    ctx.fillText(texto, x0 + largura / 2, py + 1.5 * e);
+  };
+  pilula(`↑ ${t(lang, "polo_autoridade")}`, cx, Y(10) + 34 * e, "meio");
+  pilula(`↓ ${t(lang, "polo_liberdade")}`, cx, Y(-10) - 26 * e, "meio");
+  pilula(`← ${t(lang, "polo_igualdade")}`, X(-10) + 6 * e, cy + 4 * e, "inicio");
+  pilula(`${t(lang, "polo_mercado")} →`, X(10) - 6 * e, cy + 4 * e, "fim");
+
+  // A margem de erro e o ponto.
+  const vx = X(resultado.economico.posicao);
+  const vy = Y(resultado.autoridade.posicao);
+  const rx = Math.max((resultado.economico.margem / 20) * lado, 3 * e);
+  const ry = Math.max((resultado.autoridade.margem / 20) * lado, 3 * e);
+  ctx.fillStyle = comAlfa(COR.tinta, 0.07);
+  ctx.beginPath();
+  ctx.arc(vx, vy, Math.max(rx, ry) + 10 * e, 0, Math.PI * 2);
   ctx.fill();
-  ctx.globalAlpha = 0.6;
-  ctx.strokeStyle = TEMA.tinta;
+  ctx.setLineDash([4 * e, 3 * e]);
+  ctx.strokeStyle = comAlfa(COR.tinta, 0.7);
+  ctx.lineWidth = 1.6 * e;
+  ctx.beginPath();
+  ctx.ellipse(vx, vy, rx, ry, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.arc(vx, vy, 8 * e, 0, Math.PI * 2);
+  ctx.fillStyle = COR.tinta;
+  ctx.fill();
+  ctx.lineWidth = 3 * e;
+  ctx.strokeStyle = COR.painel;
+  ctx.stroke();
+
+  // Etiqueta "Voce": em cima e a esquerda da margem; vira se nao couber.
+  ctx.font = fonte(700, 11.5 * e);
+  const rotulo = t(lang, "bus_voce");
+  const larguraRotulo = ctx.measureText(rotulo).width + 22 * e;
+  const alturaRotulo = 21 * e;
+  let ex = vx - rx - larguraRotulo - 8 * e;
+  if (ex < X(-10)) ex = Math.min(vx + rx + 8 * e, X(10) - larguraRotulo);
+  let ey = vy - ry - alturaRotulo - 4 * e;
+  if (ey < Y(10)) ey = Math.min(vy + ry + 6 * e, Y(-10) - alturaRotulo);
+  ctx.fillStyle = COR.tinta;
+  retanguloRedondo(ctx, ex, ey, larguraRotulo, alturaRotulo, alturaRotulo / 2);
+  ctx.fill();
+  ctx.fillStyle = COR.fundo;
+  ctx.textAlign = "center";
+  ctx.fillText(rotulo, ex + larguraRotulo / 2, ey + 14.5 * e);
+
+  ctx.textAlign = "left";
+  return lado + 2 * folga;
+}
+
+/** Quadro branco em volta da bussola, como no site. */
+function moldura(ctx, x, y, tamanho) {
+  ctx.fillStyle = COR.painel;
+  retanguloRedondo(ctx, x, y, tamanho, tamanho, 28);
+  ctx.fill();
+  ctx.strokeStyle = COR.linha;
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.globalAlpha = 1;
-
-  ctx.beginPath();
-  ctx.arc(ponto.x, ponto.y, tamanho * 0.018, 0, Math.PI * 2);
-  ctx.fillStyle = TEMA.tinta;
-  ctx.fill();
-
-  // Sem rotulo o card vira um ponto num quadrado: no feed de alguem, quem ve
-  // nao tem o resto da pagina para deduzir o que cada eixo significa.
-  ctx.font = fonte(600, tamanho * 0.036);
-  ctx.fillStyle = TEMA.tintaMedia;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(t(lang, "polo_autoridade"), meio, borda - tamanho * 0.028);
-  ctx.fillText(t(lang, "polo_liberdade"), meio, fim + tamanho * 0.06);
-
-  ctx.save();
-  ctx.translate(borda - tamanho * 0.035, meio);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText(t(lang, "polo_igualdade"), 0, 0);
-  ctx.restore();
-
-  ctx.save();
-  ctx.translate(fim + tamanho * 0.045, meio);
-  ctx.rotate(Math.PI / 2);
-  ctx.fillText(t(lang, "polo_mercado"), 0, 0);
-  ctx.restore();
-
-  ctx.textAlign = "left";
-  ctx.restore();
 }
 
-function desenharBarras(ctx, { x, y, largura, resultado, lang, eixosMeta }) {
-  const secundarios = EIXOS.filter((e) => e !== "economico" && e !== "autoridade");
-  const alturaLinha = 62;
-
-  secundarios.forEach((eixo, i) => {
-    const topo = y + i * alturaLinha;
-    const dados = resultado[eixo];
-    const meta = eixosMeta[eixo];
-
-    ctx.font = fonte(600, 19);
-    ctx.fillStyle = TEMA.tintaMedia;
-    ctx.textAlign = "left";
-    ctx.fillText(t(lang, `polo_${meta.neg}`), x, topo);
-    ctx.textAlign = "right";
-    ctx.fillText(t(lang, `polo_${meta.pos}`), x + largura, topo);
-
-    const trilhoY = topo + 14;
-    const trilhoAltura = 12;
-    ctx.fillStyle = TEMA.painel;
-    retanguloRedondo(ctx, x, trilhoY, largura, trilhoAltura, 6);
-    ctx.fill();
-
-    ctx.strokeStyle = TEMA.linha;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(x + largura / 2, trilhoY);
-    ctx.lineTo(x + largura / 2, trilhoY + trilhoAltura);
-    ctx.stroke();
-
-    const posX = x + ((dados.posicao + 10) / 20) * largura;
-    const margemLargura = Math.max((dados.margem / 20) * largura * 2, 8);
-    // Recorta a faixa nas DUAS pontas do trilho. So prendia a esquerda, e numa
-    // posicao no extremo direito (+10) a faixa vazava para fora da barra.
-    const inicioMargem = Math.max(x, posX - margemLargura / 2);
-    const fimMargem = Math.min(x + largura, posX + margemLargura / 2);
-    ctx.fillStyle = TEMA.tintaMedia;
-    ctx.globalAlpha = 0.35;
-    retanguloRedondo(ctx, inicioMargem, trilhoY, fimMargem - inicioMargem, trilhoAltura, 6);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    ctx.fillStyle = TEMA.tinta;
-    retanguloRedondo(ctx, posX - 3, trilhoY - 3, 6, trilhoAltura + 6, 3);
-    ctx.fill();
-  });
-
+function topo(ctx, { largura, margem, y, lang }) {
+  ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
-  return secundarios.length * alturaLinha;
+  ctx.fillStyle = COR.tinta;
+  ctx.font = fonte(700, 38);
+  ctx.fillText(t(lang, "marca"), margem, y);
+  ctx.textAlign = "right";
+  ctx.fillStyle = COR.tintaMedia;
+  ctx.font = fonte(700, 21);
+  ctx.fillText(t(lang, "card_meu_resultado").toLocaleUpperCase(lang), largura - margem, y);
+  ctx.textAlign = "left";
+}
+
+function titulo(ctx, { texto, x, y, largura, tamanho, maxLinhas, centro = false }) {
+  const { linhas, tamanho: t } = quebrar(ctx, texto, largura, tamanho, 750, maxLinhas);
+  ctx.font = fonte(750, t);
+  ctx.fillStyle = COR.tinta;
+  ctx.textAlign = centro ? "center" : "left";
+  linhas.forEach((linha, i) => ctx.fillText(linha, centro ? x + largura / 2 : x, y + t + i * t * 1.06));
+  ctx.textAlign = "left";
+  return y + linhas.length * t * 1.06;
+}
+
+/** Rodape com o convite: e o que transforma o card num caminho para o teste. */
+function convite(ctx, { largura, margem, y, lang }) {
+  ctx.fillStyle = COR.tinta;
+  ctx.fillRect(margem, y, largura - margem * 2, 2);
+  ctx.textAlign = "left";
+  ctx.font = fonte(700, 34);
+  ctx.fillText(t(lang, "card_convite_titulo"), margem, y + 62);
+  ctx.font = fonte(500, 27);
+  ctx.fillStyle = COR.tintaMedia;
+  const antes = `${t(lang, "card_convite")} `;
+  ctx.fillText(antes, margem, y + 104);
+  const deslocamento = ctx.measureText(antes).width;
+  ctx.font = fonte(700, 27);
+  ctx.fillStyle = COR.tinta;
+  ctx.fillText("compass.gsromerolab.com", margem + deslocamento, y + 104);
+  ctx.textAlign = "right";
+  ctx.font = fonte(500, 21);
+  ctx.fillStyle = COR.tintaMedia;
+  const [l1, l2] = t(lang, "card_rodape").split("\n");
+  ctx.fillText(l1, largura - margem, y + 66);
+  ctx.fillText(l2, largura - margem, y + 96);
+  ctx.textAlign = "left";
+}
+
+function destaque(ctx, { x, y, eixo, resultado, lang, eixosMeta }) {
+  ctx.textAlign = "left";
+  ctx.fillStyle = COR.tintaMedia;
+  ctx.font = fonte(700, 20);
+  ctx.fillText(t(lang, `eixo_${eixo}`).toLocaleUpperCase(lang), x, y);
+  ctx.fillStyle = COR.tinta;
+  ctx.font = fonte(750, 96);
+  ctx.fillText(numSinal(lang, resultado[eixo].posicao), x, y + 96);
+  ctx.fillStyle = COR.tintaMedia;
+  ctx.font = fonte(500, 26);
+  ctx.fillText(leitura(resultado, eixo, lang, eixosMeta), x, y + 136);
+}
+
+function regua(ctx, { x, y, largura, posicao, margem }) {
+  const X = (v) => x + 8 + ((Math.max(-10, Math.min(10, v)) + 10) / 20) * (largura - 16);
+  ctx.strokeStyle = COR.linhaForte;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x + 8, y);
+  ctx.lineTo(x + largura - 8, y);
+  for (let v = -10; v <= 10; v += 2) {
+    const h = v === 0 ? 9 : 4;
+    ctx.moveTo(X(v), y - h);
+    ctx.lineTo(X(v), y + h);
+  }
+  ctx.stroke();
+  ctx.strokeStyle = comAlfa(COR.tinta, 0.25);
+  ctx.lineWidth = 9;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(X(posicao - margem), y);
+  ctx.lineTo(X(posicao + margem), y);
+  ctx.stroke();
+  ctx.lineCap = "butt";
+  ctx.beginPath();
+  ctx.arc(X(posicao), y, 8, 0, Math.PI * 2);
+  ctx.fillStyle = COR.tinta;
+  ctx.fill();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = COR.painel;
+  ctx.stroke();
 }
 
 /**
  * Monta o card e devolve o canvas pronto para `compartilharCanvasPng`.
- * @param {object} opcoes resultado, quadrante, tradicao, lang, layout, eixosMeta
+ * `comTradicao`: so o Story mostra a tradicao, e so se a pessoa ligar. Um nome
+ * de tradicao num card publico pode expor mais do que ela quer.
  */
-export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixosMeta }) {
+export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixosMeta, comTradicao = false }) {
+  const formato = TAMANHOS[layout] ? layout : LAYOUTS[0];
+  const { largura, altura } = TAMANHOS[formato];
   const canvas = document.createElement("canvas");
-  canvas.width = LADO;
-  canvas.height = LADO;
+  canvas.width = largura;
+  canvas.height = altura;
   const ctx = canvas.getContext("2d");
 
   // Fundo solido, sempre. Ver o gotcha no topo do arquivo.
-  ctx.fillStyle = TEMA.fundo;
-  ctx.fillRect(0, 0, LADO, LADO);
+  ctx.fillStyle = COR.fundo;
+  ctx.fillRect(0, 0, largura, altura);
+  const texto = frase(resultado, lang, eixosMeta);
+  const comum = { resultado, quadrante, lang };
 
+  if (formato === "minimo") {
+    const margem = 72;
+    titulo(ctx, { texto, x: margem, y: 60, largura: largura - margem * 2, tamanho: 58, maxLinhas: 2, centro: true });
+    const lado = 640;
+    const tamanho = lado + 2 * 26 * 1.7;
+    desenharBussola(ctx, { x: (largura - tamanho) / 2, y: 240, lado, e: 1.7, ...comum });
+    ctx.textAlign = "center";
+    ctx.font = fonte(500, 28);
+    ctx.fillStyle = COR.tintaMedia;
+    ctx.fillText(`${t(lang, "marca")} · ${t(lang, "card_minimo_convite")} compass.gsromerolab.com`, largura / 2, altura - 62);
+    ctx.textAlign = "left";
+    return canvas;
+  }
+
+  if (formato === "story") {
+    const margem = 80;
+    topo(ctx, { largura, margem, y: 130, lang });
+    let y = titulo(ctx, { texto, x: margem, y: 168, largura: largura - margem * 2, tamanho: 84, maxLinhas: 3 });
+    // Com a tradicao, a bussola encolhe para a caixa dela caber acima do convite.
+    const mostraTradicao = comTradicao && tradicao;
+    const lado = mostraTradicao ? 540 : 640;
+    const tamanho = lado + 2 * 26 * 1.7;
+    const caixa = tamanho + 32;
+    moldura(ctx, (largura - caixa) / 2, y + 40, caixa);
+    desenharBussola(ctx, { x: (largura - caixa) / 2 + 16, y: y + 56, lado, e: 1.7, ...comum });
+    y += 40 + caixa + 30;
+
+    // Os seis eixos em reguas.
+    for (const eixo of EIXOS) {
+      const { posicao, margem: m } = resultado[eixo];
+      const polo = t(lang, `polo_${posicao > 0 ? eixosMeta[eixo].pos : eixosMeta[eixo].neg}`);
+      ctx.fillStyle = COR.tintaMedia;
+      ctx.font = fonte(700, 19);
+      ctx.textAlign = "left";
+      ctx.fillText(t(lang, `eixo_${eixo}`).toLocaleUpperCase(lang), margem, y + 26);
+      ctx.fillStyle = COR.tinta;
+      ctx.font = fonte(650, 25);
+      ctx.fillText(intensidade(posicao) === "centro" ? t(lang, "leitura_centro") : polo, margem, y + 56);
+      regua(ctx, { x: margem + 270, y: y + 38, largura: 520, posicao, margem: m });
+      ctx.textAlign = "right";
+      ctx.font = fonte(750, 36);
+      ctx.fillText(numSinal(lang, posicao), largura - margem, y + 50);
+      ctx.fillStyle = COR.linha;
+      ctx.fillRect(margem, y + 76, largura - margem * 2, 2);
+      y += 78;
+    }
+    ctx.textAlign = "left";
+
+    if (mostraTradicao) {
+      y += 26;
+      ctx.fillStyle = COR.painel;
+      retanguloRedondo(ctx, margem, y, largura - margem * 2, 96, 24);
+      ctx.fill();
+      ctx.strokeStyle = COR.linha;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.font = fonte(500, 24);
+      ctx.fillStyle = COR.tintaMedia;
+      ctx.fillText(t(lang, "card_tradicao"), margem + 30, y + 58);
+      ctx.textAlign = "right";
+      ctx.font = fonte(700, 34, FONTE_TEXTO);
+      ctx.fillStyle = COR.tinta;
+      ctx.fillText(tradicao.nome[lang] ?? tradicao.nome.pt, largura - margem - 30, y + 60);
+      ctx.textAlign = "left";
+    }
+
+    convite(ctx, { largura, margem, y: altura - 88 - 120, lang });
+    return canvas;
+  }
+
+  // quadrado
   const margem = 72;
-  const larguraUtil = LADO - margem * 2;
-
-  ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "left";
-  ctx.font = fonte(700, 30);
-  ctx.fillStyle = TEMA.tinta;
-  ctx.fillText(t(lang, "marca"), margem, margem + 24);
-
-  ctx.font = fonte(500, 20);
-  ctx.fillStyle = TEMA.tintaMedia;
-  ctx.textAlign = "right";
-  ctx.fillText("compass.gsromerolab.com", LADO - margem, margem + 24);
-  ctx.textAlign = "left";
-
-  if (layout === "minimo") {
-    desenharBussola(ctx, {
-      x: margem,
-      y: 190,
-      tamanho: larguraUtil,
-      resultado,
-      quadrante,
-      lang,
-    });
-    escreverAssinatura(ctx, { lang, tradicao, y: LADO - margem - 10, margem });
-    return canvas;
-  }
-
-  if (layout === "cartaz") {
-    const nome = tradicao ? tradicao.nome[lang] : t(lang, "res_titulo");
-    const tamanho = encolherPara(ctx, nome, larguraUtil, 68, 700, FONTE_TEXTO);
-    ctx.font = fonte(700, tamanho, FONTE_TEXTO);
-    ctx.fillStyle = TEMA.tinta;
-    ctx.fillText(nome, margem, 250);
-
-    ctx.font = fonte(500, 22);
-    ctx.fillStyle = TEMA.tintaMedia;
-    ctx.fillText(t(lang, "res_tradicoes"), margem, 200);
-
-    desenharBussola(ctx, {
-      x: LADO / 2 - 260,
-      y: 300,
-      tamanho: 520,
-      resultado,
-      quadrante,
-      lang,
-    });
-    escreverAssinatura(ctx, { lang, tradicao: null, y: LADO - margem - 10, margem });
-    return canvas;
-  }
-
-  // classico: bussola em cima, quatro eixos secundarios embaixo
-  desenharBussola(ctx, { x: LADO / 2 - 235, y: 150, tamanho: 470, resultado, quadrante, lang });
-
-  const barrasY = 690;
-  desenharBarras(ctx, {
-    x: margem,
-    y: barrasY,
-    largura: larguraUtil,
-    resultado,
-    lang,
-    eixosMeta,
-  });
-
-  escreverAssinatura(ctx, { lang, tradicao, y: LADO - margem + 6, margem });
+  topo(ctx, { largura, margem, y: 104, lang });
+  const fimTitulo = titulo(ctx, { texto, x: margem, y: 130, largura: largura - margem * 2, tamanho: 70, maxLinhas: 2 });
+  const lado = 420;
+  const tamanho = lado + 2 * 26 * 1.3;
+  const caixa = tamanho + 28;
+  const yCaixa = Math.max(fimTitulo + 34, 320);
+  moldura(ctx, margem, yCaixa, caixa);
+  desenharBussola(ctx, { x: margem + 14, y: yCaixa + 14, lado, e: 1.3, ...comum });
+  const xDestaques = margem + caixa + 48;
+  const meio = yCaixa + caixa / 2;
+  EIXOS_PRINCIPAIS.forEach((eixo, i) =>
+    destaque(ctx, { x: xDestaques, y: meio - 150 + i * 200, eixo, resultado, lang, eixosMeta }),
+  );
+  convite(ctx, { largura, margem, y: altura - 72 - 122, lang });
   return canvas;
-}
-
-function escreverAssinatura(ctx, { lang, tradicao, y, margem }) {
-  // Cada funcao de desenho reposiciona o que usa, em vez de confiar no estado
-  // que a anterior deixou. Sem esta linha a assinatura saia centralizada em
-  // x=margem e vazava pela borda esquerda do card.
-  ctx.textAlign = "left";
-  ctx.textBaseline = "alphabetic";
-
-  if (tradicao) {
-    ctx.font = fonte(500, 20);
-    ctx.fillStyle = TEMA.tintaMedia;
-    ctx.fillText(t(lang, "res_tradicoes"), margem, y - 30);
-    ctx.font = fonte(650, 30, FONTE_TEXTO);
-    ctx.fillStyle = TEMA.tinta;
-    ctx.fillText(tradicao.nome[lang], margem, y);
-  } else {
-    ctx.font = fonte(500, 20);
-    ctx.fillStyle = TEMA.tintaMedia;
-    ctx.fillText(t(lang, "tagline"), margem, y);
-  }
 }

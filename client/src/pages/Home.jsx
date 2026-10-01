@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useLang } from "../lib/lang.jsx";
 import { carregar, limpar, quantasRespondidas } from "../lib/sessao.js";
 import BussolaAmostra from "../components/BussolaAmostra.jsx";
+import SeletorModo from "../components/SeletorModo.jsx";
 
-const MODOS_ORDEM = ["rapido", "padrao", "completo"];
 const AMOSTRA = ["posicao", "eixos", "fontes", "tradicoes"];
 
 export default function Home() {
@@ -33,22 +33,7 @@ export default function Home() {
 
         <div className="pilha" style={{ gap: "8px" }}>
           <span className="rotulo">{t("home_escolha_modo")}</span>
-          {/* Tres partes numa linha so: antes eram tres cartoes altos, e a
-              descricao do modo escolhido ainda se repetia ao lado do botao. */}
-          <div className="seletor-modo">
-            {MODOS_ORDEM.map((chave) => (
-              <button
-                key={chave}
-                type="button"
-                aria-pressed={modo === chave}
-                onClick={() => setModo(chave)}
-              >
-                <strong>{t(`modo_${chave}`)}</strong>
-                <span>{t(`modo_${chave}_qtd`)}</span>
-                <span>{t(`modo_${chave}_tempo`)}</span>
-              </button>
-            ))}
-          </div>
+          <SeletorModo modo={modo} setModo={setModo} />
         </div>
 
         {temTeste ? (

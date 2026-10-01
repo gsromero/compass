@@ -8,6 +8,7 @@ import AtalhosSecoes from "../components/AtalhosSecoes.jsx";
 import CabecalhoSecao from "../components/CabecalhoSecao.jsx";
 import MiniBussola from "../components/MiniBussola.jsx";
 import VitrineCards from "../components/VitrineCards.jsx";
+import SeletorModo from "../components/SeletorModo.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num, numSinal } from "../lib/i18n.js";
 import {
@@ -26,6 +27,7 @@ import { TRADICOES, maisProximas } from "../lib/tradicoes.js";
 import { intensidade, margemUnica, partesDaManchete } from "../lib/manchete.js";
 import { carregarAgregados, enviarResposta, ondeDestoa, percentil } from "../lib/agregados.js";
 import { verificarPessoa } from "../lib/turnstile.js";
+import { eMeuResultado } from "../lib/meusResultados.js";
 import { LAYOUTS, montarCard } from "../lib/shareCard.js";
 import { baixarCanvasPng, compartilharCanvasPng } from "../lib/shareImage.js";
 
@@ -33,7 +35,22 @@ const SECUNDARIOS = EIXOS.filter((eixo) => !EIXOS_PRINCIPAIS.includes(eixo));
 // Os ids das secoes, na ordem da pagina. Fora do componente de proposito: a
 // fileira de atalhos observa estes ids, e uma lista nova a cada render
 // religaria o observador o tempo todo.
-const SECOES = ["grafico", "eixos", "porque", "tradicoes", "comparar", "compartilhar"];
+// Sem respostas suficientes a comparacao nem aparece (um medidor "4 de 50" nao
+// dizia nada a quem acabou de fazer o teste), e quem so recebeu o link ve "Sua
+// vez" no lugar de "Compartilhar". As quatro combinacoes ficam prontas aqui.
+const SECOES = {};
+for (const comparacao of [true, false]) {
+  for (const visitante of [true, false]) {
+    SECOES[`${comparacao}-${visitante}`] = [
+      "grafico",
+      "eixos",
+      "porque",
+      "tradicoes",
+      ...(comparacao ? ["comparar"] : []),
+      visitante ? "suavez" : "compartilhar",
+    ];
+  }
+}
 
 export default function Resultado() {
   const { codigo } = useParams();
@@ -49,6 +66,15 @@ export default function Resultado() {
 
   const [agregados, setAgregados] = useState(null);
   const [layout, setLayout] = useState(LAYOUTS[0]);
+  const [comTradicao, setComTradicao] = useState(false);
+  const [modoConvite, setModoConvite] = useState("padrao");
+  // Quem acabou de fazer o teste, ou fez neste aparelho, e o dono. Os demais
+  // abriram o link de outra pessoa: veem o convite para fazer o teste.
+  const visitante = useMemo(
+    () => !state?.doTeste && !eMeuResultado(codigo),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [codigo],
+  );
   const [copiado, setCopiado] = useState(false);
   const enviado = useRef(false);
   const caixaVerificacao = useRef(null);
@@ -141,12 +167,15 @@ export default function Resultado() {
     return (
       <span className="sua-resposta">
         <Polegar nota={r} tamanho={14} />
-        {t("res_voce_respondeu", r === NAO_SEI ? t("teste_nao_sei") : t(`resposta${r}`))}
+        {t(
+          visitante ? "res_resposta" : "res_voce_respondeu",
+          r === NAO_SEI ? t("teste_nao_sei") : t(`resposta${r}`),
+        )}
       </span>
     );
   }
 
-  function gerarCanvas(qual = layout) {
+  function gerarCanvas(qual = layout, tradicaoNoCard = comTradicao) {
     return montarCard({
       resultado,
       quadrante: quad,
@@ -154,6 +183,7 @@ export default function Resultado() {
       lang,
       layout: qual,
       eixosMeta: EIXOS_META,
+      comTradicao: tradicaoNoCard,
     });
   }
 
@@ -170,6 +200,8 @@ export default function Resultado() {
     );
   }
 
+  const comparacao = agregados?.suficiente === true;
+
   const textoMargem =
     margemComum !== null
       ? t("res_margem_todas", num(lang, margemComum, 1))
@@ -178,7 +210,11 @@ export default function Resultado() {
           num(lang, resultado.economico.margem, 1),
           num(lang, resultado.autoridade.margem, 1),
         );
-  const acoesTopo = (
+  const acoesTopo = visitante ? (
+    <button type="button" className="botao botao-secundario" style={{ width: "100%" }} onClick={copiarLink}>
+      {copiado ? t("res_link_copiado") : t("res_copiar_link")}
+    </button>
+  ) : (
     <div className="acoes-topo">
       <button
         type="button"
@@ -219,13 +255,29 @@ export default function Resultado() {
         </div>
       )}
 
+      {/* Quem abriu o link de outra pessoa: o convite vem antes de tudo. */}
+      {visitante && (
+        <section className="faixa faixa-visitante">
+          <div className="pilha" style={{ gap: "4px" }}>
+            <span className="faixa-visitante-texto">{t("vis_faixa_texto")}</span>
+            <strong className="faixa-visitante-titulo">{t("vis_faixa_titulo")}</strong>
+          </div>
+          <div className="linha faixa-visitante-acao">
+            <Link to="/" className="botao botao-invertido">
+              {t("vis_fazer_teste")}
+            </Link>
+            <span className="faixa-visitante-texto">{t("vis_tempo")}</span>
+          </div>
+        </section>
+      )}
+
       {/* A capa: manchete, a bussola grande, os dois numeros e Compartilhar,
           tudo no primeiro andar. Faixa de ponta a ponta, em outro tom. */}
       <section id="grafico" className="faixa faixa-capa secao-resultado">
         <div className="capa">
           <div className="capa-texto">
             <div className="pilha" style={{ gap: "10px" }}>
-              <span className="rotulo">{t("res_titulo")}</span>
+              <span className="rotulo">{t(visitante ? "vis_rotulo" : "res_titulo")}</span>
               <h1 className="manchete">{manchete}</h1>
               <p className="apoio capa-subtitulo">
                 {tradicaoTopo && <>{t("res_tradicao_topo", pick(tradicaoTopo.nome))} </>}
@@ -240,6 +292,7 @@ export default function Resultado() {
             quadrante={quad}
             populacao={agregados?.suficiente ? agregados.mapa : null}
             proximas={proximas}
+            etiqueta={visitante ? t("bus_esta_pessoa") : null}
           />
           <div className="capa-acoes-estreito">{acoesTopo}</div>
         </div>
@@ -249,7 +302,7 @@ export default function Resultado() {
           sempre fica vazia e nao ocupa espaco. */}
       <div ref={caixaVerificacao} className="caixa-verificacao" />
 
-      <AtalhosSecoes secoes={SECOES} />
+      <AtalhosSecoes secoes={SECOES[`${comparacao}-${visitante}`]} />
 
       <section id="eixos" className="faixa secao-resultado">
         <CabecalhoSecao
@@ -278,8 +331,8 @@ export default function Resultado() {
       <section id="porque" className="faixa faixa-tom secao-resultado">
         <CabecalhoSecao
           rotulo={t("sec_explicacao")}
-          titulo={t("res_por_que")}
-          intro={t("res_por_que_intro")}
+          titulo={t(visitante ? "res_por_que_vis" : "res_por_que")}
+          intro={t(visitante ? "res_por_que_intro_vis" : "res_por_que_intro")}
         />
         <div className="citacoes">
           {EIXOS.map((eixo) => {
@@ -378,7 +431,8 @@ export default function Resultado() {
             ponto "Voce" de la, nunca guardado. */}
         <Link
           to="/partidos"
-          state={{ economico: resultado.economico.posicao }}
+          // O ponto "Voce" de la e o da pessoa que fez o teste: visitante nao leva.
+          state={visitante ? null : { economico: resultado.economico.posicao }}
           className="cartao cartao-link partidos-chamada"
         >
           <strong>{t("partidos_link")}</strong>
@@ -386,23 +440,10 @@ export default function Resultado() {
         </Link>
       </section>
 
-      <section className="faixa faixa-tom fim-resultado">
-        <div id="comparar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
-          <CabecalhoSecao rotulo={t("sec_comparacao")} titulo={t("pop_titulo")} />
-          {!agregados ? (
-            <p className="apoio">{t("carregando")}</p>
-          ) : !agregados.suficiente ? (
-            <div className="cartao pilha medidor">
-              <div className="medidor-numero">
-                <strong>{agregados.total}</strong>
-                <span>{t("pop_faltam", agregados.total, agregados.minimo)}</span>
-              </div>
-              <div className="medidor-barra" aria-hidden="true">
-                <i style={{ width: `${Math.min(100, (agregados.total / agregados.minimo) * 100)}%` }} />
-              </div>
-              <p className="apoio">{t("pop_faltam_texto")}</p>
-            </div>
-          ) : (
+      <section className={`faixa faixa-tom fim-resultado${comparacao ? "" : " fim-so-card"}`}>
+        {comparacao && (
+          <div id="comparar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
+            <CabecalhoSecao rotulo={t("sec_comparacao")} titulo={t("pop_titulo")} />
             <div className="pilha">
               <p className="apoio">{t("pop_total", agregados.total)}</p>
               {EIXOS_PRINCIPAIS.map((eixo) => {
@@ -433,40 +474,63 @@ export default function Resultado() {
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div id="compartilhar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
-          <CabecalhoSecao rotulo={t("sec_compartilhar")} titulo={t("res_seu_card")} />
-          <VitrineCards
-            gerar={gerarCanvas}
-            layout={layout}
-            setLayout={setLayout}
-            chave={`${codigo}-${lang}`}
-          />
-          <div className="acoes-card">
+        {visitante ? (
+          <div id="suavez" className="pilha secao-resultado sua-vez" style={{ gap: "18px", minWidth: 0 }}>
+            <CabecalhoSecao
+              rotulo={t("vis_sua_vez_rotulo")}
+              titulo={t("vis_sua_vez")}
+              intro={t("vis_sua_vez_texto")}
+            />
+            <SeletorModo modo={modoConvite} setModo={setModoConvite} />
             <button
               type="button"
-              className="botao"
-              onClick={() => compartilharCanvasPng(gerarCanvas(), "compass.png")}
+              className="botao botao-comecar"
+              onClick={() => navigate("/teste", { state: { modo: modoConvite } })}
             >
-              {t("res_compartilhar")}
+              {t("vis_comecar")}
             </button>
-            <button
-              type="button"
-              className="botao botao-secundario"
-              onClick={() => baixarCanvasPng(gerarCanvas(), "compass.png")}
-            >
-              {t("res_baixar")}
-            </button>
-            <button type="button" className="botao botao-secundario" onClick={copiarLink}>
-              {copiado ? t("res_link_copiado") : t("res_copiar_link")}
+            <button type="button" className="botao-discreto" style={{ justifySelf: "center" }} onClick={copiarLink}>
+              {copiado ? t("res_link_copiado") : t("vis_copiar")}
             </button>
           </div>
-          <Link to="/" className="botao-discreto" style={{ justifySelf: "center" }}>
-            {t("res_refazer")}
-          </Link>
-        </div>
+        ) : (
+          <div id="compartilhar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
+            <CabecalhoSecao rotulo={t("sec_compartilhar")} titulo={t("res_seu_card")} />
+            <VitrineCards
+              gerar={gerarCanvas}
+              layout={layout}
+              setLayout={setLayout}
+              comTradicao={comTradicao}
+              setComTradicao={setComTradicao}
+              chave={`${codigo}-${lang}`}
+            />
+            <div className="acoes-card">
+              <button
+                type="button"
+                className="botao"
+                onClick={() => compartilharCanvasPng(gerarCanvas(), "compass.png")}
+              >
+                {t("res_compartilhar")}
+              </button>
+              <button
+                type="button"
+                className="botao botao-secundario"
+                onClick={() => baixarCanvasPng(gerarCanvas(), "compass.png")}
+              >
+                {t("res_baixar")}
+              </button>
+              <button type="button" className="botao botao-secundario" onClick={copiarLink}>
+                {copiado ? t("res_link_copiado") : t("res_copiar_link")}
+              </button>
+            </div>
+            <Link to="/" className="botao-discreto" style={{ justifySelf: "center" }}>
+              {t("res_refazer")}
+            </Link>
+          </div>
+        )}
       </section>
     </main>
   );

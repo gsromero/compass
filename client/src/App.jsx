@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
-import { useTema } from "./lib/tema.jsx";
 import { TRADICOES } from "./lib/tradicoes.js";
 import ErroLimite from "./components/ErroLimite.jsx";
 import Home from "./pages/Home.jsx";
@@ -50,7 +49,6 @@ function LinksPrincipais({ onNavegar, detalhado = false }) {
 
 function Topo() {
   const { t } = useLang();
-  const { tema, alternar } = useTema();
   const { pathname } = useLocation();
   const [menuAberto, setMenuAberto] = useState(false);
 
@@ -75,15 +73,6 @@ function Topo() {
 
         <div className="linha topo-controles">
           <SeletorIdioma />
-          <button
-            type="button"
-            className="botao-discreto"
-            onClick={alternar}
-            aria-label={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
-            title={t(tema === "claro" ? "nav_tema_escuro" : "nav_tema_claro")}
-          >
-            {tema === "claro" ? "\u25D1" : "\u25D0"}
-          </button>
         </div>
 
         <button

@@ -1,3 +1,32 @@
+## 2026-10-01 (tarde), claude
+
+**O que foi feito:** as seis propostas de interface, pesquisadas na Mobbin e aprovadas pelo dono
+em mockup (artefato Design "Propostas de Tela Compass"), implementadas e **publicadas no mesmo dia** com autorização do dono (merge `--no-ff`, deploy,
+conferido em compass.gsromerolab.com sem gravar nada: elementos novos presentes, 0 POST ao abrir
+link de resultado, nenhum erro no console).
+
+1. **Resultado:** manchete em palavras (`lib/manchete.js` + i18n), atalhos de seção presos no topo
+   (`AtalhosSecoes.jsx`), Compartilhar e Copiar link logo abaixo da bússola, margem igual dita uma
+   vez só (`BarraEixo semMargem`).
+2. **Cartão:** coluna de 42rem, cartão com teto de altura, baralho por trás em CSS, fileira de
+   quatro polegares sempre visível. A `.escala-oculta` (lista escondida que reaparecia ao foco)
+   saiu: os polegares são botões de verdade e cumprem esse papel.
+3. **Lista:** afirmação no alto, peso ("Peso desta resposta") ANTES das opções nos dois modos.
+4. **Por quê:** selo "Você: discordo muito" e `<details>` com todas as respostas.
+5. **Início:** seletor de duração numa linha, amostra do resultado com ponto no centro
+   (`BussolaAmostra.jsx`), duas colunas no computador.
+6. **Navegação:** Tradições no menu e no rodapé (lista `LINKS` única em `App.jsx`), cartão de
+   tradição vira link.
+
+**Verificado de verdade:** 381 testes, build, `wrangler pages dev` local fotografado em 390px e
+1366px, pt e en, claro e escuro; teste inteiro respondido só pelos polegares chega ao resultado e
+grava 1 linha; nenhum erro no console. Dois defeitos achados só ao renderizar e corrigidos: o peso
+quebrava em duas linhas no celular, e as beiradas do baralho ficavam escondidas (escala a partir
+do centro; agora da base).
+
+**Para o próximo agente:** o dono gostou da ideia de gravar o modo de resposta (cartão ou lista)
+para medir se o arrasto puxa respostas mais extremas, mas ainda não autorizou. Exige migration.
+
 ## 2026-10-01, claude
 
 **O que foi feito:** revisão geral do site a pedido do dono, e depois correção de tudo que ela

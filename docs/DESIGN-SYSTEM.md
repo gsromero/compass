@@ -54,18 +54,11 @@ uma diferença grande, o gráfico passa a dizer "este lado é o certo", que é j
 paleta de peso igual existe para não dizer. Quem mostra onde a pessoa está é o ponto, não a cor de
 fundo.
 
-## Tema claro e escuro
+## Só tema claro
 
-**O claro é o padrão, sempre.** O site abre claro para todo mundo, inclusive para quem tem o
-computador inteiro no escuro, e o escuro existe como escolha da pessoa. Decisão do dono, em
-10/08/2026.
-
-Por isso **não existe `prefers-color-scheme` neste projeto**: o tema é um atributo `data-tema` no
-`<html>`, controlado por `lib/tema.jsx` e guardado no `localStorage`. Quem for adicionar cor nova
-precisa declará-la nos dois blocos, `:root` e `:root[data-tema="escuro"]`.
-
-No escuro os quadrantes ganham um pouco de leveza para não sumirem no fundo, mas continuam iguais
-entre si, que é o que importa.
+**O site, o card e as prévias são só claros.** O modo escuro existiu até 2026-10-01 e saiu por
+decisão do dono: o card de compartilhar passou a ser claro e o site fala a mesma língua visual. Não
+existe mais `lib/tema.jsx`, `data-tema` nem botão de tema. Cor nova é declarada só em `:root`.
 
 ## Tipografia
 
@@ -178,8 +171,11 @@ escuro ela clareia.
 **Cartão** (arrastar) e **lista** (botões). Mostrar os dois juntos polui a tela e deixa a
 experiência pior do que qualquer um deles sozinho; foi assim na primeira versão e estava ruim.
 
-- **O padrão segue o aparelho**: `(pointer: coarse)` abre no cartão, o resto na lista. Arrastar com
-  o dedo é ótimo, arrastar com o mouse é pior que clicar.
+- **O padrão segue o aparelho**: com mouse (`(hover: hover) and (pointer: fine)`) abre a **lista**,
+  no toque abre o **cartão**. Arrastar com o dedo é ótimo, arrastar com o mouse é pior que clicar.
+  A troca manual fica guardada **por tipo de aparelho** (`compass.modoResposta.mouse` e
+  `.toque`): era uma chave só, e uma troca feita uma vez fazia o computador abrir no cartão para
+  sempre. A chave antiga é apagada ao abrir o teste.
 - **O botão de trocar fica no topo**, ao lado do progresso, e a escolha fica guardada no navegador.
 - **No modo cartão, uma fileira de quatro polegares fica sempre embaixo do cartão**
   (`.polegares-resposta`, 2026-10-01). Revisita a regra acima de propósito, com aprovação do dono
@@ -360,7 +356,23 @@ tiraria a referencia de qual eixo e qual.
 
 ## O card social
 
-1080x1080, Canvas 2D, três modelos (`classico`, `cartaz`, `minimo`). A geometria vem de
-`lib/compass.js`, a mesma que a tela usa, para os dois nunca mostrarem posições diferentes.
+Canvas 2D, três formatos em `lib/shareCard.js`: **Quadrado** (1080×1080, WhatsApp e feed), **Story**
+(1080×1920, Instagram e status) e **Mínimo** (1080×1080). Tema claro, com as cores do site
+convertidas de OKLCH para sRGB (é a única exceção à regra de cor no `index.css`, porque o card é
+imagem e sai do site). Todo formato traz a frase do resultado em primeira pessoa, vinda de
+`lib/manchete.js` como na tela, e a bússola com o mesmo desenho do site, sem os números da escala.
+O Quadrado e o Story terminam com o convite "E você, onde está? Faça o teste em…".
+
+**A tradição mais próxima só aparece no Story, e só se a pessoa ligar** (`comTradicao`): um nome
+de tradição num card público pode expor mais do que ela quer. Com ela ligada, a bússola do Story
+encolhe para a caixa caber acima do convite.
 
 **Fundo sempre sólido.** Transparência vira preto no Instagram. Gotcha herdado do BBB.
+
+## Quem abre o link de outra pessoa
+
+`lib/meusResultados.js` guarda no navegador os códigos feitos naquele aparelho (no fim do teste).
+Quem abre um código que não está lá é **visitante**: faixa escura no topo com "Fazer o teste",
+"Resultado compartilhado", "Esta pessoa" na bússola, "Resposta: …" no lugar de "Você: …", e no fim
+"Agora é a sua vez" com `SeletorModo` no lugar do card. O ponto "Você" da página de partidos não
+vai para visitante. Nada vai para o servidor: é só conveniência de quem abre.

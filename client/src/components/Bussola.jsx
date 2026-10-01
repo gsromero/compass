@@ -62,7 +62,13 @@ const LADO_DO_NOME = {
  * As tradicoes sao opcionais e comecam DESLIGADAS: no grafico elas so tem os
  * dois eixos, e a proximidade de verdade e medida nos seis.
  */
-export default function Bussola({ resultado, quadrante, populacao = null, proximas = [] }) {
+export default function Bussola({
+  resultado,
+  quadrante,
+  populacao = null,
+  proximas = [],
+  etiqueta = null,
+}) {
   const { t, lang, pick } = useLang();
   const id = useId();
   const [comTradicoes, setComTradicoes] = useState(false);
@@ -86,8 +92,9 @@ export default function Bussola({ resultado, quadrante, populacao = null, proxim
   // Etiqueta "Voce": em cima e a esquerda da margem de erro, e vira para o
   // outro lado quando nao cabe. A conta usa a margem de verdade: com margem
   // grande e ponto alto, "em cima" saia para fora do desenho.
-  const esquerda = vx - rx - 58;
-  const voceX = esquerda < 2 ? Math.min(vx + rx + 8, LARGURA - 52) : esquerda;
+  const larguraEtiqueta = (etiqueta ?? t("bus_voce")).length * 6.4 + 20;
+  const esquerda = vx - rx - larguraEtiqueta - 8;
+  const voceX = esquerda < 2 ? Math.min(vx + rx + 8, LARGURA - larguraEtiqueta - 2) : esquerda;
   const acima = vy - ry - 26;
   const voceY = acima < 2 ? Math.min(vy + ry + 6, ALTURA - 22) : acima;
 
@@ -310,16 +317,16 @@ export default function Bussola({ resultado, quadrante, populacao = null, proxim
           />
           <circle cx={vx} cy={vy} r="7.5" fill="var(--voce)" stroke="var(--panel)" strokeWidth="3" />
           <g>
-            <rect x={voceX} y={voceY} width="50" height="20" rx="10" fill="var(--ink)" />
+            <rect x={voceX} y={voceY} width={larguraEtiqueta} height="20" rx="10" fill="var(--ink)" />
             <text
-              x={voceX + 25}
+              x={voceX + larguraEtiqueta / 2}
               y={voceY + 14}
               textAnchor="middle"
               fontSize="11"
               fontWeight="700"
               fill="var(--bg)"
             >
-              {t("bus_voce")}
+              {etiqueta ?? t("bus_voce")}
             </text>
           </g>
         </g>

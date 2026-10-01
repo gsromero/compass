@@ -33,10 +33,10 @@ const CHAVES_DINAMICAS = [
     `modo_${modo}_qtd`,
     `modo_${modo}_tempo`,
   ]),
-  ...["grafico", "eixos", "porque", "tradicoes", "comparar", "compartilhar"].map(
+  ...["grafico", "eixos", "porque", "tradicoes", "comparar", "compartilhar", "suavez"].map(
     (s) => `res_atalho_${s}`,
   ),
-  ...["forte", "media", "leve", "centro"].map((n) => `leitura_${n}`),
+  ...["forte", "media", "leve", "centro"].flatMap((n) => [`leitura_${n}`, `nivel_${n}`]),
   ...["igualdade_autoridade", "mercado_autoridade", "igualdade_liberdade", "mercado_liberdade"].map(
     (q) => `quadrante_${q}`,
   ),

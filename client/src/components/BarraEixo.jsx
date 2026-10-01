@@ -54,7 +54,8 @@ export default function BarraEixo({ eixo, meta, dados, semMargem = false, destaq
         <span data-ativo={ladoPos && nivel !== "centro"}>{t(`polo_${meta.pos}`)}</span>
       </div>
 
-      {destaque && <span className="barra-leitura">{t(`leitura_${nivel}`, polo)}</span>}
+      {/* O polo ja esta ao lado do numero: aqui so a intensidade. */}
+      {destaque && <span className="barra-leitura">{t(`nivel_${nivel}`)}</span>}
     </div>
   );
 }
