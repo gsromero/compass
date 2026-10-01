@@ -56,3 +56,30 @@ describe("margemUnica", () => {
     expect(margemUnica(r, EIXOS)).toBeNull();
   });
 });
+
+import { lugarDaEtiqueta } from "./compass.js";
+
+describe("lugarDaEtiqueta", () => {
+  const limites = { x0: 0, y0: 0, x1: 300, y1: 300 };
+  const base = { rx: 10, ry: 10, largura: 50, altura: 20, folga: 6, limites };
+
+  it("fica em cima a esquerda quando ali esta livre", () => {
+    const o = lugarDaEtiqueta({ ...base, vx: 150, vy: 150, ocupados: [] });
+    expect(o.x).toBeLessThan(150);
+    expect(o.y).toBeLessThan(150);
+  });
+
+  it("foge de um nome de polo que esta em cima a esquerda", () => {
+    const polo = { x: 60, y: 100, w: 90, h: 30 };
+    const o = lugarDaEtiqueta({ ...base, vx: 150, vy: 150, ocupados: [polo] });
+    const encosta = !(o.x + 50 <= polo.x || polo.x + polo.w <= o.x || o.y + 20 <= polo.y || polo.y + polo.h <= o.y);
+    expect(encosta).toBe(false);
+  });
+
+  it("nunca sai do grafico, nem com o ponto no canto", () => {
+    const o = lugarDaEtiqueta({ ...base, vx: 295, vy: 5, ocupados: [] });
+    expect(o.x).toBeGreaterThanOrEqual(0);
+    expect(o.x + 50).toBeLessThanOrEqual(300);
+    expect(o.y).toBeGreaterThanOrEqual(0);
+  });
+});

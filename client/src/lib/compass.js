@@ -52,3 +52,27 @@ export function distancia(a, b, eixos) {
   const maxima = Math.sqrt(eixos.length * 400);
   return Math.sqrt(soma) / maxima;
 }
+
+/**
+ * Onde por a etiqueta "Voce": testa em cima a esquerda, em cima a direita,
+ * embaixo a esquerda e embaixo a direita da margem de erro, e fica com a
+ * primeira que cabe no grafico sem encostar em nada de `ocupados`. Sem
+ * nenhuma livre, fica com a que cabe no grafico.
+ */
+export function lugarDaEtiqueta({ vx, vy, rx, ry, largura, altura, folga, limites, ocupados }) {
+  const opcoes = [
+    { x: vx - rx - largura - folga, y: vy - ry - altura },
+    { x: vx + rx + folga, y: vy - ry - altura },
+    { x: vx - rx - largura - folga, y: vy + ry },
+    { x: vx + rx + folga, y: vy + ry },
+  ];
+  const cabe = (o) =>
+    o.x >= limites.x0 && o.y >= limites.y0 && o.x + largura <= limites.x1 && o.y + altura <= limites.y1;
+  const livre = (o) =>
+    ocupados.every((r) => o.x + largura <= r.x || r.x + r.w <= o.x || o.y + altura <= r.y || r.y + r.h <= o.y);
+  const prende = (o) => ({
+    x: Math.min(Math.max(o.x, limites.x0), limites.x1 - largura),
+    y: Math.min(Math.max(o.y, limites.y0), limites.y1 - altura),
+  });
+  return opcoes.find((o) => cabe(o) && livre(o)) ?? prende(opcoes.find(cabe) ?? opcoes[0]);
+}

@@ -1,3 +1,26 @@
+## 2026-10-01 (fim de tarde), claude
+
+**O que foi feito:** na branch `fix/card-story`, tudo publicado junto com autorização do dono
+("pode colocar tudo no ar"):
+
+1. **Card Story** montado de baixo para cima: a tradição não invade mais o convite.
+2. **Etiqueta "Você"** desvia das pílulas de polo (`lugarDaEtiqueta` em `compass.js`, canvas e SVG).
+3. **Afirmação reescrita** ("Dá para resolver a crise ambiental só com tecnologia, sem mudar o jeito
+   como vivemos"), banco **v4**, `VERSAO = 4` nas Functions. Sem migration.
+4. **Partidos:** linha vertical da sua posição atravessando todas as linhas.
+5. **Teste rápido fora da escolha** (o dono achou o resultado vago demais com 16 perguntas). Só
+   saiu do `SeletorModo`; continua em `scoring.js` para quem tinha um em andamento. Convite do
+   visitante agora diz "a partir de 6 min".
+6. **Seção de compartilhar nova** (pesquisa na Mobbin, mockup aprovado no artefato "Compass: nova
+   seção de compartilhar" depois de três rodadas): faixa própria de ponta a ponta, cards reais em
+   leque, "Mostre onde você caiu", WhatsApp com frase pronta, linha do cadeado. O dono vetou
+   "Desafie alguém" (política não é desafio) e pediu altura fixa ao trocar de formato.
+
+**Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
+formatos, sem rolagem lateral).
+
+**Aberto:** comparação dono × visitante; 10ª onda do BLS.
+
 ## 2026-10-02, claude
 
 **O que foi feito:** pedidos do dono depois do redesenho, na branch `feat/tema-claro-comparacao`
@@ -54,32 +77,3 @@ grande.
 **Ainda não confirmado em produção:** o Turnstile com a chave real num teste completo (exige
 gravar uma resposta de verdade; o dono pode fazer o próprio teste e conferir se `itens.via` veio
 preenchido) e a prévia aparecendo no WhatsApp.
-
-## 2026-10-01 (noite), claude
-
-**O que foi feito:** Turnstile ligado, na branch `feat/turnstile`. O dono criou o widget no painel
-(Managed, domínios `compass.gsromerolab.com` e `localhost`) e gravou ele mesmo o segredo no Pages
-(`wrangler pages secret put TURNSTILE_SECRET_KEY`). A Secret Key nunca passou pelo chat.
-
-- `lib/turnstile.js`: carrega o script da Cloudflare só no fim do teste, `interaction-only`
-  (quase sempre invisível), e devolve o token. Abrir um link compartilhado não carrega nada.
-- `respostas.js`: valida o corpo, depois confere o token no `siteverify` (sem `remoteip`), 403 se
-  falhar. Falha não tira o resultado de ninguém; a resposta só não conta.
-- Sobre: o parágrafo de privacidade explica a verificação, nos dois idiomas. No caminho, três
-  palavras sem acento corrigidas nos limites ("é rastreável", "não é o instrumento", "há").
-- Local: `.dev.vars` com o segredo oficial de teste da Cloudflare, par da chave de teste usada em
-  localhost.
-
-**Junto, na mesma branch (renomeada para `feat/turnstile-modo-resposta`):** o dono decidiu que
-o site anota por onde cada resposta veio. `itens.via` (migration 0003, aplicada só no D1 local):
-`arrasto`, `botao` ou `teclado`. Testado respondendo pelos três jeitos: 6/5/5 gravados certos.
-**Antes do deploy, aplicar a 0003 em produção.** O texto de privacidade do Sobre menciona isso.
-
-**Imagem de prévia por quadrante:** dono disse sim. Quatro imagens em mockup no artefato Design
-"Prévias por Quadrante", esperando aprovação. Plano técnico: Function em
-`functions/resultado/[codigo].js` com HTMLRewriter trocando `og:image`; ela pode importar
-`lib/permalink.js`, `lib/scoring.js` e `questions.json` (puros, sem DOM; nenhuma pergunta usa
-`so_no_idioma`, então o código decodifica igual em pt e en).
-
-**Verificado:** POST sem token recebe 403; teste inteiro no navegador local passa pela verificação
-e grava 1 linha (201); F5 não reenvia; 381 testes e build.

@@ -24,6 +24,16 @@ export default function Partidos() {
   const { state } = useLocation();
   const economico = typeof state?.economico === "number" ? state.economico : null;
   const { fonte, partidos, fora, minimo } = dados;
+  // A sua posicao atravessa todas as linhas: da para ver de relance quais
+  // partidos ficam de cada lado. So existe vindo do resultado.
+  const linhaVoce =
+    economico !== null ? (
+      <span
+        className="partidos-linha-voce"
+        style={{ left: `${posicao(paraRegua(economico))}%` }}
+        aria-hidden="true"
+      />
+    ) : null;
 
   return (
     <main className="coluna pilha-larga" style={{ paddingBlock: "40px 64px" }}>
@@ -41,6 +51,7 @@ export default function Partidos() {
           <div className="partidos-linha partidos-escala" aria-hidden="true">
             <span />
             <div className="partidos-trilho">
+              {linhaVoce}
               {MARCAS.map((m) => (
                 <span key={m} className="partidos-marca" style={{ left: `${posicao(m)}%` }}>
                   {m}
@@ -58,6 +69,7 @@ export default function Partidos() {
                   <small>{t("partidos_voce_eixo")}</small>
                 </span>
                 <div className="partidos-trilho">
+                  {linhaVoce}
                   <span
                     className="partidos-losango"
                     style={{ left: `${posicao(paraRegua(economico))}%` }}
@@ -75,6 +87,7 @@ export default function Partidos() {
                   {p.hoje && <small>{t("partidos_hoje", p.hoje)}</small>}
                 </span>
                 <div className="partidos-trilho">
+                  {linhaVoce}
                   <span
                     className="partidos-margem"
                     style={{

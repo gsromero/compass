@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react";
 import { useLang } from "../lib/lang.jsx";
 import { numSinal } from "../lib/i18n.js";
 import { TRADICOES } from "../lib/tradicoes.js";
+import { lugarDaEtiqueta } from "../lib/compass.js";
 
 // Coordenadas do desenho (viewBox). O quadrado do grafico fica entre as
 // margens; a esquerda e embaixo sobra espaco para os numeros da escala.
@@ -92,11 +93,19 @@ export default function Bussola({
   // Etiqueta "Voce": em cima e a esquerda da margem de erro, e vira para o
   // outro lado quando nao cabe. A conta usa a margem de verdade: com margem
   // grande e ponto alto, "em cima" saia para fora do desenho.
+  // Mesma regra do card (lib/shareCard.js): a primeira das quatro posicoes em
+  // volta da margem que nao encosta nos nomes dos polos.
   const larguraEtiqueta = (etiqueta ?? t("bus_voce")).length * 6.4 + 20;
-  const esquerda = vx - rx - larguraEtiqueta - 8;
-  const voceX = esquerda < 2 ? Math.min(vx + rx + 8, LARGURA - larguraEtiqueta - 2) : esquerda;
-  const acima = vy - ry - 26;
-  const voceY = acima < 2 ? Math.min(vy + ry + 6, ALTURA - 22) : acima;
+  const pilulas = [
+    caixaPilula(CX, Y(10) + 30, `↑ ${t("polo_autoridade")}`, "meio"),
+    caixaPilula(CX, Y(-10) - 24, `↓ ${t("polo_liberdade")}`, "meio"),
+    caixaPilula(X(-10) + 6, CY + 4, `← ${t("polo_igualdade")}`, "inicio"),
+    caixaPilula(X(10) - 6, CY + 4, `${t("polo_mercado")} →`, "fim"),
+  ];
+  const { x: voceX, y: voceY } = lugarDaEtiqueta({
+    vx, vy, rx, ry, largura: larguraEtiqueta, altura: 20, folga: 6,
+    limites: { x0: X(-10), y0: Y(10), x1: X(10), y1: Y(-10) }, ocupados: pilulas,
+  });
 
   // Os numeros da escala somem onde a etiqueta com o seu valor aparece.
   const longe = (a, b) => Math.abs(a - b) > 26;
@@ -383,10 +392,16 @@ export default function Bussola({
   );
 }
 
-/** Nome de polo com fundo, para ler por cima das cores. */
-function Pilula({ x, y, texto, ancora }) {
+/** O retangulo que uma pilula de polo ocupa (mesma conta do desenho). */
+function caixaPilula(x, y, texto, ancora) {
   const largura = texto.length * 6.6 + 16;
   const x0 = ancora === "inicio" ? x : ancora === "fim" ? x - largura : x - largura / 2;
+  return { x: x0, y: y - 13, w: largura, h: 19 };
+}
+
+/** Nome de polo com fundo, para ler por cima das cores. */
+function Pilula({ x, y, texto, ancora }) {
+  const { x: x0, w: largura } = caixaPilula(x, y, texto, ancora);
   return (
     <g>
       <rect x={x0} y={y - 13} width={largura} height="19" rx="9.5" fill="var(--panel)" fillOpacity="0.92" />

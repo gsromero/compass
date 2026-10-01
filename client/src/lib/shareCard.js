@@ -13,6 +13,7 @@
 import { EIXOS, EIXOS_PRINCIPAIS } from "./scoring.js";
 import { intensidade, partesDaManchete } from "./manchete.js";
 import { numSinal, t } from "./i18n.js";
+import { lugarDaEtiqueta } from "./compass.js";
 
 export const LAYOUTS = ["quadrado", "story", "minimo"];
 
@@ -159,11 +160,14 @@ function desenharBussola(ctx, { x, y, lado, e, resultado, quadrante, lang }) {
   ctx.fillText(quad("quadrante_mercado_autoridade"), X(10) - 10 * e, Y(10) + 18 * e);
   ctx.fillText(quad("quadrante_mercado_liberdade"), X(10) - 10 * e, Y(-10) - 10 * e);
 
-  // Os quatro polos, dentro do grafico, na horizontal.
+  // Os quatro polos, dentro do grafico, na horizontal. Os retangulos ficam
+  // guardados para a etiqueta "Voce" nao cair em cima de nenhum deles.
+  const ocupados = [];
   const pilula = (texto, px, py, ancora) => {
     ctx.font = fonte(700, 12 * e);
     const largura = ctx.measureText(texto).width + 16 * e;
     const x0 = ancora === "inicio" ? px : ancora === "fim" ? px - largura : px - largura / 2;
+    ocupados.push({ x: x0, y: py - 12 * e, w: largura, h: 18.5 * e });
     ctx.fillStyle = comAlfa(COR.painel, 0.92);
     retanguloRedondo(ctx, x0, py - 12 * e, largura, 18.5 * e, 9.25 * e);
     ctx.fill();
@@ -200,15 +204,16 @@ function desenharBussola(ctx, { x, y, lado, e, resultado, quadrante, lang }) {
   ctx.strokeStyle = COR.painel;
   ctx.stroke();
 
-  // Etiqueta "Voce": em cima e a esquerda da margem; vira se nao couber.
+  // Etiqueta "Voce": a primeira das quatro posicoes em volta da margem que
+  // cabe no grafico e nao encosta em nome de polo.
   ctx.font = fonte(700, 11.5 * e);
   const rotulo = t(lang, "bus_voce");
   const larguraRotulo = ctx.measureText(rotulo).width + 22 * e;
   const alturaRotulo = 21 * e;
-  let ex = vx - rx - larguraRotulo - 8 * e;
-  if (ex < X(-10)) ex = Math.min(vx + rx + 8 * e, X(10) - larguraRotulo);
-  let ey = vy - ry - alturaRotulo - 4 * e;
-  if (ey < Y(10)) ey = Math.min(vy + ry + 6 * e, Y(-10) - alturaRotulo);
+  const { x: ex, y: ey } = lugarDaEtiqueta({
+    vx, vy, rx, ry, largura: larguraRotulo, altura: alturaRotulo, folga: 6 * e,
+    limites: { x0: X(-10), y0: Y(10), x1: X(10), y1: Y(-10) }, ocupados,
+  });
   ctx.fillStyle = COR.tinta;
   retanguloRedondo(ctx, ex, ey, larguraRotulo, alturaRotulo, alturaRotulo / 2);
   ctx.fill();
@@ -354,19 +359,36 @@ export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixos
   }
 
   if (formato === "story") {
+    // Montado de BAIXO PARA CIMA: o convite fica preso no fim, a tradicao (se
+    // ligada) logo acima, as reguas acima dela, e a bussola ocupa o espaco que
+    // sobrar entre a frase e as reguas. Com posicoes fixas de cima para baixo,
+    // uma frase de tres linhas empurrava tudo e a tradicao caia em cima do
+    // convite (aconteceu no ar, com "Levemente a Esquerda e um pouco para...").
     const margem = 80;
-    topo(ctx, { largura, margem, y: 130, lang });
-    let y = titulo(ctx, { texto, x: margem, y: 168, largura: largura - margem * 2, tamanho: 84, maxLinhas: 3 });
-    // Com a tradicao, a bussola encolhe para a caixa dela caber acima do convite.
+    const ALTURA_LINHA = 78;
+    const ALTURA_TRADICAO = 96;
     const mostraTradicao = comTradicao && tradicao;
-    const lado = mostraTradicao ? 540 : 640;
-    const tamanho = lado + 2 * 26 * 1.7;
-    const caixa = tamanho + 32;
-    moldura(ctx, (largura - caixa) / 2, y + 40, caixa);
-    desenharBussola(ctx, { x: (largura - caixa) / 2 + 16, y: y + 56, lado, e: 1.7, ...comum });
-    y += 40 + caixa + 30;
+
+    const yConvite = altura - 88 - 120;
+    const yTradicao = yConvite - 34 - ALTURA_TRADICAO;
+    const fimReguas = mostraTradicao ? yTradicao - 26 : yConvite - 34;
+    const yReguas = fimReguas - EIXOS.length * ALTURA_LINHA;
+
+    topo(ctx, { largura, margem, y: 130, lang });
+    const fimTitulo = titulo(ctx, { texto, x: margem, y: 168, largura: largura - margem * 2, tamanho: 84, maxLinhas: 3 });
+
+    // A bussola cabe no que sobrou, ate 760 de caixa; a escala dos detalhes
+    // acompanha o tamanho para os rotulos nao ficarem desproporcionais.
+    const espaco = yReguas - 30 - (fimTitulo + 36);
+    const caixa = Math.min(760, espaco);
+    const e = (1.7 * caixa) / 760;
+    const lado = caixa - 32 - 2 * 26 * e;
+    const yCaixa = fimTitulo + 36 + (espaco - caixa) / 2;
+    moldura(ctx, (largura - caixa) / 2, yCaixa, caixa);
+    desenharBussola(ctx, { x: (largura - caixa) / 2 + 16, y: yCaixa + 16, lado, e, ...comum });
 
     // Os seis eixos em reguas.
+    let y = yReguas;
     for (const eixo of EIXOS) {
       const { posicao, margem: m } = resultado[eixo];
       const polo = t(lang, `polo_${posicao > 0 ? eixosMeta[eixo].pos : eixosMeta[eixo].neg}`);
@@ -383,29 +405,36 @@ export function montarCard({ resultado, quadrante, tradicao, lang, layout, eixos
       ctx.fillText(numSinal(lang, posicao), largura - margem, y + 50);
       ctx.fillStyle = COR.linha;
       ctx.fillRect(margem, y + 76, largura - margem * 2, 2);
-      y += 78;
+      y += ALTURA_LINHA;
     }
     ctx.textAlign = "left";
 
     if (mostraTradicao) {
-      y += 26;
       ctx.fillStyle = COR.painel;
-      retanguloRedondo(ctx, margem, y, largura - margem * 2, 96, 24);
+      retanguloRedondo(ctx, margem, yTradicao, largura - margem * 2, ALTURA_TRADICAO, 24);
       ctx.fill();
       ctx.strokeStyle = COR.linha;
       ctx.lineWidth = 2;
       ctx.stroke();
       ctx.font = fonte(500, 24);
       ctx.fillStyle = COR.tintaMedia;
-      ctx.fillText(t(lang, "card_tradicao"), margem + 30, y + 58);
+      ctx.fillText(t(lang, "card_tradicao"), margem + 30, yTradicao + 58);
+      // O nome encolhe se for longo, para nunca encostar no rotulo.
+      const nome = tradicao.nome[lang] ?? tradicao.nome.pt;
+      const larguraNome = largura - margem * 2 - 60 - ctx.measureText(t(lang, "card_tradicao")).width - 30;
+      let tam = 34;
+      ctx.font = fonte(700, tam, FONTE_TEXTO);
+      while (ctx.measureText(nome).width > larguraNome && tam > 20) {
+        tam -= 2;
+        ctx.font = fonte(700, tam, FONTE_TEXTO);
+      }
       ctx.textAlign = "right";
-      ctx.font = fonte(700, 34, FONTE_TEXTO);
       ctx.fillStyle = COR.tinta;
-      ctx.fillText(tradicao.nome[lang] ?? tradicao.nome.pt, largura - margem - 30, y + 60);
+      ctx.fillText(nome, largura - margem - 30, yTradicao + 60);
       ctx.textAlign = "left";
     }
 
-    convite(ctx, { largura, margem, y: altura - 88 - 120, lang });
+    convite(ctx, { largura, margem, y: yConvite, lang });
     return canvas;
   }
 

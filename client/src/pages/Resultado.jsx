@@ -8,6 +8,13 @@ import AtalhosSecoes from "../components/AtalhosSecoes.jsx";
 import CabecalhoSecao from "../components/CabecalhoSecao.jsx";
 import MiniBussola from "../components/MiniBussola.jsx";
 import VitrineCards from "../components/VitrineCards.jsx";
+import {
+  IconeBaixar,
+  IconeCadeado,
+  IconeCompartilhar,
+  IconeLink,
+  IconeWhatsApp,
+} from "../components/Icones.jsx";
 import SeletorModo from "../components/SeletorModo.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num, numSinal } from "../lib/i18n.js";
@@ -229,6 +236,11 @@ export default function Resultado() {
     </div>
   );
 
+  function abrirWhatsApp() {
+    const texto = `${t("res_whatsapp_texto")} ${window.location.href}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+  }
+
   async function copiarLink() {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -440,7 +452,10 @@ export default function Resultado() {
         </Link>
       </section>
 
-      <section className={`faixa faixa-tom fim-resultado${comparacao ? "" : " fim-so-card"}`}>
+      {(comparacao || visitante) && (
+      <section
+        className={`faixa${visitante ? " faixa-tom" : ""} fim-resultado${comparacao && visitante ? "" : " fim-so-card"}`}
+      >
         {comparacao && (
           <div id="comparar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
             <CabecalhoSecao rotulo={t("sec_comparacao")} titulo={t("pop_titulo")} />
@@ -477,7 +492,7 @@ export default function Resultado() {
           </div>
         )}
 
-        {visitante ? (
+        {visitante && (
           <div id="suavez" className="pilha secao-resultado sua-vez" style={{ gap: "18px", minWidth: 0 }}>
             <CabecalhoSecao
               rotulo={t("vis_sua_vez_rotulo")}
@@ -496,42 +511,65 @@ export default function Resultado() {
               {copiado ? t("res_link_copiado") : t("vis_copiar")}
             </button>
           </div>
-        ) : (
-          <div id="compartilhar" className="pilha secao-resultado" style={{ gap: "18px", minWidth: 0 }}>
-            <CabecalhoSecao rotulo={t("sec_compartilhar")} titulo={t("res_seu_card")} />
-            <VitrineCards
-              gerar={gerarCanvas}
-              layout={layout}
-              setLayout={setLayout}
-              comTradicao={comTradicao}
-              setComTradicao={setComTradicao}
-              chave={`${codigo}-${lang}`}
-            />
+        )}
+      </section>
+      )}
+
+      {!visitante && (
+        <section id="compartilhar" className="faixa faixa-compartilhar secao-resultado">
+          <VitrineCards
+            gerar={gerarCanvas}
+            layout={layout}
+            setLayout={setLayout}
+            comTradicao={comTradicao}
+            setComTradicao={setComTradicao}
+            chave={`${codigo}-${lang}`}
+            cabecalho={
+              <CabecalhoSecao
+                rotulo={t("sec_compartilhar")}
+                titulo={t("res_compartilhar_titulo")}
+                intro={t("res_compartilhar_intro")}
+              />
+            }
+          >
             <div className="acoes-card">
               <button
                 type="button"
                 className="botao"
                 onClick={() => compartilharCanvasPng(gerarCanvas(), "compass.png")}
               >
-                {t("res_compartilhar")}
+                <IconeCompartilhar />
+                {t("res_compartilhar_imagem")}
+              </button>
+              <button type="button" className="botao botao-secundario" onClick={abrirWhatsApp}>
+                <IconeWhatsApp />
+                {t("res_whatsapp")}
               </button>
               <button
                 type="button"
                 className="botao botao-secundario"
                 onClick={() => baixarCanvasPng(gerarCanvas(), "compass.png")}
               >
+                <IconeBaixar />
                 {t("res_baixar")}
               </button>
               <button type="button" className="botao botao-secundario" onClick={copiarLink}>
+                <IconeLink />
                 {copiado ? t("res_link_copiado") : t("res_copiar_link")}
               </button>
             </div>
-            <Link to="/" className="botao-discreto" style={{ justifySelf: "center" }}>
+            <p className="vitrine-privacidade">
+              <IconeCadeado />
+              <span>
+                {t("res_privacidade_link")} <strong>{t("res_privacidade_forte")}</strong>
+              </span>
+            </p>
+            <Link to="/" className="botao-discreto" style={{ justifySelf: "start" }}>
               {t("res_refazer")}
             </Link>
-          </div>
-        )}
-      </section>
+          </VitrineCards>
+        </section>
+      )}
     </main>
   );
 }

@@ -103,7 +103,7 @@ Essa mesma margem **decide quando parar de perguntar**. É um mecanismo só com 
 
 | Modo | Perguntas | Como funciona |
 |---|---|---|
-| Rápido | 16 | Para nos 8 pares |
+| Rápido | 16 | Para nos 8 pares. Fora da escolha desde 2026-10 (resultado vago demais); só termina quem já tinha começado |
 | Padrão | 32 | Para nos 16 pares, ou antes se todos os eixos convergirem |
 | Completo | 48 | Todas |
 

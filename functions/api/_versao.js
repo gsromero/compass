@@ -15,4 +15,8 @@
 //
 // Os indices de migrations/0001_init.sql ja tem `versao` como primeira coluna,
 // justamente para este filtro.
-export const VERSAO = 3;
+//   v3 -> v4: "A tecnologia resolve a crise ambiental sem ninguem mudar de vida"
+//             virou "Da para resolver a crise ambiental so com tecnologia, sem
+//             mudar o jeito como vivemos" (a frase antiga era vaga). So uma
+//             afirmacao, mas a regra vale para qualquer mudanca de redacao.
+export const VERSAO = 4;
