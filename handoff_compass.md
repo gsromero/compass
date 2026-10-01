@@ -1,8 +1,9 @@
 ## 2026-10-01 (tarde), claude
 
 **O que foi feito:** as seis propostas de interface, pesquisadas na Mobbin e aprovadas pelo dono
-em mockup (artefato Design "Propostas de Tela Compass"), implementadas na branch
-`feat/propostas-interface`. **Sem commit e sem deploy**: o dono ainda não pediu.
+em mockup (artefato Design "Propostas de Tela Compass"), implementadas e **publicadas no mesmo dia** com autorização do dono (merge `--no-ff`, deploy,
+conferido em compass.gsromerolab.com sem gravar nada: elementos novos presentes, 0 POST ao abrir
+link de resultado, nenhum erro no console).
 
 1. **Resultado:** manchete em palavras (`lib/manchete.js` + i18n), atalhos de seção presos no topo
    (`AtalhosSecoes.jsx`), Compartilhar e Copiar link logo abaixo da bússola, margem igual dita uma
