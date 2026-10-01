@@ -83,8 +83,7 @@
       `/resultado/:codigo` (o site é SPA, o robô do WhatsApp não roda JS)
 - [x] Projeto no Pages criado e primeiro deploy publicado em `compass-429.pages.dev` (2026-08-16,
       autorizado pelo dono). Banco de produção migrado.
-- [ ] Conectar o domínio `compass.gsromerolab.com` ao projeto `compass` no Pages: passo manual,
-      painel Cloudflare → Pages → compass → Custom domains → Add → digitar o domínio
+- [x] Domínio `compass.gsromerolab.com` conectado (confirmado no ar em 2026-10-01)
 
 ---
 
@@ -134,9 +133,12 @@
 - [x] Tela de idade e gênero sem explicação e sem "Pular"
 - [x] Título da aba por página e rolagem ao topo ao trocar de página
 - [x] `criado_em` só com o dia; idioma e tema não derrubam o site com armazenamento bloqueado
-- [ ] **Antes do próximo deploy**: aplicar `0002_demografia.sql` em produção
-      (`npm run db:migrate:prod`, com autorização do dono). Sem ela, toda gravação falha
-- [ ] Proteção contra robô no POST (ex.: Turnstile). Dependência nova: só com autorização do dono
+- [x] `0002_demografia.sql` aplicada em produção e revisão publicada (2026-10-01, autorizado)
+- [ ] Turnstile no POST: **autorizado pelo dono em 2026-10-01**, parado esperando a Site Key e a
+      Secret Key (o login OAuth do wrangler não tem escopo de Turnstile). Plano: verificar dentro de
+      `functions/api/respostas.js` (sem Worker separado) e citar o script na página Sobre
+- [ ] `og:image` por quadrante: dono perguntou se é só autorizar; falta o "pode fazer". Mostrar as
+      quatro imagens antes de codar
 
 ## Depois do lançamento
 

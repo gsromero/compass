@@ -23,8 +23,15 @@ e o fluxo inteiro num Chrome sem janela via DevTools Protocol: o teste grava 1 l
 abrindo o link" gravam 0, tradições e mensagens nos dois idiomas, aba e rolagem certas, sem erro no
 console.
 
-**Para o próximo agente:** antes de publicar esta branch, `0002_demografia.sql` precisa estar em
-produção, senão toda gravação dá 500. Turnstile ficou de fora (dependência nova, falta autorização).
+**Publicado no mesmo dia**, com autorização do dono: merge `--no-ff` na `main`, `0002_demografia.sql`
+aplicada em produção ANTES do deploy, deploy, e conferido em compass.gsromerolab.com (páginas, og.png,
+favicon, POST falso recusado, abrir link de resultado não grava). O dono liberou `npm run
+db:migrate:prod` e `npm run deploy` nas permissões locais do Claude Code; outras ações de produção
+continuam pedindo permissão.
+
+**Para o próximo agente:** Turnstile está autorizado e esperando as chaves (ver PENDENCIAS). Os POSTs
+para caminhos aleatórios no domínio são a detecção de robôs da Cloudflare (zona), não o Compass. A
+página de resultado não tem `<h1>` (só um rótulo), vale corrigir junto de outra mudança nela.
 
 ## 2026-08-17, claude
 
