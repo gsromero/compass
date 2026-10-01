@@ -1,7 +1,9 @@
 ## 2026-10-02, claude
 
 **O que foi feito:** pedidos do dono depois do redesenho, na branch `feat/tema-claro-comparacao`
-(sem commit, sem deploy, aguardando o dono):
+(**publicado no mesmo dia**, com autorização do dono; conferido em produção: sem botão de tema, teste
+abre em lista no computador mesmo com a escolha antiga "cartao", visitante vê a faixa e o convite,
+comparação escondida, 0 POST ao abrir link, sem erro no console):
 
 1. **Modo escuro removido** do site inteiro (`tema.jsx`, botão, tokens escuros, `color-scheme`).
 2. **Comparação escondida** até `agregados.suficiente`: some a seção e o atalho; o card fica
