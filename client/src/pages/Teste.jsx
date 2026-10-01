@@ -186,18 +186,27 @@ export default function Teste() {
       // sempre). Viajam so nesta navegacao, pro envio anonimo unico que a
       // tela de resultado faz ao montar. `doTeste` e o que autoriza esse
       // envio: abrir o mesmo link depois nao grava de novo.
+      // A via de cada resposta tambem nao cabe no codigo: viaja aqui, junto.
+      const vias = Object.fromEntries(
+        Object.entries(finais).map(([id, resposta]) => [id, resposta.via ?? null]),
+      );
       navigate(`/resultado/${codigo}`, {
         replace: true,
-        state: { doTeste: true, faixaEtaria, genero },
+        state: { doTeste: true, faixaEtaria, genero, vias },
       });
     },
     [navigate, perguntas, faixaEtaria, genero],
   );
 
+  // `via`: por onde a resposta veio (arrasto, botao ou teclado). Vai junto ao
+  // banco para medir se o arrasto puxa respostas mais extremas que o toque.
   const responder = useCallback(
-    (nota) => {
+    (nota, via) => {
       if (!idAtual) return;
-      const finais = { ...respostas, [idAtual]: { r: nota, m: IMPORTANCIAS[importancia] } };
+      const finais = {
+        ...respostas,
+        [idAtual]: { r: nota, m: IMPORTANCIAS[importancia], via },
+      };
       setRespostas(finais);
       setImportancia("normal");
 
@@ -222,7 +231,7 @@ export default function Teste() {
     (nota, direcao) => {
       if (prefereMenosMovimento()) {
         setArrasto(SEM_ARRASTO);
-        responder(nota);
+        responder(nota, "arrasto");
         return;
       }
       setArrasto(SEM_ARRASTO);
@@ -230,7 +239,7 @@ export default function Teste() {
       clearTimeout(relogio.current);
       relogio.current = setTimeout(() => {
         setSaindoPara(0);
-        responder(nota);
+        responder(nota, "arrasto");
       }, VOO);
     },
     [responder],
@@ -313,10 +322,10 @@ export default function Teste() {
       const indice = Number(evento.key) - 1;
       if (indice >= 0 && indice < NOTAS.length) {
         evento.preventDefault();
-        responder(NOTAS[indice]);
+        responder(NOTAS[indice], "teclado");
       } else if (evento.key === "0") {
         evento.preventDefault();
-        responder(NAO_SEI);
+        responder(NAO_SEI, "teclado");
       } else if (evento.key === "Backspace" || evento.key === "ArrowLeft") {
         evento.preventDefault();
         voltar();
@@ -526,7 +535,7 @@ export default function Teste() {
       className="botao-discreto nao-sei"
       aria-pressed={respostaAtual?.r === NAO_SEI}
       title={t("teste_nao_sei_ajuda")}
-      onClick={() => responder(NAO_SEI)}
+      onClick={() => responder(NAO_SEI, "botao")}
     >
       {t("teste_nao_sei")}
     </button>
@@ -605,7 +614,7 @@ export default function Teste() {
                   key={nota}
                   type="button"
                   aria-pressed={respostaAtual?.r === nota}
-                  onClick={() => responder(nota)}
+                  onClick={() => responder(nota, "botao")}
                 >
                   <Polegar nota={nota} tamanho={18} />
                   <span>{t(`resposta${nota}`)}</span>
@@ -631,7 +640,7 @@ export default function Teste() {
                 type="button"
                 className="opcao"
                 aria-pressed={respostaAtual?.r === nota}
-                onClick={() => responder(nota)}
+                onClick={() => responder(nota, "botao")}
               >
                 <kbd aria-hidden="true">{i + 1}</kbd>
                 <span>{t(`resposta${nota}`)}</span>

@@ -33,7 +33,13 @@ const CHAVES_DINAMICAS = [
     `modo_${modo}_qtd`,
     `modo_${modo}_tempo`,
   ]),
-  ...["grafico", "eixos", "porque", "tradicoes", "comparar"].map((s) => `res_atalho_${s}`),
+  ...["grafico", "eixos", "porque", "tradicoes", "comparar", "compartilhar"].map(
+    (s) => `res_atalho_${s}`,
+  ),
+  ...["forte", "media", "leve", "centro"].map((n) => `leitura_${n}`),
+  ...["igualdade_autoridade", "mercado_autoridade", "igualdade_liberdade", "mercado_liberdade"].map(
+    (q) => `quadrante_${q}`,
+  ),
   ...["posicao", "eixos", "fontes", "tradicoes"].map((s) => `home_amostra_${s}`),
   ...["baixa", "normal", "alta"].map((i) => `teste_importancia_${i}`),
   ...LAYOUTS.map((nome) => `res_layout_${nome}`),

@@ -1,0 +1,148 @@
+{
+  "fonte": {
+    "citacao": "Zucco, Cesar (2023). Brazilian Legislative Surveys (Waves 1-9, 1990-2021). Harvard Dataverse.",
+    "doi": "10.7910/DVN/WM9IZ8",
+    "coordenacao": "Timothy Power e Cesar Zucco",
+    "rodada": 2021,
+    "respondentes": 118,
+    "pergunta": "Ideological placement of each party. Using a scale from 1 (more Left) to 10 (more Right)"
+  },
+  "minimo": 10,
+  "partidos": [
+    {
+      "sigla": "PSOL",
+      "n": 113,
+      "media": 1.58,
+      "margem": 0.28
+    },
+    {
+      "sigla": "PCdoB",
+      "n": 10,
+      "media": 1.8,
+      "margem": 0.64
+    },
+    {
+      "sigla": "PT",
+      "n": 113,
+      "media": 2.37,
+      "margem": 0.24
+    },
+    {
+      "sigla": "PSB",
+      "n": 111,
+      "media": 3.54,
+      "margem": 0.24
+    },
+    {
+      "sigla": "PDT",
+      "n": 113,
+      "media": 3.84,
+      "margem": 0.28
+    },
+    {
+      "sigla": "PROS",
+      "n": 13,
+      "media": 5.15,
+      "margem": 0.7,
+      "hoje": "Solidariedade"
+    },
+    {
+      "sigla": "Cidadania",
+      "n": 65,
+      "media": 5.31,
+      "margem": 0.44
+    },
+    {
+      "sigla": "MDB",
+      "n": 113,
+      "media": 5.91,
+      "margem": 0.27
+    },
+    {
+      "sigla": "PSDB",
+      "n": 113,
+      "media": 5.97,
+      "margem": 0.31
+    },
+    {
+      "sigla": "Solidariedade",
+      "n": 27,
+      "media": 6,
+      "margem": 0.84
+    },
+    {
+      "sigla": "PSD",
+      "n": 109,
+      "media": 6.56,
+      "margem": 0.32
+    },
+    {
+      "sigla": "Podemos",
+      "n": 65,
+      "media": 7.02,
+      "margem": 0.42
+    },
+    {
+      "sigla": "DEM",
+      "n": 113,
+      "media": 7.19,
+      "margem": 0.3,
+      "hoje": "União Brasil"
+    },
+    {
+      "sigla": "PTB",
+      "n": 112,
+      "media": 7.28,
+      "margem": 0.37,
+      "hoje": "PRD"
+    },
+    {
+      "sigla": "PL",
+      "n": 112,
+      "media": 7.41,
+      "margem": 0.31
+    },
+    {
+      "sigla": "PP",
+      "n": 113,
+      "media": 7.49,
+      "margem": 0.31
+    },
+    {
+      "sigla": "Republicanos",
+      "n": 113,
+      "media": 7.69,
+      "margem": 0.3
+    },
+    {
+      "sigla": "PSC",
+      "n": 21,
+      "media": 7.71,
+      "margem": 0.62,
+      "hoje": "Podemos"
+    },
+    {
+      "sigla": "Novo",
+      "n": 69,
+      "media": 8.46,
+      "margem": 0.45
+    },
+    {
+      "sigla": "PSL",
+      "n": 113,
+      "media": 8.84,
+      "margem": 0.26,
+      "hoje": "União Brasil"
+    }
+  ],
+  "fora": [
+    {
+      "sigla": "PV",
+      "n": 1
+    },
+    {
+      "sigla": "Rede",
+      "n": 1
+    }
+  ]
+}

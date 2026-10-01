@@ -4,11 +4,13 @@
 import { describe, expect, it } from "vitest";
 import { TODAS, VERSAO_BANCO } from "./questions.js";
 import { FAIXAS_ETARIAS, GENEROS } from "./demografia.js";
+import { VIAS } from "./agregados.js";
 import { VERSAO } from "../../../functions/api/_versao.js";
 import { IDS_PERGUNTAS } from "../../../functions/api/_perguntas.js";
 import {
   FAIXAS_ETARIAS as FAIXAS_SERVIDOR,
   GENEROS as GENEROS_SERVIDOR,
+  VIAS as VIAS_SERVIDOR,
 } from "../../../functions/api/respostas.js";
 
 describe("copias do servidor", () => {
@@ -23,5 +25,9 @@ describe("copias do servidor", () => {
   it("as listas de demografia sao as mesmas dos dois lados", () => {
     expect([...FAIXAS_SERVIDOR].sort()).toEqual([...FAIXAS_ETARIAS].sort());
     expect([...GENEROS_SERVIDOR].sort()).toEqual([...GENEROS].sort());
+  });
+
+  it("as vias de resposta sao as mesmas dos dois lados", () => {
+    expect([...VIAS_SERVIDOR].sort()).toEqual([...VIAS].sort());
   });
 });

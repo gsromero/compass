@@ -135,6 +135,16 @@ sozinha, sem biblioteca e sem estado extra.
 
 ## A bússola
 
+**Redesenho de 2026-10-01:** nome de cada quadrante no canto de fora; escala de −10 a +10 na base
+e na lateral; os quatro polos **dentro do gráfico, na horizontal**, em pílulas na ponta de cada
+eixo (deitados de lado, as setas de Esquerda e Direita apontavam para baixo, apontado pelo dono);
+linhas-guia do ponto até os eixos com o valor destacado na borda; etiqueta "Você" posicionada
+pela margem real; cor do quadrante em degradê, clara no centro e forte na borda, igual nos quatro;
+o ponto desliza do centro ao abrir (zerado sob reduced-motion). **Tradições opcionais, desligadas
+por padrão** (`role="switch"`), com aviso de que no gráfico elas só têm dois eixos; nomes com
+contorno da cor do painel para ler por cima de tudo. A bússola não usa mais `lib/compass.js`
+(o card continua usando); a escala é a mesma, só a margem do desenho difere.
+
 Três camadas, nesta ordem de importância visual:
 
 1. **A mancha da população** é o fundo de dados: células de 2 pontos do eixo, desenhadas como
@@ -288,7 +298,21 @@ notar. Se voltar a existir, mantenha tudo junto e do mais amplo para o mais estr
 foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar. Lados sem esforço,
 "não sei" deliberado.
 
-## A página de resultado
+## A página de resultado (redesenho de 2026-10-01, aprovado em mockup)
+
+- **Faixas de ponta a ponta** (`.faixa`, com `.faixa-tom` alternando o fundo): capa, seis eixos,
+  por quê (tom), tradições, comparação e compartilhar (tom). `.pagina` tem `overflow-x: clip`
+  porque a faixa usa `100vw`.
+- **A capa**: manchete, os dois números grandes com leitura ("Bem para Direita"), Compartilhar e a
+  bússola em cartão. No computador, duas colunas.
+- **Seis eixos como cartões** (`BarraEixo destaque`): número, polo, régua e leitura. Uma coluna
+  abaixo de 40rem: em duas, "Sustentabilidade" e "Crescimento" estouravam o cartão.
+- **A régua** (`.regua`) substitui o trilho cinza: linha fina, marcas a cada 2 pontos desenhadas
+  como fundo, margem como traço e o ponto; o polo para onde a pessoa pende em negrito.
+- **"Por quê" em citações** (`.citacao`, serifa grande), duas colunas no computador.
+- **Tradições** com número de posição em serifa e `MiniBussola`.
+- **Comparação**: abaixo do mínimo, medidor "N de 50", e não caixa vazia.
+- **Vitrine do card**: o modelo escolhido grande, os outros dois menores dos lados.
 
 - **Abre com uma manchete em palavras** (`.manchete`): "Bem à Direita e mais para Autoridade".
   A regra da intensidade mora em `lib/manchete.js` (cortes 1, 3 e 7 na escala de -10 a +10), o

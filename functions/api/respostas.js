@@ -16,12 +16,16 @@ const QUADRANTES = new Set([
 ]);
 const IDIOMAS = new Set(["pt", "en"]);
 const MAX_ITENS = 60;
+const SITEVERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const DIA_MS = 24 * 60 * 60 * 1000;
 
 // Mesma lista de client/src/lib/demografia.js. Nao da para importar de la:
 // Pages Functions e um runtime separado do bundle do client. Mudou aqui,
 // muda la tambem. Os dois campos sao OPCIONAIS: a pessoa pode pular a etapa.
 export const FAIXAS_ETARIAS = new Set(["16-24", "25-34", "35-44", "45-54", "55-64", "65+"]);
+// Mesma lista de VIAS em client/src/lib/agregados.js: por onde cada resposta
+// foi dada. Opcional (respostas antigas e links reabertos nao tem).
+export const VIAS = new Set(["arrasto", "botao", "teclado"]);
 export const GENEROS = new Set(["feminino", "masculino", "outro", "nao_informado"]);
 
 function erro(mensagem, status = 400) {
@@ -63,6 +67,7 @@ function validar(corpo) {
     if (vistos.has(item.id)) return "pergunta repetida";
     vistos.add(item.id);
     if (!Number.isInteger(item.r) || item.r < -2 || item.r > 2) return "resposta invalida";
+    if (item.via != null && !VIAS.has(item.via)) return "via invalida";
   }
 
   // Opcionais: null/undefined (pulou a etapa) sempre passa. So valida quando
@@ -75,6 +80,29 @@ function validar(corpo) {
   return null;
 }
 
+/**
+ * Confere com a Cloudflare o comprovante de que quem respondeu e uma pessoa
+ * (Turnstile). O token e de uso unico e vale 5 minutos.
+ *
+ * Sem `remoteip` de proposito: o campo e opcional, e o site nao manda o IP de
+ * ninguem a lugar nenhum. Sem o segredo configurado (preview sem segredo, por
+ * exemplo) nada passa: melhor nao contar do que contar sem verificar.
+ */
+async function ePessoa(token, env) {
+  if (!env.TURNSTILE_SECRET_KEY) return false;
+  if (typeof token !== "string" || token.length === 0 || token.length > 2048) return false;
+  const corpo = new FormData();
+  corpo.append("secret", env.TURNSTILE_SECRET_KEY);
+  corpo.append("response", token);
+  try {
+    const resposta = await fetch(SITEVERIFY, { method: "POST", body: corpo });
+    const resultado = await resposta.json();
+    return resultado.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   let corpo;
   try {
@@ -85,6 +113,10 @@ export async function onRequestPost({ request, env }) {
 
   const problema = validar(corpo);
   if (problema) return erro(problema);
+
+  // Depois da validacao, que e barata: so gasta a ida a Cloudflare com um
+  // envio que ja tem a forma certa.
+  if (!(await ePessoa(corpo.turnstileToken, env))) return erro("verificacao falhou", 403);
 
   const id = crypto.randomUUID();
   // So o dia (inicio, em UTC), nunca a hora: o momento exato nao serve a
@@ -110,11 +142,13 @@ export async function onRequestPost({ request, env }) {
 
   // Em lote, nunca em laco: sao dezenas de linhas por resposta.
   const inserirItem = env.DB.prepare(
-    `INSERT OR IGNORE INTO itens (resposta_id, pergunta, r, quadrante, versao)
-     VALUES (?, ?, ?, ?, ?)`,
+    `INSERT OR IGNORE INTO itens (resposta_id, pergunta, r, quadrante, versao, via)
+     VALUES (?, ?, ?, ?, ?, ?)`,
   );
   for (const item of corpo.itens) {
-    gravacoes.push(inserirItem.bind(id, item.id, item.r, corpo.quadrante, corpo.versao));
+    gravacoes.push(
+      inserirItem.bind(id, item.id, item.r, corpo.quadrante, corpo.versao, item.via ?? null),
+    );
   }
 
   try {

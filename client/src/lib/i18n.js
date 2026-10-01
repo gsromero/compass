@@ -141,6 +141,41 @@ const dict = {
     res_atalho_porque: "Por quê",
     res_atalho_tradicoes: "Tradições",
     res_atalho_comparar: "Comparar",
+    res_atalho_compartilhar: "Compartilhar",
+
+    // bussola
+    bus_voce: "Você",
+    bus_margem: "margem de erro",
+    bus_populacao: "onde caiu quem já respondeu",
+    bus_tradicoes: "Mostrar as tradições no gráfico",
+    bus_tradicoes_legenda: "tradição, só nos dois eixos do gráfico",
+    bus_tradicoes_aviso:
+      "As tradições aparecem só pela posição nos dois eixos do gráfico. A proximidade de verdade é medida nos seis eixos: uma tradição pode parecer perto aqui e estar longe nos outros quatro.",
+    quadrante_igualdade_autoridade: "Esquerda · Autoridade",
+    quadrante_mercado_autoridade: "Direita · Autoridade",
+    quadrante_igualdade_liberdade: "Esquerda · Liberdade",
+    quadrante_mercado_liberdade: "Direita · Liberdade",
+
+    // leitura de uma posicao num eixo (mesmos cortes da manchete)
+    leitura_forte: (polo) => `Bem para ${polo}`,
+    leitura_media: (polo) => `Mais para ${polo}`,
+    leitura_leve: (polo) => `Um pouco para ${polo}`,
+    leitura_centro: () => "No centro",
+
+    // secoes do resultado
+    sec_perfil: "Perfil",
+    sec_explicacao: "Explicação",
+    sec_tradicoes: "Tradições",
+    sec_comparacao: "Comparação",
+    sec_compartilhar: "Compartilhar",
+    sec_ajuda: "Como ler esta seção",
+    res_seu_card: "Seu card",
+    res_escolher_card: (nome) => `Usar o modelo ${nome}`,
+    trad_voce: "você",
+    trad_ela: "a tradição, nos dois eixos do gráfico",
+    pop_faltam: (n, minimo) => `de ${minimo} respostas para liberar a comparação`,
+    pop_faltam_texto:
+      "Com respostas suficientes aparecem: em que ponto você está em relação a quem respondeu, a mancha de onde as pessoas caíram no gráfico e as afirmações em que você destoa da sua turma. Antes disso, os números seriam ruído.",
     res_ler_tradicao: "Ler sobre essa tradição →",
     res_todas_tradicoes: (n) => `Ver as ${n} tradições`,
     res_tradicoes: "Tradições mais próximas de você",
@@ -218,6 +253,39 @@ const dict = {
     sobre_titulo: "Sobre",
     metodologia_titulo: "Metodologia",
     tradicoes_titulo: "Tradições ideológicas",
+
+    // partidos (dados do Brazilian Legislative Surveys)
+    partidos_titulo: "Onde ficam os partidos",
+    partidos_rotulo: (ano) => `Partidos · Brazilian Legislative Survey ${ano}`,
+    partidos_intro: (n, ano) =>
+      `Como os próprios parlamentares posicionam cada partido, numa escala de 1 (mais à esquerda) a 10 (mais à direita). ${n} deputados e senadores responderam em ${ano}.`,
+    partidos_aviso:
+      "O Compass não posiciona partidos e não liga partidos a tradições. Esta página só mostra o que a pesquisa mediu, com uma régua só: esquerda e direita.",
+    partidos_grafico: "Posição média de cada partido, de 1 (mais à esquerda) a 10 (mais à direita)",
+    partidos_voce: "Você",
+    partidos_voce_eixo: "eixo econômico",
+    partidos_hoje: (sigla) => `hoje parte do ${sigla}`,
+    partidos_notas: (n) => `${n} notas`,
+    partidos_esquerda: "← mais à esquerda",
+    partidos_direita: "mais à direita →",
+    partidos_como_ler: "Como ler",
+    partidos_como_ler_texto:
+      "Cada ponto é a média das notas que os parlamentares deram ao partido, de 1 a 10. O traço em volta é a margem de erro: quanto menos gente avaliou, maior ele fica. A linha mais escura no meio é o 5,5, o centro da escala.",
+    partidos_mudou: (ano) => `O que mudou desde ${ano}`,
+    partidos_mudou_texto:
+      "DEM e PSL formaram o União Brasil (2022). O PROS foi incorporado ao Solidariedade e o PSC ao Podemos (2023). PTB e Patriota formaram o PRD (2023). Partidos criados depois da pesquisa não aparecem.",
+    partidos_fora: "Quem ficou de fora, e por quê",
+    partidos_fora_texto: (minimo, lista) =>
+      `Só entram partidos avaliados por pelo menos ${minimo} parlamentares. Abaixo disso a média é instável e, com uma ou duas notas, vira a resposta de uma pessoa só, o que a pesquisa proíbe expor. Ficaram de fora: ${lista}.`,
+    partidos_fora_item: (sigla, n) => `${sigla} (${n} ${n === 1 ? "nota" : "notas"})`,
+    partidos_voce_titulo: "Você nesta régua",
+    partidos_voce_texto:
+      "O seu ponto é o seu eixo econômico, levado para a mesma escala de 1 a 10. As duas medidas não são iguais: a pesquisa pergunta a posição geral de cada partido, o Compass mede só a economia. Compare com cuidado.",
+    partidos_fonte: "Fonte",
+    partidos_coordenacao: (quem) => `Projeto coordenado por ${quem}.`,
+    partidos_link: "Onde ficam os partidos →",
+    partidos_link_texto:
+      "Como os parlamentares posicionam cada partido de esquerda a direita, segundo uma pesquisa acadêmica de 2021.",
     teste_titulo_aba: "Teste",
     titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adaptado do item",
@@ -349,6 +417,38 @@ const dict = {
     res_atalho_porque: "Why",
     res_atalho_tradicoes: "Traditions",
     res_atalho_comparar: "Compare",
+    res_atalho_compartilhar: "Share",
+
+    bus_voce: "You",
+    bus_margem: "margin of error",
+    bus_populacao: "where previous respondents landed",
+    bus_tradicoes: "Show the traditions on the chart",
+    bus_tradicoes_legenda: "tradition, on the chart's two axes only",
+    bus_tradicoes_aviso:
+      "Traditions are placed by their position on the chart's two axes only. Real closeness is measured on all six: a tradition can look close here and be far on the other four.",
+    quadrante_igualdade_autoridade: "Left · Authority",
+    quadrante_mercado_autoridade: "Right · Authority",
+    quadrante_igualdade_liberdade: "Left · Liberty",
+    quadrante_mercado_liberdade: "Right · Liberty",
+
+    leitura_forte: (polo) => `Strongly toward ${polo}`,
+    leitura_media: (polo) => `Leaning toward ${polo}`,
+    leitura_leve: (polo) => `Slightly toward ${polo}`,
+    leitura_centro: () => "In the centre",
+
+    sec_perfil: "Profile",
+    sec_explicacao: "Explanation",
+    sec_tradicoes: "Traditions",
+    sec_comparacao: "Comparison",
+    sec_compartilhar: "Share",
+    sec_ajuda: "How to read this section",
+    res_seu_card: "Your card",
+    res_escolher_card: (nome) => `Use the ${nome} style`,
+    trad_voce: "you",
+    trad_ela: "the tradition, on the chart's two axes",
+    pop_faltam: (n, minimo) => `of ${minimo} answers to unlock the comparison`,
+    pop_faltam_texto:
+      "With enough answers you will see where you stand compared with other respondents, the cloud of where people landed on the chart, and the statements where you differ from your own side. Before that, the numbers would be noise.",
     res_ler_tradicao: "Read about this tradition →",
     res_todas_tradicoes: (n) => `See all ${n} traditions`,
     res_tradicoes: "Traditions closest to you",
@@ -415,6 +515,38 @@ const dict = {
     sobre_titulo: "About",
     metodologia_titulo: "Methodology",
     tradicoes_titulo: "Ideological traditions",
+
+    partidos_titulo: "Where the parties stand",
+    partidos_rotulo: (ano) => `Parties · Brazilian Legislative Survey ${ano}`,
+    partidos_intro: (n, ano) =>
+      `How Brazilian legislators themselves place each party, on a scale from 1 (most left) to 10 (most right). ${n} deputies and senators answered in ${ano}.`,
+    partidos_aviso:
+      "Compass does not place parties and does not link parties to traditions. This page only shows what the survey measured, on a single scale: left and right.",
+    partidos_grafico: "Average position of each party, from 1 (most left) to 10 (most right)",
+    partidos_voce: "You",
+    partidos_voce_eixo: "economic axis",
+    partidos_hoje: (sigla) => `now part of ${sigla}`,
+    partidos_notas: (n) => `${n} ratings`,
+    partidos_esquerda: "← more to the left",
+    partidos_direita: "more to the right →",
+    partidos_como_ler: "How to read it",
+    partidos_como_ler_texto:
+      "Each dot is the average of the ratings legislators gave the party, from 1 to 10. The bar around it is the margin of error: the fewer people rated it, the wider it gets. The darker line in the middle is 5.5, the centre of the scale.",
+    partidos_mudou: (ano) => `What changed since ${ano}`,
+    partidos_mudou_texto:
+      "DEM and PSL merged into União Brasil (2022). PROS was absorbed by Solidariedade and PSC by Podemos (2023). PTB and Patriota merged into PRD (2023). Parties created after the survey do not appear.",
+    partidos_fora: "Who is left out, and why",
+    partidos_fora_texto: (minimo, lista) =>
+      `Only parties rated by at least ${minimo} legislators are shown. Below that the average is unstable and, with one or two ratings, it becomes a single person's answer, which the survey forbids disclosing. Left out: ${lista}.`,
+    partidos_fora_item: (sigla, n) => `${sigla} (${n} ${n === 1 ? "rating" : "ratings"})`,
+    partidos_voce_titulo: "You on this scale",
+    partidos_voce_texto:
+      "Your dot is your economic axis, converted to the same 1 to 10 scale. The two measures are not the same: the survey asks for each party's overall position, Compass measures only the economy. Compare with care.",
+    partidos_fonte: "Source",
+    partidos_coordenacao: (quem) => `Project led by ${quem}.`,
+    partidos_link: "Where the parties stand →",
+    partidos_link_texto:
+      "How Brazilian legislators place each party from left to right, according to a 2021 academic survey.",
     teste_titulo_aba: "Test",
     titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adapted from item",
@@ -429,6 +561,13 @@ export function t(lang, chave, ...args) {
 }
 
 /** Numero no idioma do app, nunca no locale do navegador. */
+/** Numero com sinal explicito (+3,4 / −2,0), para posicao num eixo. */
+export function numSinal(lang, valor, casas = 1) {
+  const arredondado = Number(valor.toFixed(casas));
+  const sinal = arredondado > 0 ? "+" : arredondado < 0 ? "−" : "";
+  return sinal + num(lang, Math.abs(arredondado), casas);
+}
+
 export function num(lang, valor, casas = 1) {
   return new Intl.NumberFormat(lang === "pt" ? "pt-BR" : "en-US", {
     minimumFractionDigits: casas,

@@ -154,6 +154,19 @@ Ler o handoff recente **antes de começar**.
   Não dá para importar o JSON do client dentro das Functions sem arrastar o bundle do front junto,
   então a sincronia é manual. Mudou lá, muda aqui (e os ids em `functions/api/_perguntas.js`).
   `sincronia.test.js` barra o build se divergirem.
+- **Toda gravação de resposta passa pelo Turnstile.** O segredo `TURNSTILE_SECRET_KEY` existe só
+  no ambiente de produção do Pages; local usa o segredo de TESTE no `.dev.vars` (fora do git, par
+  da chave de teste em `lib/turnstile.js`). Prévia avulsa não tem o segredo e recebe 403, além do
+  problema do banco descrito abaixo. O widget só aceita os domínios cadastrados no painel
+  (`compass.gsromerolab.com` e `localhost`): quem responde por `compass-429.pages.dev` não conta.
+- **`dados-bls/` nunca entra no git.** São os dados brutos do Brazilian Legislative Surveys, com
+  respostas individuais anônimas, baixados com cadastro. O termo de uso proíbe expor respondente:
+  por isso partido com menos de 10 notas não aparece. Só `client/src/data/partidos-bls.json`
+  (médias) vai para o repo, gerado por `scripts/partidos-bls.mjs`.
+- **Uma Function importa do client de propósito:** `functions/resultado/[codigo].js` usa
+  `lib/previa.js` (permalink, scoring e `questions.json`) para a prévia do link calcular o mesmo
+  quadrante que a tela. Funciona porque são módulos puros, sem DOM. Não importar daí nada que
+  toque `window` ou `document`.
 - **O `state` da navegação sobrevive ao F5.** O react-router guarda no `history` do navegador.
   Quem depende dele para "acontecer uma vez só" tem que apagá-lo depois de usar.
 - **A escala de resposta mora só em `lib/scoring.js`.** Já esteve copiada em `permalink.js` e em

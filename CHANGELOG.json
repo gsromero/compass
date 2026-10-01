@@ -1,5 +1,60 @@
 [
   {
+    "version": "9.0",
+    "date": "2026-10-01T23:30:00",
+    "author": "claude",
+    "summary": "Redesenho do resultado e da bussola, pagina de partidos (BLS 2021), previa de link por quadrante, Turnstile e via de resposta.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/components/Bussola.jsx",
+        "client/src/components/BarraEixo.jsx",
+        "client/src/components/CabecalhoSecao.jsx",
+        "client/src/components/MiniBussola.jsx",
+        "client/src/components/VitrineCards.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Partidos.jsx",
+        "client/src/data/partidos-bls.json",
+        "scripts/partidos-bls.mjs",
+        "client/src/lib/previa.js",
+        "functions/resultado/[codigo].js",
+        "client/public/og/",
+        "client/src/lib/shareCard.js",
+        "client/src/lib/i18n.js",
+        "client/src/index.css"
+      ],
+      "technical": "Bussola reescrita em SVG proprio (viewBox 400): degrade por quadrante, escala, polos em pilulas internas, linhas-guia com valores, etiqueta Voce posicionada pela margem real, tradicoes opcionais com role=switch, entrada animada. BarraEixo vira regua (CSS de fundo) com variante destaque. Resultado em faixas full-bleed (.faixa com 100vw, .pagina overflow-x clip). Partidos: script gera JSON de medias com minimo 10 notas a partir do BLS9 (gitignored), pagina HTML/CSS acessivel. Previa: Function com HTMLRewriter sobre env.ASSETS, lib/previa.js reaproveita a conta do client. Card: faixa da margem recortada nas duas pontas.",
+      "pending": [
+        "aplicar 0003 em producao e publicar (dono quer tudo junto)",
+        "10a rodada do BLS quando sair"
+      ]
+    }
+  },
+  {
+    "version": "8.1",
+    "date": "2026-10-01T19:00:00",
+    "author": "claude",
+    "summary": "Turnstile protege a gravacao de respostas; pagina Sobre explica a verificacao.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/turnstile.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Sobre.jsx",
+        "client/src/index.css",
+        "functions/api/respostas.js",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md",
+        "CLAUDE.md"
+      ],
+      "technical": "Widget Managed criado pelo dono; segredo TURNSTILE_SECRET_KEY gravado por ele no ambiente de producao do Pages. Cliente: script explicito carregado so quando ha resposta a enviar, appearance interaction-only, action 'resposta', token vai no corpo do POST. Servidor: siteverify com FormData (secret, response), sem remoteip; sem segredo ou token invalido, 403 antes de qualquer gravacao. Localhost usa a chave de teste 1x00000000000000000000AA e o segredo de teste no .dev.vars (gitignored). Verificado local: sem token 403, fluxo completo 201 e +1 linha, F5 0 envios.",
+      "pending": [
+        "og:image por quadrante (decisao do dono)",
+        "registrar modo de resposta (decisao do dono)"
+      ]
+    }
+  },
+  {
     "version": "8.0",
     "date": "2026-10-01T16:30:00",
     "author": "claude",
@@ -94,68 +149,6 @@
       "technical": "Dono relatou tela em branco ao terminar o modo completo (48 perguntas) em producao. Investigacao rodou os 371 testes existentes e simulou sessoes completas de 48 respostas em varios padroes (concordar com tudo, alternar extremos, aleatorio, nao sei em tudo) direto contra pontuar/codificar/decodificar: nada reproduziu excecao, a logica de pontuacao e do link esta correta. Causa do sintoma ser tela EM BRANCO (nao uma mensagem de erro): o site nao tinha nenhum ErrorBoundary, entao qualquer excecao de render nao tratada, em qualquer componente, derrubava a arvore inteira sem deixar rastro. ErroLimite.jsx (novo) envolve so <Routes> dentro de App.jsx, por fora de Topo/Rodape: pagina que quebra mostra mensagem no lugar dela mantendo cabecalho e rodape, e troca de rota reseta o limite via key={pathname}. componentDidCatch manda o erro completo pro console.error; sem telemetria nova, por decisao de privacidade do projeto (nada identifica quem respondeu). Verificado forcando um throw de proposito, confirmando mensagem/console/reset, e removendo antes do commit. Bug real achado no caminho, nao a causa da tela em branco mas corrigido junto: proximoPar em scoring.js parava de perguntar cedo no modo completo tambem (limite Infinity), apesar de modo_completo_desc prometer '48 perguntas, precisao maxima' — simulacao com resposta coerente parava em 24/48. Corrigido gateando o corte antecipado a modos com limite finito. Teste novo em fluxo.test.js cobrindo o caso, e confirmado tambem numa sessao completa de verdade no navegador (48 respostas, chegou no resultado sem erro).",
       "pending": [
         "se a tela em branco acontecer de novo, pedir print do console do navegador (agora vai ter o erro real)",
-        "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
-        "revisao das 48 afirmacoes pelo dono",
-        "piloto com 4 a 6 pessoas antes de divulgar o link",
-        "og:image estatica por quadrante"
-      ]
-    }
-  },
-  {
-    "version": "5.0",
-    "date": "2026-08-16T21:20:00",
-    "author": "claude",
-    "summary": "Container unico de 1200px, topo e rodape de ponta a ponta, Home mais enxuta, e o site aprovado e publicado em producao.",
-    "details": {
-      "commits": [
-        "894711f"
-      ],
-      "files": [
-        "client/src/index.css",
-        "client/src/App.jsx",
-        "client/src/lib/i18n.js",
-        "client/src/lib/i18n.test.js",
-        "client/src/pages/Home.jsx",
-        "client/src/pages/Metodologia.jsx",
-        "client/src/pages/Resultado.jsx",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/PENDENCIAS.md"
-      ],
-      "technical": "As duas larguras de container (42rem leitura, 58rem dados) viraram uma, --coluna:75rem (1200px). Topo e rodape saem de dentro de '.coluna': ocupam a largura inteira da tela (fundo e borda de ponta a ponta), o conteudo interno mantem os mesmos 20px de margem lateral que a coluna central usava. Na Home, os tres cards de 'diferenca' saem (redundantes com a pagina Sobre) e a escolha de modo vira tres colunas lado a lado e mais altas (min-height:96px) em vez de lista empilhada, voltando a empilhar abaixo de 30rem. O topo do celular ganhou mais um ajuste: cabe numa linha so ate 320px, com '.topo-controles .segmentado button' reduzindo so o padding horizontal (nao a altura do alvo de toque) nesse breakpoint, seletor mais especifico de proposito para vencer a cascata do bloco (pointer:coarse) sem repetir os bugs de especificidade do commit anterior. Cada mudanca foi testada num deploy de preview (URL separada de producao) antes de aprovada. i18n: chaves home_diferenca_1/2/3 (e _titulo) removidas dos dois idiomas e do teste, por ficarem sem uso.",
-      "pending": [
-        "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
-        "revisao das 48 afirmacoes pelo dono",
-        "piloto com 4 a 6 pessoas antes de divulgar o link",
-        "og:image estatica por quadrante"
-      ]
-    }
-  },
-  {
-    "version": "4.0",
-    "date": "2026-08-16T18:55:00",
-    "author": "claude",
-    "summary": "Revisao completa do site no celular, o topo ganhou menu hamburguer e seletor de idioma segmentado, e o site foi ao ar pela primeira vez.",
-    "details": {
-      "commits": [
-        "99f60f4",
-        "8db2477",
-        "b313403",
-        "a94ef3b"
-      ],
-      "files": [
-        "client/src/index.css",
-        "client/src/App.jsx",
-        "client/src/lib/i18n.js",
-        "client/src/lib/i18n.test.js",
-        "client/src/lib/lang.jsx",
-        "client/src/pages/Home.jsx",
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Sobre.jsx",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/PENDENCIAS.md"
-      ],
-      "technical": "Auditoria em 375px e 320px achou o topo quebrando em tres linhas (114px, botao de tema orfao), alvos de toque de 34px, e a tabela de afirmacoes cortando texto sem avisar que rolava. Corrigido com topo em duas linhas, um bloco (pointer: coarse) padronizando alvo minimo em 40-48px, e sombra de rolagem em CSS puro (quatro camadas de fundo, duas presas na caixa e duas que andam com o conteudo) na classe .rolagem. Na sequencia o topo voltou a nao caber com Inicio, Sobre e Metodologia por extenso: esses tres saem para um menu hamburguer no celular, e idioma/tema continuam sempre visiveis por serem escolha de estado. O botao de idioma trocou de ciclo por clique para controle segmentado (PT-BR | EN-US) nos dois tamanhos de tela. Dois bugs de especificidade de CSS apareceram no caminho: '.linha' e '.botao-discreto' (utilitarios com display:flex/inline-flex) empatavam em especificidade com as classes novas que escondem esses elementos e venciam a cascata por virem depois no arquivo. Corrigido com seletores mais especificos em vez de reordenar o arquivo. Fechamento: banco de producao migrado (estava vazio), projeto 'compass' criado no Cloudflare Pages e primeiro deploy publicado.",
-      "pending": [
         "conectar compass.gsromerolab.com ao projeto (passo manual no painel Cloudflare)",
         "revisao das 48 afirmacoes pelo dono",
         "piloto com 4 a 6 pessoas antes de divulgar o link",

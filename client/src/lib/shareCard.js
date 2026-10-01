@@ -169,16 +169,13 @@ function desenharBarras(ctx, { x, y, largura, resultado, lang, eixosMeta }) {
 
     const posX = x + ((dados.posicao + 10) / 20) * largura;
     const margemLargura = Math.max((dados.margem / 20) * largura * 2, 8);
+    // Recorta a faixa nas DUAS pontas do trilho. So prendia a esquerda, e numa
+    // posicao no extremo direito (+10) a faixa vazava para fora da barra.
+    const inicioMargem = Math.max(x, posX - margemLargura / 2);
+    const fimMargem = Math.min(x + largura, posX + margemLargura / 2);
     ctx.fillStyle = TEMA.tintaMedia;
     ctx.globalAlpha = 0.35;
-    retanguloRedondo(
-      ctx,
-      Math.max(x, posX - margemLargura / 2),
-      trilhoY,
-      Math.min(margemLargura, largura),
-      trilhoAltura,
-      6,
-    );
+    retanguloRedondo(ctx, inicioMargem, trilhoY, fimMargem - inicioMargem, trilhoAltura, 6);
     ctx.fill();
     ctx.globalAlpha = 1;
 

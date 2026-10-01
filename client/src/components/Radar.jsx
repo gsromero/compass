@@ -78,7 +78,7 @@ export default function Radar({ resultado }) {
             <polygon
               points={pontos(p.indice, p.forca)}
               fill="var(--voce)"
-              opacity="0.34"
+              opacity="0.82"
               stroke="var(--voce)"
               strokeWidth="0.5"
               strokeLinejoin="round"
