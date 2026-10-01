@@ -11,6 +11,7 @@ import {
 } from "../lib/gesto.js";
 import { codificar } from "../lib/permalink.js";
 import { carregar, limpar, salvar } from "../lib/sessao.js";
+import { lembrarResultado } from "../lib/meusResultados.js";
 import { FAIXAS_ETARIAS, GENEROS } from "../lib/demografia.js";
 import Polegar from "../components/Polegar.jsx";
 
@@ -47,7 +48,16 @@ const INCLINACAO_MAXIMA = 10;
 // O cartao sai da tela inclinado um pouco mais do que ficou na mao, senao a
 // saida parece frouxa depois de um arrasto forte.
 const INCLINACAO_SAIDA = 18;
-const KEY_MODO = "compass.modoResposta";
+// A escolha manual entre cartao e lista fica guardada POR TIPO DE APARELHO.
+// Era uma chave so, e uma troca feita uma vez valia para sempre: quem tocou em
+// "Usar cartao" passava a abrir no cartao ate no computador.
+const KEY_MODO = (aparelho) => `compass.modoResposta.${aparelho}`;
+const KEY_MODO_ANTIGA = "compass.modoResposta";
+
+/** "mouse" quando ha ponteiro preciso com hover; "toque" no resto. */
+function tipoDeAparelho() {
+  return window.matchMedia?.("(hover: hover) and (pointer: fine)").matches ? "mouse" : "toque";
+}
 
 function prefereMenosMovimento() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -59,17 +69,21 @@ function prefereMenosMovimento() {
  * Mostrar os dois caminhos ao mesmo tempo polui a tela e deixa a experiencia
  * pior do que qualquer um deles sozinho. Entao so um aparece, e da para trocar.
  *
- * O padrao segue o aparelho: no toque o arrasto e otimo, no mouse arrastar e
- * pior que clicar. Quem discordar troca, e a escolha fica guardada.
+ * O padrao segue o aparelho: no computador (mouse) abre a LISTA, no celular
+ * (toque) abre o CARTAO, porque arrastar e otimo com o dedo e pior que clicar
+ * com o mouse. Quem discordar troca, e a escolha fica guardada so para aquele
+ * tipo de aparelho.
  */
 function modoInicial() {
+  const aparelho = tipoDeAparelho();
   try {
-    const salvo = localStorage.getItem(KEY_MODO);
+    localStorage.removeItem(KEY_MODO_ANTIGA);
+    const salvo = localStorage.getItem(KEY_MODO(aparelho));
     if (salvo === "cartao" || salvo === "lista") return salvo;
   } catch {
     /* sem armazenamento: segue o aparelho */
   }
-  return window.matchMedia?.("(pointer: coarse)").matches ? "cartao" : "lista";
+  return aparelho === "mouse" ? "lista" : "cartao";
 }
 
 export default function Teste() {
@@ -119,7 +133,7 @@ export default function Teste() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(KEY_MODO, comoResponder);
+      localStorage.setItem(KEY_MODO(tipoDeAparelho()), comoResponder);
     } catch {
       /* armazenamento cheio nao pode impedir de responder */
     }
@@ -181,6 +195,9 @@ export default function Teste() {
     (finais) => {
       limpar();
       const codigo = codificar(perguntas, finais, VERSAO_BANCO);
+      // Marca o resultado como deste aparelho: e o que separa o dono de quem
+      // so recebeu o link (ver lib/meusResultados.js).
+      lembrarResultado(codigo);
       // Idade e genero NAO entram no codigo do link (ele so guarda respostas,
       // e precisa continuar curto e reconstruindo o mesmo resultado pra
       // sempre). Viajam so nesta navegacao, pro envio anonimo unico que a

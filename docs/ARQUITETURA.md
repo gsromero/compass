@@ -44,7 +44,8 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 | `i18n.js` | TODAS as strings de interface, pt e en. Valor pode ser função quando tem número no meio |
 | `lang.jsx` | `LangProvider` + `useLang()`, devolvendo `{ lang, setLang, t, pick }`. `t` é string de interface; `pick` é texto de conteúdo (objetos `{pt, en}`). A escolha fica no localStorage e manda sobre o navegador |
 | `compass.js` | Geometria do gráfico: converte posição de eixo (-10 a +10) em coordenada de SVG, e margem de erro em elipse. Usado pela tela de resultado E pelo card social, para os dois nunca discordarem |
-| `shareCard.js` | Card 1080x1080 em Canvas 2D, sem dependência. Fundo sempre sólido (transparência vira preto no Instagram). Portado do BBB |
+| `shareCard.js` | Card em Canvas 2D, três formatos (`quadrado`, `story`, `minimo`), tema claro, frase do resultado via `manchete.js`. Tradição só no Story e só com `comTradicao`. Fundo sempre sólido |
+| `meusResultados.js` | Códigos de resultado feitos neste aparelho (localStorage). Separa o dono de quem recebeu o link |
 | `shareImage.js` | `shareCanvasPng()` e `downloadCanvasPng()`: compartilhamento nativo quando o navegador aceita arquivo, download quando não. Portado do BBB, sem a parte de Capacitor |
 | `permalink.js` | Codifica e decodifica o resultado na URL. É o que faz o link de resultado funcionar sem banco. `versaoDoCodigo()` separa "link de versão anterior do teste" de "link quebrado", que pedem mensagens diferentes |
 | `agregados.js` | Busca `GET /api/agregados` e nunca lança: sem servidor, devolve "dados insuficientes" e a tela esconde as seções que dependem de volume |
@@ -92,6 +93,7 @@ tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. Imagens em
 | `components/CabecalhoSecao.jsx` | Rótulo, título e frase curta de cada seção do resultado; os parágrafos longos ficam atrás do "?" |
 | `components/MiniBussola.jsx` | Bússola pequena do cartão de tradição: você (cheio) e a tradição (vazada) |
 | `components/VitrineCards.jsx` | Os três modelos do card de compartilhar, gerados com o próprio `montarCard`, depois da primeira pintura |
+| `components/SeletorModo.jsx` | Rápido, Padrão, Completo numa linha. Usado no início e no convite do visitante |
 | `components/BussolaAmostra.jsx` | A bússola pequena da página inicial, com o ponto no centro de propósito |
 
 Menu e rodapé saem da mesma lista `LINKS` em `App.jsx`: Início, Tradições, Metodologia, Sobre.

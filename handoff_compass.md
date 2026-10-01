@@ -1,3 +1,30 @@
+## 2026-10-02, claude
+
+**O que foi feito:** pedidos do dono depois do redesenho, na branch `feat/tema-claro-comparacao`
+(sem commit, sem deploy, aguardando o dono):
+
+1. **Modo escuro removido** do site inteiro (`tema.jsx`, botão, tokens escuros, `color-scheme`).
+2. **Comparação escondida** até `agregados.suficiente`: some a seção e o atalho; o card fica
+   sozinho e centralizado na faixa final.
+3. **Cards novos** (pesquisa na Mobbin, mockup aprovado no artefato "Cards e Visitante"):
+   `shareCard.js` reescrito, claro, Quadrado/Story/Mínimo, frase em primeira pessoa, bússola nova,
+   convite no rodapé; tradição só no Story e só ligada. `VitrineCards` virou prévia única + escolha
+   de formato + chave.
+4. **Visitante de link:** `lib/meusResultados.js` + faixa no topo, terceira pessoa, convite "Agora é
+   a sua vez" com `SeletorModo` (extraído da Home).
+
+**Depois, a pedido do dono:** (a) o teste abria em cartão no computador dele porque uma troca
+antiga ficava salva para sempre; agora a escolha é guardada por tipo de aparelho (mouse ou toque) e
+a chave antiga é apagada. (b) Revisão de texto: "com 5 de resposta" corrigido, termos técnicos
+trocados ("pesos publicados", "área de incerteza", "Peso desta resposta" virou "Importância para
+você"), leituras sem artigo ("Direita, posição forte"), eixo "Decisão" virou "Quem decide", margem
+com a escala dita ("numa escala de −10 a +10"), "Algo deu errado".
+
+**Verificado:** 391 testes e build; local com `wrangler pages dev`: fluxo do dono (sem faixa,
+atalho "Compartilhar", os três cards exportados e conferidos), visitante num navegador limpo (faixa,
+"Resultado compartilhado", "Resposta: …", atalho "Sua vez", "Começar o teste" leva ao teste), sem
+erro no console. Achado e corrigido: no Story com tradição, a caixa invadia o convite.
+
 ## 2026-10-01 (madrugada), claude
 
 **O que foi feito:** tudo que o dono aprovou em mockup, na branch `feat/turnstile-modo-resposta`,
@@ -54,32 +81,3 @@ o site anota por onde cada resposta veio. `itens.via` (migration 0003, aplicada 
 
 **Verificado:** POST sem token recebe 403; teste inteiro no navegador local passa pela verificação
 e grava 1 linha (201); F5 não reenvia; 381 testes e build.
-
-## 2026-10-01 (tarde), claude
-
-**O que foi feito:** as seis propostas de interface, pesquisadas na Mobbin e aprovadas pelo dono
-em mockup (artefato Design "Propostas de Tela Compass"), implementadas e **publicadas no mesmo dia** com autorização do dono (merge `--no-ff`, deploy,
-conferido em compass.gsromerolab.com sem gravar nada: elementos novos presentes, 0 POST ao abrir
-link de resultado, nenhum erro no console).
-
-1. **Resultado:** manchete em palavras (`lib/manchete.js` + i18n), atalhos de seção presos no topo
-   (`AtalhosSecoes.jsx`), Compartilhar e Copiar link logo abaixo da bússola, margem igual dita uma
-   vez só (`BarraEixo semMargem`).
-2. **Cartão:** coluna de 42rem, cartão com teto de altura, baralho por trás em CSS, fileira de
-   quatro polegares sempre visível. A `.escala-oculta` (lista escondida que reaparecia ao foco)
-   saiu: os polegares são botões de verdade e cumprem esse papel.
-3. **Lista:** afirmação no alto, peso ("Peso desta resposta") ANTES das opções nos dois modos.
-4. **Por quê:** selo "Você: discordo muito" e `<details>` com todas as respostas.
-5. **Início:** seletor de duração numa linha, amostra do resultado com ponto no centro
-   (`BussolaAmostra.jsx`), duas colunas no computador.
-6. **Navegação:** Tradições no menu e no rodapé (lista `LINKS` única em `App.jsx`), cartão de
-   tradição vira link.
-
-**Verificado de verdade:** 381 testes, build, `wrangler pages dev` local fotografado em 390px e
-1366px, pt e en, claro e escuro; teste inteiro respondido só pelos polegares chega ao resultado e
-grava 1 linha; nenhum erro no console. Dois defeitos achados só ao renderizar e corrigidos: o peso
-quebrava em duas linhas no celular, e as beiradas do baralho ficavam escondidas (escala a partir
-do centro; agora da base).
-
-**Para o próximo agente:** o dono gostou da ideia de gravar o modo de resposta (cartão ou lista)
-para medir se o arrasto puxa respostas mais extremas, mas ainda não autorizou. Exige migration.

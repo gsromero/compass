@@ -22,38 +22,35 @@ const dict = {
     nav_menu_fechar: "Fechar menu",
     nav_idioma_pt: "PT-BR",
     nav_idioma_en: "EN-US",
-    nav_tema_escuro: "Mudar para o tema escuro",
-    nav_tema_claro: "Mudar para o tema claro",
     rodape_privacidade: "Nada aqui identifica quem respondeu",
     rodape_codigo: "Código aberto",
 
     // entrada
     home_titulo: "Onde você está no espectro político",
-    home_intro:
-      "Um teste de 48 afirmações tiradas de pesquisas acadêmicas, com os pesos publicados e a margem de erro na tela.",
+    home_intro: "Um teste com 48 afirmações tiradas de pesquisas acadêmicas. A conta é aberta, e o resultado vem com a margem de erro.",
     home_escolha_modo: "Quanto tempo você tem?",
     home_comecar: "Começar",
     home_retomar: "Continuar de onde parei",
     home_recomecar: "Começar de novo",
-    home_tem_teste: (n) => `Você tem um teste em andamento, com ${n} de resposta.`,
+    home_tem_teste: (n) => `Você tem um teste em andamento: ${n} ${n === 1 ? "resposta" : "respostas"} até agora.`,
 
     modo_rapido: "Rápido",
     modo_padrao: "Padrão",
     modo_completo: "Completo",
     modo_rapido_desc: "16 perguntas, cerca de 3 minutos",
     modo_padrao_desc: "32 perguntas, cerca de 6 minutos",
-    modo_completo_desc: "48 perguntas, precisão máxima",
+    modo_completo_desc: "48 perguntas, cerca de 9 minutos",
     modo_rapido_qtd: "16 perguntas",
     modo_padrao_qtd: "32 perguntas",
     modo_completo_qtd: "48 perguntas",
     modo_rapido_tempo: "3 min",
     modo_padrao_tempo: "6 min",
-    modo_completo_tempo: "precisão máxima",
+    modo_completo_tempo: "9 min",
     home_amostra_titulo: "No fim você recebe",
     home_amostra_posicao: "Sua posição, com a margem de erro desenhada",
     home_amostra_eixos: "Seis eixos, não só esquerda e direita",
     home_amostra_fontes: "A fonte de cada pergunta, e por que você caiu ali",
-    home_amostra_tradicoes: "As tradições mais próximas, com leituras",
+    home_amostra_tradicoes: "As tradições mais próximas, com sugestões de leitura",
 
     // questionario
     teste_progresso: (n, total) => `Pergunta ${n} de ${total}`,
@@ -66,9 +63,8 @@ const dict = {
     teste_modo_lista: "Usar lista",
     teste_modo_cartao: "Usar cartão",
     teste_nao_sei: "Não sei dizer",
-    teste_nao_sei_ajuda:
-      "Esta afirmação não entra na sua conta. Nem ela, nem a afirmação oposta que faz par com ela.",
-    teste_importancia: "Peso desta resposta",
+    teste_nao_sei_ajuda: "Esta afirmação fica fora da conta, junto com a afirmação oposta que faz par com ela.",
+    teste_importancia: "Importância para você",
     teste_importancia_baixa: "Pouco",
     teste_importancia_normal: "Normal",
     teste_importancia_alta: "Muito",
@@ -99,19 +95,15 @@ const dict = {
     res_area_explicacao:
       "A área ao redor do ponto é a sua margem de erro. Ela é maior quando suas respostas se contradizem, e menor quando são coerentes entre si.",
     res_confianca_baixa_titulo: "Este resultado diz pouco sobre você",
-    res_uniforme:
-      "Você deu a mesma nota em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É assim que o teste evita empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação e o resultado passa a significar alguma coisa.",
-    res_contraditorio:
-      "Suas respostas se contradizem bastante, e a área de incerteza no gráfico ficou grande por causa disso. O teste não conseguiu te medir bem, e prefere dizer isso a inventar uma posição.",
+    res_uniforme: "Você deu a mesma resposta em todas as afirmações. Metade delas defende o contrário da outra metade, de propósito, então responder tudo igual se anula e o ponto cai no centro. É assim que o teste evita empurrar para algum lado quem responde no automático. Refaça lendo cada afirmação, e o resultado passa a dizer alguma coisa.",
+    res_contraditorio: "Suas respostas se contradizem bastante, e por isso a margem de erro no gráfico ficou grande. O teste não conseguiu medir bem a sua posição, e prefere dizer isso a inventar uma.",
     res_refazer_lendo: "Refazer com calma",
     res_esquerda_direita:
       "Esquerda e direita aqui são a dimensão econômica: mais igualdade e mais Estado de um lado, mais mercado e menos Estado do outro.",
     res_mancha: "A mancha mostra onde caiu quem já respondeu. Quanto mais forte, mais gente ali.",
     res_perfil: "Seu perfil nos seis eixos",
-    res_perfil_intro:
-      "Uma pétala por eixo, do tamanho da sua convicção e apontando para o lado que você escolheu. Polos opostos ficam em lados opostos, então a forma nunca pode dizer que você é as duas coisas ao mesmo tempo.",
-    res_perfil_legenda:
-      "A pétala clara por baixo é a margem de erro. Quando ela aparece também do lado oposto, nem o lado daquele eixo ficou definido.",
+    res_perfil_intro: "Cada pétala é um eixo: aponta para o lado em que você pende, e é maior quanto mais forte é a sua posição.",
+    res_perfil_legenda: "A pétala clara por baixo é a margem de erro. Polos opostos ficam em lados opostos do desenho, então cada eixo tem uma pétala só. Quando a pétala clara aparece também do lado oposto, o seu lado naquele eixo não ficou definido.",
     res_eixos_secundarios: "Os outros quatro eixos",
     res_por_que: "Por que você caiu aqui",
     res_por_que_intro:
@@ -126,15 +118,15 @@ const dict = {
     manchete_economico_forte: (polo) => `Bem à ${polo}`,
     manchete_economico_media: (polo) => `À ${polo}`,
     manchete_economico_leve: (polo) => `Levemente à ${polo}`,
-    manchete_economico_centro: () => "No centro da economia",
+    manchete_economico_centro: () => "No centro no eixo econômico",
     manchete_autoridade_forte: (polo) => `bem para o lado da ${polo}`,
     manchete_autoridade_media: (polo) => `mais para ${polo}`,
     manchete_autoridade_leve: (polo) => `um pouco para ${polo}`,
     manchete_autoridade_centro: () => "no meio entre Liberdade e Autoridade",
     res_tradicao_topo: (nome) => `Tradição mais próxima: ${nome}.`,
-    res_margem_todas: (m) => `Margem de erro de ${m} em todos os eixos.`,
+    res_margem_todas: (m) => `Margem de erro de ${m} em todos os eixos, numa escala de −10 a +10.`,
     res_margem_principais: (me, ma) =>
-      `Margem de erro de ${me} no econômico e de ${ma} na autoridade.`,
+      `Margem de erro de ${me} no econômico e de ${ma} na autoridade, numa escala de −10 a +10.`,
     res_atalhos: "Seções do resultado",
     res_atalho_grafico: "Gráfico",
     res_atalho_eixos: "Seis eixos",
@@ -157,10 +149,15 @@ const dict = {
     quadrante_mercado_liberdade: "Direita · Liberdade",
 
     // leitura de uma posicao num eixo (mesmos cortes da manchete)
-    leitura_forte: (polo) => `Bem para ${polo}`,
-    leitura_media: (polo) => `Mais para ${polo}`,
-    leitura_leve: (polo) => `Um pouco para ${polo}`,
+    leitura_forte: (polo) => `${polo}, posição forte`,
+    leitura_media: (polo) => `${polo}, posição moderada`,
+    leitura_leve: (polo) => `${polo}, posição leve`,
     leitura_centro: () => "No centro",
+    // So a intensidade, para quando o polo ja aparece ao lado do numero.
+    nivel_forte: "Posição forte",
+    nivel_media: "Posição moderada",
+    nivel_leve: "Posição leve",
+    nivel_centro: "No centro",
 
     // secoes do resultado
     sec_perfil: "Perfil",
@@ -173,14 +170,10 @@ const dict = {
     res_escolher_card: (nome) => `Usar o modelo ${nome}`,
     trad_voce: "você",
     trad_ela: "a tradição, nos dois eixos do gráfico",
-    pop_faltam: (n, minimo) => `de ${minimo} respostas para liberar a comparação`,
-    pop_faltam_texto:
-      "Com respostas suficientes aparecem: em que ponto você está em relação a quem respondeu, a mancha de onde as pessoas caíram no gráfico e as afirmações em que você destoa da sua turma. Antes disso, os números seriam ruído.",
     res_ler_tradicao: "Ler sobre essa tradição →",
     res_todas_tradicoes: (n) => `Ver as ${n} tradições`,
     res_tradicoes: "Tradições mais próximas de você",
-    res_tradicoes_intro:
-      "Proximidade medida nos seis eixos. Estar perto de uma tradição não significa concordar com ela em tudo.",
+    res_tradicoes_intro: "A distância é medida nos seis eixos, não só nos dois do gráfico. Estar perto de uma tradição não significa concordar com ela em tudo.",
     // Posicao, e nao porcentagem: a distancia nos seis eixos dava 64% a 86%
     // de "proximidade" com TODAS as tradicoes para quem esta no centro.
     res_proximidade: (n) => (n === 1 ? "A mais próxima" : `${n}ª mais próxima`),
@@ -189,10 +182,39 @@ const dict = {
     res_copiar_link: "Copiar link",
     res_link_copiado: "Link copiado",
     res_refazer: "Refazer o teste",
-    res_layout: "Modelo do card",
-    res_layout_classico: "Clássico",
-    res_layout_cartaz: "Cartaz",
+    res_layout: "Formato do card",
+    res_layout_quadrado: "Quadrado",
+    res_layout_story: "Story",
     res_layout_minimo: "Mínimo",
+    res_incluir_tradicao: "Incluir a tradição mais próxima",
+    res_tradicao_so_story: "A tradição aparece só no formato Story.",
+
+    // card de compartilhar (imagem)
+    card_meu_resultado: "Meu resultado",
+    card_convite_titulo: "E você, onde está?",
+    card_convite: "Faça o teste em",
+    card_rodape: "48 afirmações\nfontes citadas",
+    card_tradicao: "Tradição mais próxima",
+    card_minimo_convite: "E você?",
+
+    // quem abre o link de outra pessoa
+    vis_faixa_texto: "Este é o resultado de quem te mandou o link.",
+    vis_faixa_titulo: "E você, onde está?",
+    vis_fazer_teste: "Fazer o teste",
+    vis_tempo: "a partir de 3 min",
+    vis_rotulo: "Resultado compartilhado",
+    bus_esta_pessoa: "Esta pessoa",
+    res_resposta: (resposta) => `Resposta: ${resposta.toLowerCase()}`,
+    res_por_que_vis: "Por que este resultado caiu aqui",
+    res_por_que_intro_vis:
+      "A afirmação que mais puxou cada eixo, o que foi respondido e de onde ela veio.",
+    vis_sua_vez_rotulo: "Sua vez",
+    vis_sua_vez: "Agora é a sua vez",
+    vis_sua_vez_texto:
+      "48 afirmações tiradas de pesquisas acadêmicas, com a fonte de cada uma. Nada aqui identifica quem respondeu.",
+    vis_comecar: "Começar o teste",
+    vis_copiar: "Copiar o link deste resultado",
+    res_atalho_suavez: "Sua vez",
     res_ver_metodologia: "Ver como a conta é feita",
     res_link_antigo_titulo: "Este link é de uma versão anterior do teste",
     res_link_antigo_corpo:
@@ -204,10 +226,8 @@ const dict = {
 
     // populacao
     pop_titulo: "Comparado com quem já respondeu",
-    pop_insuficiente: (n, minimo) =>
-      `Ainda coletando respostas: ${n} de ${minimo}. Os números de comparação aparecem quando houver gente suficiente para eles significarem alguma coisa.`,
     pop_percentil: (pct, polo) => `Você está mais para ${polo} que ${pct}% de quem respondeu`,
-    pop_destoa: "Onde você destoa da sua turma",
+    pop_destoa: "Onde você destoa de quem pensa parecido",
     pop_destoa_intro:
       "Afirmações em que sua resposta foge da média de quem caiu no mesmo quadrante que você.",
     pop_sua_resposta: "Você",
@@ -220,7 +240,7 @@ const dict = {
     eixo_fronteiras: "Fronteiras",
     eixo_costumes: "Costumes",
     eixo_ecologia: "Ecologia",
-    eixo_povo: "Decisão",
+    eixo_povo: "Quem decide",
 
     // As CHAVES continuam igualdade/mercado porque sao identificadores
     // internos: estao no banco, nos nomes das cores dos quadrantes e na
@@ -241,7 +261,7 @@ const dict = {
     polo_povo: "Povo",
 
     // estados
-    erro_titulo: "Alguma coisa quebrou",
+    erro_titulo: "Algo deu errado",
     erro_tentar: "Tentar de novo",
     erro_limite_corpo:
       "Isso não deveria ter acontecido. Voltar ao início e começar de novo costuma resolver.",
@@ -306,32 +326,29 @@ const dict = {
     nav_menu_fechar: "Close menu",
     nav_idioma_pt: "PT-BR",
     nav_idioma_en: "EN-US",
-    nav_tema_escuro: "Switch to dark theme",
-    nav_tema_claro: "Switch to light theme",
     rodape_privacidade: "Nothing here identifies who answered",
     rodape_codigo: "Open source",
 
     home_titulo: "Where you stand on the political spectrum",
-    home_intro:
-      "A test of 48 statements taken from academic surveys, with the weights published and the margin of error on screen.",
+    home_intro: "A test with 48 statements taken from academic surveys. The scoring is open, and the result comes with its margin of error.",
     home_escolha_modo: "How much time do you have?",
     home_comecar: "Start",
     home_retomar: "Pick up where I left off",
     home_recomecar: "Start over",
-    home_tem_teste: (n) => `You have a test in progress, ${n} answered.`,
+    home_tem_teste: (n) => `You have a test in progress: ${n} ${n === 1 ? "answer" : "answers"} so far.`,
 
     modo_rapido: "Quick",
     modo_padrao: "Standard",
     modo_completo: "Full",
     modo_rapido_desc: "16 questions, about 3 minutes",
     modo_padrao_desc: "32 questions, about 6 minutes",
-    modo_completo_desc: "48 questions, maximum precision",
+    modo_completo_desc: "48 questions, about 9 minutes",
     modo_rapido_qtd: "16 questions",
     modo_padrao_qtd: "32 questions",
     modo_completo_qtd: "48 questions",
     modo_rapido_tempo: "3 min",
     modo_padrao_tempo: "6 min",
-    modo_completo_tempo: "max precision",
+    modo_completo_tempo: "9 min",
     home_amostra_titulo: "At the end you get",
     home_amostra_posicao: "Your position, with the margin of error drawn",
     home_amostra_eixos: "Six axes, not just left and right",
@@ -348,9 +365,8 @@ const dict = {
     teste_modo_lista: "Use the list",
     teste_modo_cartao: "Use the card",
     teste_nao_sei: "I could not say",
-    teste_nao_sei_ajuda:
-      "This statement is left out of your score, and so is the opposite statement paired with it.",
-    teste_importancia: "Weight of this answer",
+    teste_nao_sei_ajuda: "This statement is left out of your score, together with the opposite statement paired with it.",
+    teste_importancia: "How much it matters",
     teste_importancia_baixa: "A little",
     teste_importancia_normal: "Normal",
     teste_importancia_alta: "A lot",
@@ -378,19 +394,15 @@ const dict = {
     res_area_explicacao:
       "The area around the dot is your margin of error. It grows when your answers contradict each other, and shrinks when they line up.",
     res_confianca_baixa_titulo: "This result says little about you",
-    res_uniforme:
-      "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the center. That is how the test avoids pushing anyone who answers on autopilot. Take it again reading each statement and the result starts to mean something.",
-    res_contraditorio:
-      "Your answers contradict each other a lot, and that is why the uncertainty area came out large. The test could not measure you well, and would rather say so than invent a position.",
+    res_uniforme: "You gave the same answer to every statement. Half of them argue the opposite of the other half, by design, so answering everything the same cancels out and the dot lands at the centre. That is how the test avoids pushing anyone who answers on autopilot. Take it again reading each statement, and the result starts to mean something.",
+    res_contraditorio: "Your answers contradict each other a lot, so the margin of error on the chart came out large. The test could not measure your position well, and would rather say so than invent one.",
     res_refazer_lendo: "Take it again slowly",
     res_esquerda_direita:
       "Left and right here mean the economic dimension: more equality and more state on one side, more market and less state on the other.",
     res_mancha: "The cloud shows where previous respondents landed. The stronger it is, the more people.",
     res_perfil: "Your profile across the six axes",
-    res_perfil_intro:
-      "One petal per axis, sized by how strongly you hold it and pointing at the side you picked. Opposite poles sit on opposite sides, so the shape can never claim you are both things at once.",
-    res_perfil_legenda:
-      "The pale petal underneath is the margin of error. When it also shows up on the opposite side, not even the side of that axis is settled.",
+    res_perfil_intro: "Each petal is an axis: it points to the side you lean toward, and grows with how strongly you hold that position.",
+    res_perfil_legenda: "The pale petal underneath is the margin of error. Opposite poles sit on opposite sides of the drawing, so each axis has a single petal. When the pale petal also shows on the opposite side, your side on that axis is not settled.",
     res_eixos_secundarios: "The other four axes",
     res_por_que: "Why you landed here",
     res_por_que_intro:
@@ -402,15 +414,15 @@ const dict = {
     manchete_economico_forte: (polo) => `Far to the ${polo}`,
     manchete_economico_media: (polo) => `To the ${polo}`,
     manchete_economico_leve: (polo) => `Slightly to the ${polo}`,
-    manchete_economico_centro: () => "In the economic centre",
+    manchete_economico_centro: () => "Centre on the economic axis",
     manchete_autoridade_forte: (polo) => `strongly toward ${polo}`,
     manchete_autoridade_media: (polo) => `leaning toward ${polo}`,
     manchete_autoridade_leve: (polo) => `slightly toward ${polo}`,
     manchete_autoridade_centro: () => "between Liberty and Authority",
     res_tradicao_topo: (nome) => `Closest tradition: ${nome}.`,
-    res_margem_todas: (m) => `Margin of error of ${m} on every axis.`,
+    res_margem_todas: (m) => `Margin of error of ${m} on every axis, on a scale from −10 to +10.`,
     res_margem_principais: (me, ma) =>
-      `Margin of error of ${me} on economics and ${ma} on authority.`,
+      `Margin of error of ${me} on economics and ${ma} on authority, on a scale from −10 to +10.`,
     res_atalhos: "Result sections",
     res_atalho_grafico: "Chart",
     res_atalho_eixos: "Six axes",
@@ -431,10 +443,14 @@ const dict = {
     quadrante_igualdade_liberdade: "Left · Liberty",
     quadrante_mercado_liberdade: "Right · Liberty",
 
-    leitura_forte: (polo) => `Strongly toward ${polo}`,
-    leitura_media: (polo) => `Leaning toward ${polo}`,
-    leitura_leve: (polo) => `Slightly toward ${polo}`,
+    leitura_forte: (polo) => `${polo}, strong position`,
+    leitura_media: (polo) => `${polo}, moderate position`,
+    leitura_leve: (polo) => `${polo}, slight position`,
     leitura_centro: () => "In the centre",
+    nivel_forte: "Strong position",
+    nivel_media: "Moderate position",
+    nivel_leve: "Slight position",
+    nivel_centro: "In the centre",
 
     sec_perfil: "Profile",
     sec_explicacao: "Explanation",
@@ -446,14 +462,10 @@ const dict = {
     res_escolher_card: (nome) => `Use the ${nome} style`,
     trad_voce: "you",
     trad_ela: "the tradition, on the chart's two axes",
-    pop_faltam: (n, minimo) => `of ${minimo} answers to unlock the comparison`,
-    pop_faltam_texto:
-      "With enough answers you will see where you stand compared with other respondents, the cloud of where people landed on the chart, and the statements where you differ from your own side. Before that, the numbers would be noise.",
     res_ler_tradicao: "Read about this tradition →",
     res_todas_tradicoes: (n) => `See all ${n} traditions`,
     res_tradicoes: "Traditions closest to you",
-    res_tradicoes_intro:
-      "Distance measured across all six axes. Being close to a tradition does not mean agreeing with all of it.",
+    res_tradicoes_intro: "Distance is measured on all six axes, not just the two on the chart. Being close to a tradition does not mean agreeing with all of it.",
     res_proximidade: (n) =>
       n === 1 ? "Closest" : `${n}${{ 2: "nd", 3: "rd" }[n] ?? "th"} closest`,
     res_compartilhar: "Share",
@@ -461,10 +473,37 @@ const dict = {
     res_copiar_link: "Copy link",
     res_link_copiado: "Link copied",
     res_refazer: "Take it again",
-    res_layout: "Card style",
-    res_layout_classico: "Classic",
-    res_layout_cartaz: "Poster",
+    res_layout: "Card format",
+    res_layout_quadrado: "Square",
+    res_layout_story: "Story",
     res_layout_minimo: "Minimal",
+    res_incluir_tradicao: "Include the closest tradition",
+    res_tradicao_so_story: "The tradition only shows in the Story format.",
+
+    card_meu_resultado: "My result",
+    card_convite_titulo: "And you, where do you stand?",
+    card_convite: "Take the test at",
+    card_rodape: "48 statements\nsources cited",
+    card_tradicao: "Closest tradition",
+    card_minimo_convite: "And you?",
+
+    vis_faixa_texto: "This is the result of whoever sent you the link.",
+    vis_faixa_titulo: "And you, where do you stand?",
+    vis_fazer_teste: "Take the test",
+    vis_tempo: "from 3 min",
+    vis_rotulo: "Shared result",
+    bus_esta_pessoa: "This person",
+    res_resposta: (resposta) => `Answer: ${resposta.toLowerCase()}`,
+    res_por_que_vis: "Why this result landed here",
+    res_por_que_intro_vis:
+      "The statement that pulled each axis the most, what was answered and where it came from.",
+    vis_sua_vez_rotulo: "Your turn",
+    vis_sua_vez: "Now it's your turn",
+    vis_sua_vez_texto:
+      "48 statements taken from academic surveys, with the source of each one. Nothing here identifies who answered.",
+    vis_comecar: "Start the test",
+    vis_copiar: "Copy the link to this result",
+    res_atalho_suavez: "Your turn",
     res_ver_metodologia: "See how the scoring works",
     res_link_antigo_titulo: "This link is from an earlier version of the test",
     res_link_antigo_corpo:
@@ -475,10 +514,8 @@ const dict = {
     res_fazer_teste: "Take the test",
 
     pop_titulo: "Compared with everyone who answered",
-    pop_insuficiente: (n, minimo) =>
-      `Still collecting answers: ${n} of ${minimo}. Comparison numbers appear once there are enough people for them to mean anything.`,
     pop_percentil: (pct, polo) => `You lean toward ${polo} more than ${pct}% of respondents`,
-    pop_destoa: "Where you differ from your own side",
+    pop_destoa: "Where you differ from people who think like you",
     pop_destoa_intro:
       "Statements where your answer departs from the average of people in the same quadrant as you.",
     pop_sua_resposta: "You",
@@ -490,7 +527,7 @@ const dict = {
     eixo_fronteiras: "Borders",
     eixo_costumes: "Custom",
     eixo_ecologia: "Ecology",
-    eixo_povo: "Decision",
+    eixo_povo: "Who decides",
 
     polo_igualdade: "Left",
     polo_mercado: "Right",
@@ -505,7 +542,7 @@ const dict = {
     polo_instituicoes: "Institutions",
     polo_povo: "The people",
 
-    erro_titulo: "Something broke",
+    erro_titulo: "Something went wrong",
     erro_tentar: "Try again",
     erro_limite_corpo: "This should not have happened. Going back to the start and trying again usually fixes it.",
     carregando: "Loading",

@@ -60,36 +60,8 @@
   --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-/* O tema CLARO e o padrao, e nao o que o sistema da pessoa esta usando.
-   Decisao do dono: o site tem que abrir claro para todo mundo, e o escuro
-   existe como escolha, guardada em lib/tema.jsx. Por isso aqui e um atributo
-   no <html>, e nao uma media query. */
-:root[data-tema="escuro"] {
-    color-scheme: dark;
-
-    --ink: oklch(0.94 0.005 260);
-    --ink-mid: oklch(0.72 0.008 260);
-    --ink-dim: oklch(0.56 0.008 260);
-    --bg: oklch(0.17 0.008 260);
-    --panel: oklch(0.21 0.009 260);
-    --raised: oklch(0.25 0.01 260);
-    --line: oklch(0.3 0.01 260);
-    --line-forte: oklch(0.4 0.012 260);
-
-    /* No escuro os quadrantes precisam de mais leveza para nao sumirem no
-       fundo, mas continuam iguais entre si, que e o que importa. */
-    --q-igualdade-liberdade: oklch(0.72 0.15 155);
-    --q-igualdade-autoridade: oklch(0.72 0.15 65);
-    --q-mercado-liberdade: oklch(0.72 0.15 245);
-    --q-mercado-autoridade: oklch(0.72 0.15 335);
-
-    --populacao: oklch(0.92 0.006 260);
-    --erro: oklch(0.68 0.14 25);
-    --ok: oklch(0.7 0.11 150);
-
-    --sombra: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.35);
-    --sombra-rolagem: oklch(0.94 0.005 260 / 0.16);
-}
+/* So existe o tema claro. O escuro saiu por decisao do dono (2026-10-01): o
+   site, o card e as previas falam a mesma lingua visual, clara. */
 
 *,
 *::before,
@@ -2001,94 +1973,59 @@ td.texto-longo {
     gap: 64px;
     align-items: start;
   }
+
+  /* Sem a comparacao, o card fica sozinho e centralizado. */
+  .fim-so-card {
+    grid-template-columns: minmax(0, 40rem);
+    justify-content: center;
+  }
 }
 
-.medidor-numero {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px 10px;
-}
-
-.medidor-numero strong {
-  font-size: 40px;
-  line-height: 1;
-  font-weight: 720;
-  font-variant-numeric: tabular-nums;
-}
-
-.medidor-numero span {
-  color: var(--ink-mid);
-}
-
-.medidor-barra {
-  height: 10px;
-  border-radius: 5px;
-  background: var(--raised);
-  border: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.medidor-barra > i {
-  display: block;
-  height: 100%;
-  background: var(--ink);
-}
-
-/* A vitrine: o card escolhido grande no meio, os outros dois menores dos lados. */
+/* A previa do card: o formato escolhido, inteiro. O Story e vertical, entao a
+   largura cai para ele caber sem ocupar a tela toda. */
 .vitrine {
   display: grid;
   gap: 14px;
 }
 
-.vitrine-palco {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+.vitrine-previa {
+  justify-self: center;
+  width: min(100%, 360px);
+  border-radius: 14px;
   overflow: hidden;
-}
-
-.vitrine-card {
-  flex: none;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  width: 34%;
-  max-width: 190px;
-  opacity: 0.4;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: opacity var(--transicao);
-}
-
-.vitrine-card:hover {
-  opacity: 0.7;
-}
-
-.vitrine-card-atual {
-  width: 68%;
-  max-width: 340px;
-  opacity: 1;
-  cursor: default;
+  border: 1px solid var(--line);
   box-shadow: var(--sombra);
-  border-radius: 16px;
+  background: var(--panel);
 }
 
-.vitrine-card-atual:hover {
-  opacity: 1;
+.vitrine-story {
+  width: min(70%, 250px);
 }
 
-.vitrine-card img,
+.vitrine-previa img,
 .vitrine-vazio {
   display: block;
   width: 100%;
-  aspect-ratio: 1;
 }
 
 .vitrine-vazio {
+  aspect-ratio: 1;
   background: var(--line);
+}
+
+.vitrine-story .vitrine-vazio {
+  aspect-ratio: 9 / 16;
+}
+
+.vitrine-chave {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--ink-mid);
 }
 
 .acoes-card {
@@ -2105,4 +2042,61 @@ td.texto-longo {
   .acoes-card > :first-child {
     grid-column: 1 / -1;
   }
+}
+
+/* --- quem abriu o link de outra pessoa ------------------------------------ */
+
+/* Faixa em tinta, de ponta a ponta, antes de tudo: o convite para fazer o
+   teste. E a unica faixa escura do site, e por isso chama atencao sem cor. */
+.faixa-visitante {
+  background: var(--ink);
+  color: var(--bg);
+  padding-block: 20px 22px;
+  gap: 14px;
+}
+
+.faixa-visitante-texto {
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.faixa-visitante-titulo {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.faixa-visitante-acao {
+  gap: 14px;
+}
+
+.botao-invertido {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--bg);
+}
+
+@media (max-width: 30rem) {
+  .faixa-visitante-acao .botao {
+    flex-grow: 1;
+  }
+}
+
+@media (min-width: 900px) {
+  .faixa-visitante {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding-block: 22px;
+  }
+
+  .faixa-visitante-titulo {
+    font-size: 26px;
+  }
+}
+
+.sua-vez .seletor-modo {
+  max-width: none;
+}
+
+.sua-vez .botao-comecar {
+  justify-self: stretch;
 }

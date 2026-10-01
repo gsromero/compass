@@ -162,6 +162,15 @@
 - [ ] Confirmar em produção: um teste completo passando pelo Turnstile real e `itens.via` preenchido
 - [ ] No piloto: observar quem usa cada modo e se o arrasto deu resposta diferente da pretendida
 
+## Cards claros, visitante e tema único (2026-10-01, mockup aprovado)
+
+- [x] Modo escuro removido do site inteiro
+- [x] Comparação escondida até haver respostas suficientes (sai a seção e o atalho)
+- [x] Card claro em três formatos (Quadrado, Story, Mínimo), tradição opcional só no Story
+- [x] Visitante de link: faixa com "Fazer o teste", textos em terceira pessoa, convite no fim
+- [ ] Opcional, combinado para uma segunda etapa: depois que o visitante faz o teste, mostrar os
+      dois pontos na bússola e a comparação eixo a eixo
+
 ## Depois do lançamento
 
 - [ ] Análise fatorial com dados reais: as perguntas medem mesmo o eixo declarado?
