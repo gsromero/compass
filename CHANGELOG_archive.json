@@ -1,5 +1,44 @@
 [
   {
+    "version": "7.0",
+    "date": "2026-10-01T12:00:00",
+    "author": "claude",
+    "summary": "Revisao geral: resposta gravada uma vez so, mancha da populacao no lugar certo, POST endurecido, proximidade por posicao, previa de link e acabamentos.",
+    "details": {
+      "commits": [],
+      "files": [
+        "functions/api/respostas.js",
+        "functions/api/agregados.js",
+        "functions/api/_perguntas.js",
+        "client/src/lib/sincronia.test.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Teste.jsx",
+        "client/src/App.jsx",
+        "client/src/lib/permalink.js",
+        "client/src/lib/i18n.js",
+        "client/src/lib/i18n.test.js",
+        "client/src/lib/lang.jsx",
+        "client/src/lib/tema.jsx",
+        "client/index.html",
+        "client/public/og.png",
+        "client/public/favicon.svg",
+        "client/public/apple-touch-icon.png",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md",
+        "CLAUDE.md"
+      ],
+      "technical": "Resultado.jsx so envia com state.doTeste e apaga o state depois (o state do react-router vive no history e sobrevive ao F5); useRef contra o efeito duplo do StrictMode. agregados.js: grade da mancha com MIN(9,MAX(0,CAST((eixo+10)/2))) e centro i*2-9, antes CAST(eixo/2) truncava para o zero e deslocava o lado negativo. respostas.js: ids contra _perguntas.js, sem repeticao, quadrante coerente com o sinal (0 aceita os dois), criado_em arredondado ao dia UTC. sincronia.test.js compara VERSAO, ids e listas de demografia entre client e Functions. Proximidade das tradicoes virou ordinal (centro dava 64-86% com todas). permalink.versaoDoCodigo separa link antigo de quebrado. AoTrocarDePagina: document.title e scrollTo. og.png 1200x630 e apple-touch-icon gerados com Chrome headless a partir dos tokens. Verificado com wrangler pages dev + D1 local e fluxo completo via CDP. Inclui a etapa de demografia que estava sem commit na main.",
+      "pending": [
+        "aplicar 0002_demografia.sql em producao antes do deploy",
+        "Turnstile no POST (precisa autorizacao)",
+        "og:image por quadrante via Function",
+        "conectar o dominio",
+        "revisao das 48 afirmacoes pelo dono",
+        "piloto com 4 a 6 pessoas"
+      ]
+    }
+  },
+  {
     "version": "6.0",
     "date": "2026-08-17T00:45:00",
     "author": "claude",

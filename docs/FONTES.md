@@ -99,6 +99,11 @@ A versão 3 do banco reescreveu as 48 sem mexer no que cada uma mede: saiu o `de
 mais da metade delas, saíram as concessivas longas e o hedge. O item de origem continua o mesmo, e
 é ele que a citação promete.
 
+A versão 4 (2026-10-01) trocou só uma: "A tecnologia resolve a crise ambiental sem ninguém mudar de
+vida" virou "Dá para resolver a crise ambiental só com tecnologia, sem mudar o jeito como vivemos".
+A antiga era vaga ("mudar de vida" lê como mudar de rumo); a nova deixa explícito o construto do
+NEP, que é a tecnologia SOZINHA dando conta. Mesmo eixo, mesmo par, mesmo peso.
+
 **2. A redação em português é minha, não a oficial brasileira.**
 O World Values Survey e o ISSP publicam os questionários nacionais junto dos microdados, não como
 documentos avulsos. Consegui conferir a redação **em inglês** no questionário mestre oficial; a

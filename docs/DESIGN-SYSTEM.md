@@ -308,7 +308,15 @@ foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar
 - **"Por quê" em citações** (`.citacao`, serifa grande), duas colunas no computador.
 - **Tradições** com número de posição em serifa e `MiniBussola`.
 - **Comparação**: abaixo do mínimo, medidor "N de 50", e não caixa vazia.
-- **Vitrine do card**: o modelo escolhido grande, os outros dois menores dos lados.
+- **Compartilhar** (`.faixa-compartilhar`, mockup aprovado em 2026-10-01): faixa própria no fim,
+  de ponta a ponta, com fundo `--palco` (um tom abaixo do `--raised`). Os três cards reais em
+  leque (o escolhido na frente, os outros inclinados atrás, clicáveis); ao lado, título "Mostre
+  onde você caiu", formato em pílula (Feed 1:1, Stories 9:16, Só a bússola), chave da tradição,
+  um botão principal ("Compartilhar imagem", folha nativa do aparelho) e três discretos com ícone
+  (WhatsApp, Baixar, Copiar link), e a linha do cadeado ("Nada no card ou no link diz quem você
+  é"). **A altura não muda ao trocar de formato**: as cartas têm a mesma altura (`--alt`) e a
+  chave da tradição nunca some, só fica apagada fora do Stories. Sem tom de desafio: o dono
+  vetou "Desafie alguém", política não é competição. Ícones de linha em `components/Icones.jsx`.
 
 - **Abre com uma manchete em palavras** (`.manchete`): "Bem à Direita e mais para Autoridade".
   A regra da intensidade mora em `lib/manchete.js` (cortes 1, 3 e 7 na escala de -10 a +10), o
@@ -364,10 +372,27 @@ imagem e sai do site). Todo formato traz a frase do resultado em primeira pessoa
 O Quadrado e o Story terminam com o convite "E você, onde está? Faça o teste em…".
 
 **A tradição mais próxima só aparece no Story, e só se a pessoa ligar** (`comTradicao`): um nome
-de tradição num card público pode expor mais do que ela quer. Com ela ligada, a bússola do Story
-encolhe para a caixa caber acima do convite.
+de tradição num card público pode expor mais do que ela quer.
+
+**O Story é montado de baixo para cima:** convite preso no fim, tradição logo acima, réguas acima
+dela, e a bússola ocupa o espaço que sobrar. Com posições fixas de cima para baixo, uma frase de
+três linhas ("Levemente à Esquerda e um pouco para Liberdade") empurrava tudo e a tradição caía em
+cima do convite, no ar. Testar card sempre com a frase mais longa possível, não só com o exemplo.
+
+**A etiqueta "Você" escolhe onde cabe** (`lugarDaEtiqueta`, em `lib/compass.js`, usada pelo card e
+pela bússola do site): testa as quatro posições em volta da margem de erro e fica com a primeira que
+não encosta em nome de polo. Antes ia sempre em cima à esquerda, e perto do centro caía em cima de
+"← Esquerda".
 
 **Fundo sempre sólido.** Transparência vira preto no Instagram. Gotcha herdado do BBB.
+
+## A página de partidos
+
+Uma linha por partido (HTML, não um SVG só, para quebrar bem no celular e ser lida por leitor de
+tela): nome, régua de 1 a 10 e valor. Vindo do resultado, aparecem o losango "Você" na primeira
+linha e uma **linha vertical na sua posição atravessando a lista inteira**
+(`.partidos-linha-voce`), desenhada em pedaços, um por linha, para sair contínua sem medir altura.
+Ela é mais escura que a linha do meio (5,5), para as duas não se confundirem.
 
 ## Quem abre o link de outra pessoa
 

@@ -1,5 +1,5 @@
 {
-  "versao": 3,
+  "versao": 4,
   "atualizado": "2026-08-11",
   "nota": "Cada pergunta carrega o instrumento de origem e como foi derivada. 'adaptado' = redacao adaptada de um item que foi conferido palavra por palavra no questionario publico da fonte. 'construto' = redacao propria, baseada num construto documentado, usada quando a escala original tem direitos ou quando o item nao pode ser conferido na fonte primaria. Ver docs/FONTES.md.",
   "eixos": {
@@ -611,8 +611,8 @@
         "nota": "construto de excepcionalismo humano (Dunlap et al.); redação própria"
       },
       "texto": {
-        "pt": "A tecnologia resolve a crise ambiental sem ninguém mudar de vida.",
-        "en": "Technology will fix the environmental crisis without anyone changing how they live."
+        "pt": "Dá para resolver a crise ambiental só com tecnologia, sem mudar o jeito como vivemos.",
+        "en": "The environmental crisis can be solved with technology alone, without changing the way we live."
       }
     },
     {

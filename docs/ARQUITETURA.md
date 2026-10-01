@@ -92,8 +92,9 @@ tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. Imagens em
 | `components/AtalhosSecoes.jsx` | Fileira de atalhos presa no topo do resultado. Marca a seção visível com `IntersectionObserver` e rola sem pôr `#` na URL. Os ids vêm de `SECOES`, fora do componente em `Resultado.jsx` (lista nova a cada render religaria o observador) |
 | `components/CabecalhoSecao.jsx` | Rótulo, título e frase curta de cada seção do resultado; os parágrafos longos ficam atrás do "?" |
 | `components/MiniBussola.jsx` | Bússola pequena do cartão de tradição: você (cheio) e a tradição (vazada) |
-| `components/VitrineCards.jsx` | Os três modelos do card de compartilhar, gerados com o próprio `montarCard`, depois da primeira pintura |
-| `components/SeletorModo.jsx` | Rápido, Padrão, Completo numa linha. Usado no início e no convite do visitante |
+| `components/VitrineCards.jsx` | Os três modelos do card de compartilhar em leque, gerados com o próprio `montarCard` depois da primeira pintura, mais formato, chave da tradição e as ações (`children`) |
+| `components/Icones.jsx` | Ícones de linha dos botões de compartilhar (traço em `currentColor`) |
+| `components/SeletorModo.jsx` | Padrão e Completo numa linha (o Rápido saiu da escolha em 2026-10). Usado no início e no convite do visitante |
 | `components/BussolaAmostra.jsx` | A bússola pequena da página inicial, com o ponto no centro de propósito |
 
 Menu e rodapé saem da mesma lista `LINKS` em `App.jsx`: Início, Tradições, Metodologia, Sobre.

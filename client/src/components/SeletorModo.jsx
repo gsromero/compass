@@ -1,6 +1,8 @@
 import { useLang } from "../lib/lang.jsx";
 
-const MODOS_ORDEM = ["rapido", "padrao", "completo"];
+// O "rapido" saiu da escolha em 2026-10: com 16 perguntas o resultado ficava vago
+// demais. Continua em scoring.js para quem tinha um teste rapido em andamento.
+const MODOS_ORDEM = ["padrao", "completo"];
 
 /**
  * A duracao do teste em tres partes numa linha so. Usado na pagina inicial e

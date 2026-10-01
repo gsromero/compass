@@ -22,6 +22,8 @@
   --bg: oklch(0.985 0.003 90);
   --panel: oklch(1 0 0);
   --raised: oklch(0.955 0.004 90);
+  /* Fundo da faixa de compartilhar, um tom abaixo do --raised. */
+  --palco: oklch(0.93 0.006 90);
   --line: oklch(0.9 0.005 90);
   --line-forte: oklch(0.8 0.006 90);
 
@@ -55,6 +57,7 @@
   --sombra: 0 1px 2px oklch(0.22 0.008 260 / 0.05), 0 8px 24px oklch(0.22 0.008 260 / 0.06);
   /* A sombra que avisa que a tabela continua para o lado. Precisa de token
      proprio: no claro ela e tinta, no escuro tinta some e ela vira luz. */
+  --sombra-card: 0 1px 2px oklch(0.22 0.008 260 / 0.08), 0 14px 34px oklch(0.22 0.008 260 / 0.16);
   --sombra-rolagem: oklch(0.22 0.008 260 / 0.16);
 
   --transicao: 180ms cubic-bezier(0.2, 0, 0.2, 1);
@@ -753,8 +756,8 @@ button.topo-hamburguer {
    solido, como o seletor de idioma: opcoes exclusivas, sem comparar bordas. */
 .seletor-modo {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  max-width: 32rem;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 22rem;
   border: 1px solid var(--line-forte);
   border-radius: var(--raio-pequeno);
   overflow: hidden;
@@ -1462,7 +1465,10 @@ td.texto-longo {
 
 .partidos-trilho {
   position: relative;
-  height: 100%;
+  /* Estica ate a altura toda da linha: e o que faz a linha da sua posicao
+     sair continua de um partido para o outro. */
+  align-self: stretch;
+  height: auto;
   min-height: 26px;
   /* As linhas verticais de 1 a 10, e o meio (5,5) tracejado, desenhados como
      fundo: sem um elemento por marca em cada linha. */
@@ -1513,6 +1519,31 @@ td.texto-longo {
 .partidos-losango {
   border-radius: 2px;
   transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* A linha da sua posicao, de cima a baixo do grafico. Repetida em cada linha
+   da lista (cada uma desenha o seu pedaco), entao forma um traco continuo sem
+   medir a altura de nada. Fica por baixo dos pontos dos partidos. */
+.partidos-linha-voce {
+  position: absolute;
+  top: 0;
+  /* Cobre tambem a borda de 1px entre as linhas. */
+  bottom: -1px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  /* Mais escura que a linha do meio (5,5) para as duas nao se confundirem. */
+  opacity: 0.7;
+}
+
+.partidos-escala .partidos-linha-voce {
+  top: 18px;
+}
+
+.partidos-margem,
+.partidos-ponto,
+.partidos-losango {
+  z-index: 1;
 }
 
 .partidos-voce {
@@ -1981,31 +2012,81 @@ td.texto-longo {
   }
 }
 
-/* A previa do card: o formato escolhido, inteiro. O Story e vertical, entao a
-   largura cai para ele caber sem ocupar a tela toda. */
-.vitrine {
-  display: grid;
-  gap: 14px;
+/* --- compartilhar ----------------------------------------------------------- */
+
+/* Faixa propria, de ponta a ponta, com fundo um tom abaixo do --raised: e o fim
+   da pagina e o lugar da acao. No computador, o leque de cards a esquerda e as
+   escolhas a direita. A altura nao muda ao trocar de formato: as tres cartas
+   tem a mesma altura e a chave da tradicao nunca some (mockup aprovado em
+   2026-10-01). */
+.faixa-compartilhar {
+  background: var(--palco);
+  border-top: 1px solid var(--line);
 }
 
-.vitrine-previa {
-  justify-self: center;
-  width: min(100%, 360px);
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  box-shadow: var(--sombra);
-  background: var(--panel);
+@media (min-width: 900px) {
+  .faixa-compartilhar {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 56px;
+  }
 }
 
-.vitrine-story {
-  width: min(70%, 250px);
+/* O leque: o formato escolhido na frente, os outros dois inclinados atras.
+   Todas as cartas tem a altura --alt; a largura sai da proporcao do card. */
+.vitrine-palco {
+  --alt: 230px;
+  --desvio: 105px;
+  position: relative;
+  min-width: 0;
+  height: calc(var(--alt) + 48px);
 }
 
-.vitrine-previa img,
+@media (min-width: 600px) {
+  .vitrine-palco {
+    --alt: 320px;
+    --desvio: 160px;
+  }
+}
+
+@media (min-width: 900px) {
+  .vitrine-palco {
+    --alt: 290px;
+    --desvio: 130px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .vitrine-palco {
+    --alt: 350px;
+    --desvio: 160px;
+  }
+}
+
+.vitrine-carta {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+  transform-origin: 50% 100%;
+  transition:
+    transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity var(--transicao),
+    filter var(--transicao);
+}
+
+.vitrine-carta img,
 .vitrine-vazio {
   display: block;
-  width: 100%;
+  height: var(--alt);
+  width: auto;
+  max-width: none;
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
 }
 
 .vitrine-vazio {
@@ -2017,30 +2098,178 @@ td.texto-longo {
   aspect-ratio: 9 / 16;
 }
 
+.vitrine-carta[data-pos="centro"] {
+  z-index: 3;
+  cursor: default;
+  transform: translateX(-50%);
+}
+
+.vitrine-carta[data-pos="esq"],
+.vitrine-carta[data-pos="dir"] {
+  z-index: 1;
+  opacity: 0.92;
+  filter: saturate(0.7);
+}
+
+.vitrine-carta[data-pos="esq"] {
+  transform: translateX(calc(-50% - var(--desvio))) rotate(-7deg) scale(0.72);
+}
+
+.vitrine-carta[data-pos="dir"] {
+  transform: translateX(calc(-50% + var(--desvio))) rotate(7deg) scale(0.72);
+}
+
+.vitrine-carta[data-pos="esq"]:hover,
+.vitrine-carta[data-pos="dir"]:hover {
+  opacity: 1;
+  filter: none;
+}
+
+.vitrine-carta:focus-visible {
+  outline: none;
+}
+
+.vitrine-carta:focus-visible img {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Fica acima das cartas de tras, caso alguma passe da coluna. */
+.vitrine-lado {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.vitrine-formato {
+  justify-self: start;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line-forte);
+  border-radius: 99px;
+  background: var(--panel);
+}
+
+.vitrine-formato button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  font-size: 14px;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: background var(--transicao), color var(--transicao);
+}
+
+.vitrine-formato small {
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.vitrine-formato button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 560;
+}
+
+.vitrine-formato button[aria-pressed="true"] small {
+  color: var(--line-forte);
+}
+
 .vitrine-chave {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--ink-mid);
+  transition: opacity var(--transicao);
 }
 
+.vitrine-chave small {
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+.vitrine-chave[data-apagada] {
+  opacity: 0.45;
+}
+
+.chave:disabled {
+  cursor: default;
+}
+
+/* Um botao principal (a folha de compartilhar do aparelho) e tres discretos. */
 .acoes-card {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
-@media (max-width: 30rem) {
-  .acoes-card {
-    grid-template-columns: 1fr 1fr;
-  }
+.acoes-card .botao {
+  white-space: nowrap;
+  padding-inline: 8px;
+}
 
-  .acoes-card > :first-child {
-    grid-column: 1 / -1;
+.acoes-card .botao-secundario {
+  background: var(--panel);
+  font-weight: 450;
+}
+
+.acoes-card .botao-secundario:hover {
+  background: var(--raised);
+}
+
+.acoes-card > :first-child {
+  grid-column: 1 / -1;
+  padding-block: 14px;
+  font-size: 16px;
+}
+
+.acoes-card svg {
+  flex: none;
+}
+
+@media (max-width: 24rem) {
+  .acoes-card .botao-secundario {
+    font-size: 13.5px;
+    gap: 6px;
+  }
+}
+
+.vitrine-privacidade {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-forte);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-mid);
+}
+
+.vitrine-privacidade strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.vitrine-privacidade svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitrine-carta,
+  .vitrine-chave {
+    transition: none;
   }
 }
 
