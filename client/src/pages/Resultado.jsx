@@ -125,7 +125,13 @@ export default function Resultado() {
     // Antes de contar, a verificacao contra robo. Falhou (script bloqueado,
     // desafio recusado): a pessoa ve o resultado igual, so nao entra na conta.
     verificarPessoa(caixaVerificacao.current, lang)
-      .then((turnstileToken) => enviarResposta({ ...corpo, turnstileToken }))
+      .then((turnstileToken) => {
+        // Se a caixinha chegou a aparecer, o "Sucesso!" fica um instante e sai.
+        setTimeout(() => {
+          if (caixaVerificacao.current) caixaVerificacao.current.hidden = true;
+        }, 1500);
+        return enviarResposta({ ...corpo, turnstileToken });
+      })
       .catch(() => {});
     navigate(pathname, { replace: true, state: null });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -310,8 +316,8 @@ export default function Resultado() {
         </div>
       </section>
 
-      {/* Onde a verificacao contra robo aparece, se precisar aparecer. Quase
-          sempre fica vazia e nao ocupa espaco. */}
+      {/* Onde a verificacao contra robo aparece, se precisar aparecer: no canto
+          da tela, por cima da pagina. Quase sempre fica vazia. */}
       <div ref={caixaVerificacao} className="caixa-verificacao" />
 
       <AtalhosSecoes secoes={SECOES[`${comparacao}-${visitante}`]} />

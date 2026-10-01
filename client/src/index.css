@@ -817,40 +817,155 @@ button.topo-hamburguer {
 }
 
 /* A amostra do que a pessoa recebe no fim. Tracejada: e exemplo, nao dado. */
-.amostra {
+/* A previa viva do resultado na pagina inicial (AmostraResultado.jsx). Mesmas
+   pecas da capa do resultado, menores: manchete, dois numeros, a bussola. A
+   manchete reserva duas linhas para o cartao nao mudar de altura na troca. */
+.amostra-viva {
   display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  border: 1px dashed var(--line-forte);
-  border-radius: var(--raio);
+  gap: 12px;
+  min-width: 0;
+  padding: 20px 22px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
 }
 
-.amostra ul {
+.amostra-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.amostra-passos {
+  display: flex;
+  gap: 6px;
+}
+
+.amostra-passos i {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line-forte);
+  transition: width var(--transicao), background var(--transicao);
+}
+
+.amostra-passos i[data-ativo] {
+  width: 16px;
+  background: var(--ink);
+}
+
+.amostra-manchete {
   margin: 0;
-  padding-left: 18px;
+  min-height: 2.3em;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  transition: opacity 350ms;
+}
+
+.amostra-numeros {
   display: grid;
-  gap: 4px;
-  font-size: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-block: 12px;
+  border-block: 1px solid var(--line);
+  transition: opacity 350ms;
+}
+
+.amostra-numeros > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.amostra-numeros strong {
+  font-size: 30px;
+  line-height: 1.05;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.amostra-numeros small {
+  font-size: 12.5px;
   color: var(--ink-mid);
 }
 
-@media (min-width: 900px) {
-  .amostra {
+.amostra-trocando {
+  opacity: 0;
+}
+
+/* A bussola entra sem o proprio cartao: ja esta dentro de um. */
+.bussola-cartao.bussola-amostra-viva {
+  justify-self: center;
+  width: min(100%, 320px);
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+}
+
+.bussola-amostra-viva .bussola-voce {
+  transition: transform 1100ms cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+.bussola-amostra-viva ellipse {
+  transition: rx 1100ms, ry 1100ms;
+}
+
+.amostra-recebe {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.amostra-recebe li {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-mid);
+}
+
+.amostra-recebe li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+@media (max-width: 26rem) {
+  .amostra-recebe {
     grid-template-columns: 1fr;
-    justify-items: center;
-    padding: 32px;
-    gap: 22px;
   }
 
-  .amostra .bussola-amostra {
-    width: 240px;
-    height: 240px;
+  .amostra-manchete {
+    font-size: 19px;
   }
 
-  .amostra ul {
-    font-size: 15px;
+  .amostra-numeros strong {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amostra-manchete,
+  .amostra-numeros,
+  .amostra-passos i,
+  .bussola-amostra-viva .bussola-voce,
+  .bussola-amostra-viva ellipse {
+    transition: none;
   }
 }
 
@@ -982,9 +1097,20 @@ button.topo-hamburguer {
   max-width: 40rem;
 }
 
-/* Vazia quase sempre: sem caixa propria, nao vira um vao na grade da pagina.
-   So ganha corpo quando a verificacao contra robo precisa mostrar algo. */
-.caixa-verificacao:empty {
+/* Vazia quase sempre. Quando a verificacao contra robo precisa mostrar algo,
+   flutua no canto de baixo, por cima da pagina: no meio da grade ela abria um
+   vao entre a capa e os atalhos. Some sozinha depois do sucesso. */
+.caixa-verificacao {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+  border-radius: var(--raio-pequeno);
+  box-shadow: var(--sombra);
+}
+
+.caixa-verificacao:empty,
+.caixa-verificacao[hidden] {
   display: none;
 }
 

@@ -336,10 +336,17 @@ foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar
 ## A página inicial
 
 Convite à esquerda e amostra do resultado à direita no computador; um embaixo do outro no celular.
-A duração é um seletor de três partes numa linha (`.seletor-modo`), com o escolhido em bloco
-sólido como o seletor de idioma. A amostra (`.amostra`, `BussolaAmostra.jsx`) é tracejada porque é
-exemplo, não dado, e o ponto fica **no centro**, pelo mesmo motivo da imagem de prévia: um ponto
-de exemplo num quadrante sugeriria um lado.
+A duração é um seletor de duas partes numa linha (`.seletor-modo`, Padrão e Completo; o Rápido
+saiu em 2026-10 por dar resultado vago demais), com o escolhido em bloco sólido como o seletor de
+idioma.
+
+A amostra (`.amostra-viva`, `AmostraResultado.jsx`, mockup aprovado em 2026-10-01) é uma prévia
+**viva** do resultado: manchete, os dois números e a bússola de verdade (`Bussola amostra`), com
+o rótulo "Exemplo de resultado". O ponto passeia por **quatro exemplos, um em cada quadrante**, a
+cada 3,6 s; a frase e os números apagam e acendem no meio do deslize. Substituiu o ponto parado
+no centro: um ponto parado num quadrante sugeriria um lado, mas passando pelos quatro com o mesmo
+peso não sugere nenhum. A manchete reserva duas linhas para o cartão não mudar de altura. Com
+`prefers-reduced-motion`, fica parada no primeiro exemplo.
 
 ## O radar de perfil
 

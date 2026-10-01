@@ -46,11 +46,11 @@ const dict = {
     modo_rapido_tempo: "3 min",
     modo_padrao_tempo: "6 min",
     modo_completo_tempo: "9 min",
-    home_amostra_titulo: "No fim você recebe",
+    home_amostra_exemplo: "Exemplo de resultado",
     home_amostra_posicao: "Sua posição, com a margem de erro desenhada",
     home_amostra_eixos: "Seis eixos, não só esquerda e direita",
     home_amostra_fontes: "A fonte de cada pergunta, e por que você caiu ali",
-    home_amostra_tradicoes: "As tradições mais próximas, com sugestões de leitura",
+    home_amostra_tradicoes: "As tradições mais próximas, com leituras",
 
     // questionario
     teste_progresso: (n, total) => `Pergunta ${n} de ${total}`,
@@ -358,11 +358,11 @@ const dict = {
     modo_rapido_tempo: "3 min",
     modo_padrao_tempo: "6 min",
     modo_completo_tempo: "9 min",
-    home_amostra_titulo: "At the end you get",
+    home_amostra_exemplo: "Example result",
     home_amostra_posicao: "Your position, with the margin of error drawn",
     home_amostra_eixos: "Six axes, not just left and right",
     home_amostra_fontes: "Where each question comes from, and why you landed there",
-    home_amostra_tradicoes: "The closest traditions, with reading suggestions",
+    home_amostra_tradicoes: "The closest traditions, with readings",
 
     teste_progresso: (n, total) => `Question ${n} of ${total}`,
     teste_voltar: "Back",
