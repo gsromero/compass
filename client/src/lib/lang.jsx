@@ -8,8 +8,13 @@ const KEY = "compass.lang";
 const LangContext = createContext(null);
 
 function initialLang() {
-  const saved = localStorage.getItem(KEY);
-  if (saved === "pt" || saved === "en") return saved;
+  try {
+    const saved = localStorage.getItem(KEY);
+    if (saved === "pt" || saved === "en") return saved;
+  } catch {
+    // Armazenamento bloqueado (cookies desligados): segue o navegador. Sem o
+    // try, isto derrubava o site inteiro, por fora do ErroLimite.
+  }
   return navigator.language?.toLowerCase().startsWith("pt") ? "pt" : "en";
 }
 
@@ -17,7 +22,11 @@ export function LangProvider({ children }) {
   const [lang, setLang] = useState(initialLang);
 
   useEffect(() => {
-    localStorage.setItem(KEY, lang);
+    try {
+      localStorage.setItem(KEY, lang);
+    } catch {
+      /* sem armazenamento: a escolha vale so ate fechar a aba */
+    }
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
   }, [lang]);
 

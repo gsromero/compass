@@ -48,5 +48,6 @@ npm run dev:pages # front + API + banco de desenvolvimento
 ## Privacidade
 
 Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na
-próxima visita. O que é guardado é o vetor de respostas solto, usado só para os números da
-população que aparecem no resultado.
+próxima visita. O que é guardado é o vetor de respostas solto, usado para os números da população
+que aparecem no resultado, e faixa etária e gênero quando a pessoa escolhe informar: uma etapa
+opcional, antes da primeira pergunta, que não muda o resultado e pode ser pulada.

@@ -121,7 +121,10 @@ Docs canônicas: mapa do código em `docs/ARQUITETURA.md`, UI em `docs/DESIGN-SY
 - **O zero é o meio da escala, não a média dos respondentes.** Decisão normativa, declarada no
   site, para o centro não andar conforme o público muda.
 - **Nada identifica quem respondeu.** Sem IP, sem navegador, sem conta, sem identificador que
-  volte. Só o vetor de respostas solto.
+  volte. O vetor de respostas solto, mais faixa etária e gênero **opcionais**, perguntados uma vez
+  antes da primeira pergunta. Pular não muda o resultado. Os dois campos são validados contra lista
+  fechada em `functions/api/respostas.js` (não pode importar de `client/src/lib/demografia.js`,
+  runtime separado: mudou uma lista, muda a outra).
 - **O link de resultado não depende do banco**: o código na URL carrega o resultado inteiro.
 
 ## Git
@@ -149,8 +152,10 @@ Ler o handoff recente **antes de começar**.
   aparecem. É de propósito, não é bug.
 - **`VERSAO` em `functions/api/_versao.js` tem que ser igual ao `versao` do `questions.json`.**
   Não dá para importar o JSON do client dentro das Functions sem arrastar o bundle do front junto,
-  então a sincronia é manual. Mudou lá, muda aqui, senão os agregados param de contar as respostas
-  novas em silêncio.
+  então a sincronia é manual. Mudou lá, muda aqui (e os ids em `functions/api/_perguntas.js`).
+  `sincronia.test.js` barra o build se divergirem.
+- **O `state` da navegação sobrevive ao F5.** O react-router guarda no `history` do navegador.
+  Quem depende dele para "acontecer uma vez só" tem que apagá-lo depois de usar.
 - **A escala de resposta mora só em `lib/scoring.js`.** Já esteve copiada em `permalink.js` e em
   `Teste.jsx`, e uma cópia fora de sincronia faria o mesmo link decodificar respostas diferentes,
   sem erro nenhum.
@@ -161,3 +166,12 @@ Ler o handoff recente **antes de começar**.
 - **Nunca rodar substituição cega de texto num arquivo `.jsx` inteiro.** Já renomeou variável
   (`const forca` virou `const força`) e injetou português dentro da string em inglês. Trocar por
   chave, ou só dentro do bloco do idioma.
+- **Deploy de prévia avulso (`wrangler pages deploy` sem `--branch main`) usa o banco de
+  PRODUÇÃO.** O bloco `env.preview` do `wrangler.jsonc` só é respeitado por `wrangler pages dev
+  --env preview` (local); um `wrangler pages deploy` normal ignora esse bloco e cai no `d1_databases`
+  do topo do arquivo, que é `compass-db`. Testado e confirmado em 2026-08-17: uma prévia sem
+  `--branch` gravando dado novo (uma coluna que só existia no banco de dev) recebeu 500 da API,
+  porque tentou gravar em produção. Não corrompe nada (a gravação falha inteira, e o site nunca
+  trava por isso: `enviarResposta()` engole erro de propósito), mas o número não conta. Para testar
+  gravação de verdade numa prévia, seria preciso aplicar a migration em produção antes, ou usar
+  `wrangler pages dev` local. Para só revisar tela, a prévia serve normalmente.

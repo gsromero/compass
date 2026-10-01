@@ -72,9 +72,13 @@ async function calcular(env) {
 
   // Mancha do grafico: uma grade grossa dos dois eixos principais, para nao
   // devolver um ponto por pessoa nem permitir reidentificar ninguem.
+  // Mesma conta de faixa da distribuicao acima: deslocar para 0..20 ANTES do
+  // CAST. Fazer CAST(eixo / 2) direto truncava em direcao ao zero, juntando
+  // -2..+2 numa celula so (desenhada em +1) e empurrando todo o lado negativo
+  // uma celula para o centro.
   const grade = await env.DB.prepare(
-    `SELECT CAST(economico / 2 AS INTEGER) AS gx,
-            CAST(autoridade / 2 AS INTEGER) AS gy,
+    `SELECT MIN(9, MAX(0, CAST((economico + 10) / 2 AS INTEGER))) AS gx,
+            MIN(9, MAX(0, CAST((autoridade + 10) / 2 AS INTEGER))) AS gy,
             COUNT(*) AS n
        FROM respostas WHERE versao = ? GROUP BY gx, gy`,
   )
@@ -83,9 +87,10 @@ async function calcular(env) {
   const celulas = grade.results ?? [];
   const maior = celulas.reduce((m, c) => Math.max(m, c.n), 1);
   const mapa = {
+    // Centro da celula: a faixa i vai de -10 + 2i a -8 + 2i.
     celulas: celulas.map((c) => ({
-      economico: c.gx * 2 + 1,
-      autoridade: c.gy * 2 + 1,
+      economico: c.gx * 2 - 9,
+      autoridade: c.gy * 2 - 9,
       densidade: c.n / maior,
     })),
   };

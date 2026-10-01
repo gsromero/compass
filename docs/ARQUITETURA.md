@@ -19,9 +19,21 @@ pontuar(respostas)  →  6 eixos, cada um com posição E margem de erro
    └─→ decisão de parar de perguntar    ─┘  dois usos
    ↓
 resultado codificado na URL  →  o link funciona sem banco e sem conta
-   ↓  em paralelo, POST /api/respostas (anônimo) alimenta os agregados
+   ↓  em paralelo, POST /api/respostas (anônimo) alimenta os agregados,
+   ↓  UMA vez e só vindo do fim do teste: abrir um link compartilhado não grava
 GET /api/agregados  →  percentil, mapa de calor, "onde você destoa"
 ```
+
+**Faixa etária e gênero não entram nesse fluxo.** São opcionais, perguntados uma vez em
+`Teste.jsx` antes da primeira pergunta, e NUNCA vão para o código da URL (ele só reconstrói
+respostas, e precisa continuar curto e estável para sempre). Viajam só via `navigate(..., {
+state })` de `Teste.jsx` para `Resultado.jsx`, que os inclui no único `POST /api/respostas` que
+faz ao montar, junto de `doTeste: true`, que é o que autoriza esse envio.
+
+**Cuidado: o `state` do react-router NÃO some no F5.** Ele mora no `history` do navegador e
+sobrevive à recarga. Por isso `Resultado.jsx` apaga o state (`navigate(pathname, { replace: true,
+state: null })`) logo depois de enviar, e um `useRef` segura o efeito duplo do StrictMode. Sem
+isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agregados.
 
 ## Helpers de `client/src/lib` (reusar antes de criar)
 
@@ -30,12 +42,13 @@ GET /api/agregados  →  percentil, mapa de calor, "onde você destoa"
 | `scoring.js` | **A conta, e fonte única dela.** Posição em cada eixo, margem de erro, quadrante, e a escolha da próxima pergunta no modo adaptativo. Nenhuma tela recalcula nada por fora |
 | `questions.js` | Porta de entrada do banco de perguntas: carrega `data/questions.json`, filtra por idioma (`so_no_idioma`) e valida forma. Nenhuma tela lê o JSON direto |
 | `i18n.js` | TODAS as strings de interface, pt e en. Valor pode ser função quando tem número no meio |
-| `lang.jsx` | `LangProvider` + `useLang()`, devolvendo `{ lang, setLang, toggle, t, pick }`. `t` é string de interface; `pick` é texto de conteúdo (objetos `{pt, en}`). A escolha fica no localStorage e manda sobre o navegador |
+| `lang.jsx` | `LangProvider` + `useLang()`, devolvendo `{ lang, setLang, t, pick }`. `t` é string de interface; `pick` é texto de conteúdo (objetos `{pt, en}`). A escolha fica no localStorage e manda sobre o navegador |
 | `compass.js` | Geometria do gráfico: converte posição de eixo (-10 a +10) em coordenada de SVG, e margem de erro em elipse. Usado pela tela de resultado E pelo card social, para os dois nunca discordarem |
 | `shareCard.js` | Card 1080x1080 em Canvas 2D, sem dependência. Fundo sempre sólido (transparência vira preto no Instagram). Portado do BBB |
 | `shareImage.js` | `shareCanvasPng()` e `downloadCanvasPng()`: compartilhamento nativo quando o navegador aceita arquivo, download quando não. Portado do BBB, sem a parte de Capacitor |
-| `permalink.js` | Codifica e decodifica o resultado na URL. É o que faz o link de resultado funcionar sem banco |
+| `permalink.js` | Codifica e decodifica o resultado na URL. É o que faz o link de resultado funcionar sem banco. `versaoDoCodigo()` separa "link de versão anterior do teste" de "link quebrado", que pedem mensagens diferentes |
 | `agregados.js` | Busca `GET /api/agregados` e nunca lança: sem servidor, devolve "dados insuficientes" e a tela esconde as seções que dependem de volume |
+| `demografia.js` | `FAIXAS_ETARIAS` e `GENEROS`: as listas fechadas da etapa opcional antes da primeira pergunta. `functions/api/respostas.js` valida contra uma CÓPIA dessas listas (runtime separado, não importa daqui). Mudou uma lista, muda a outra |
 
 ## Dados (`client/src/data`)
 
@@ -48,7 +61,8 @@ GET /api/agregados  →  percentil, mapa de calor, "onde você destoa"
 
 | Rota | O que faz |
 |---|---|
-| `respostas.js` | `POST`. Valida faixa e tipo de tudo, grava uma linha em `respostas` e as linhas de `itens` **em lote**. Não guarda nada que identifique quem respondeu |
+| `respostas.js` | `POST`. Valida faixa e tipo de tudo, aceita só ids de pergunta que existem (`_perguntas.js`), sem repetição, e quadrante coerente com o sinal dos eixos. Grava uma linha em `respostas` e as linhas de `itens` **em lote**. `criado_em` guarda só o dia, nunca a hora. Não guarda nada que identifique quem respondeu |
+| `_versao.js`, `_perguntas.js` | Cópias da versão e dos ids de `questions.json` (as Functions não importam do client). `client/src/lib/sincronia.test.js` compara as cópias, inclusive as listas de demografia de `respostas.js`, e barra o build se divergirem |
 | `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta |
 
 ## Erro de render (`client/src/components/ErroLimite.jsx`)
@@ -58,6 +72,11 @@ página que quebra mostra uma mensagem no lugar dela, mas o cabeçalho e o rodap
 navegar para outra rota reseta o limite (`key={pathname}`). Antes disto o site não tinha nenhum, e
 qualquer exceção de render em qualquer componente virava tela em branco sem pista nenhuma. O erro
 completo vai para `console.error`; não existe telemetria no projeto por decisão de privacidade.
+
+## Toda troca de página (`AoTrocarDePagina`, em `App.jsx`)
+
+Põe o nome da página na aba (`titulo_aba` no i18n, tabela `TITULO_DA_ROTA`) e volta a rolagem ao
+topo. O site é uma página só, então o navegador não faz nenhuma das duas coisas sozinho.
 
 ## Testes
 

@@ -12,15 +12,23 @@ const KEY = "compass.tema";
 const TemaContext = createContext(null);
 
 function temaInicial() {
-  const salvo = localStorage.getItem(KEY);
-  return salvo === "escuro" ? "escuro" : "claro";
+  try {
+    return localStorage.getItem(KEY) === "escuro" ? "escuro" : "claro";
+  } catch {
+    // Armazenamento bloqueado: abre claro, que e o padrao de qualquer jeito.
+    return "claro";
+  }
 }
 
 export function TemaProvider({ children }) {
   const [tema, setTema] = useState(temaInicial);
 
   useEffect(() => {
-    localStorage.setItem(KEY, tema);
+    try {
+      localStorage.setItem(KEY, tema);
+    } catch {
+      /* sem armazenamento: a escolha vale so ate fechar a aba */
+    }
     // O CSS liga o tema escuro por este atributo no <html>.
     if (tema === "escuro") document.documentElement.dataset.tema = "escuro";
     else delete document.documentElement.dataset.tema;

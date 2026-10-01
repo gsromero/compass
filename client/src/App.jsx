@@ -117,6 +117,37 @@ function Rodape() {
   );
 }
 
+// O nome da aba de cada rota. Rota fora da lista e a pagina de "nao achei".
+const TITULO_DA_ROTA = [
+  ["/teste", "teste_titulo_aba"],
+  ["/resultado/", "res_titulo"],
+  ["/sobre", "sobre_titulo"],
+  ["/metodologia", "metodologia_titulo"],
+  ["/tradicoes", "tradicoes_titulo"],
+];
+
+/**
+ * O que toda troca de pagina faz: nome certo na aba do navegador, e voltar ao
+ * topo. Sem isso, sair do fim da pagina Sobre abria a Metodologia ja rolada
+ * para baixo, porque o site e uma pagina so e o navegador nao rola sozinho.
+ */
+function AoTrocarDePagina() {
+  const { t } = useLang();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  useEffect(() => {
+    const achado = TITULO_DA_ROTA.find(([prefixo]) => pathname.startsWith(prefixo));
+    const chave = pathname === "/" ? null : (achado?.[1] ?? "nao_encontrado");
+    document.title = t("titulo_aba", chave ? t(chave) : null);
+  }, [pathname, t]);
+
+  return null;
+}
+
 function NaoEncontrado() {
   const { t } = useLang();
   return (
@@ -132,6 +163,7 @@ function NaoEncontrado() {
 export default function App() {
   return (
     <div className="pagina">
+      <AoTrocarDePagina />
       <Topo />
       <ErroLimite>
         <Routes>
