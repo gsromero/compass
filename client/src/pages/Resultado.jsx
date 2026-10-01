@@ -16,6 +16,7 @@ import {
   IconeWhatsApp,
 } from "../components/Icones.jsx";
 import SeletorModo from "../components/SeletorModo.jsx";
+import ResultadoBloqueado from "../components/ResultadoBloqueado.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num, numSinal } from "../lib/i18n.js";
 import {
@@ -35,6 +36,7 @@ import { intensidade, margemUnica, partesDaManchete } from "../lib/manchete.js";
 import { carregarAgregados, enviarResposta, ondeDestoa, percentil } from "../lib/agregados.js";
 import { verificarPessoa } from "../lib/turnstile.js";
 import { eMeuResultado } from "../lib/meusResultados.js";
+import { limpar } from "../lib/sessao.js";
 import { LAYOUTS, montarCard } from "../lib/shareCard.js";
 import { baixarCanvasPng, compartilharCanvasPng } from "../lib/shareImage.js";
 
@@ -97,6 +99,11 @@ export default function Resultado() {
   // teste esta funcionando exatamente como deveria.
   const confiavel = resultado ? confianca(resultado) : "alta";
   const tudoIgual = respostas ? respondeuTudoIgual(respostas) : false;
+  // E quando nao mede nada, nao mostra nada: a tela fica borrada atras de um
+  // aviso que so deixa refazer, e a resposta nao e gravada (decisao do dono,
+  // 2026-10-01). Um ponto no centro com margem enorme nao e resultado.
+  const bloqueado = confiavel === "baixa" || tudoIgual;
+  const pagina = useRef(null);
 
   // Manda a resposta anonima UMA vez, e so quando a pessoa acabou de terminar
   // o teste (o `state.doTeste` que Teste.jsx poe na navegacao). Abrir um link
@@ -109,6 +116,11 @@ export default function Resultado() {
   useEffect(() => {
     if (!resultado || !respostas || !state?.doTeste || enviado.current) return;
     enviado.current = true;
+    if (bloqueado) {
+      // Nao entra nos numeros do site. So limpa o state, como no envio.
+      navigate(pathname, { replace: true, state: null });
+      return;
+    }
     const corpo = {
       versao: VERSAO_BANCO,
       idioma: lang,
@@ -261,18 +273,27 @@ export default function Resultado() {
     ? ondeDestoa(agregados, respostas, perguntas, quad)
     : [];
 
-  return (
-    <main className="coluna resultado">
-      {(confiavel === "baixa" || tudoIgual) && (
-        <div className="aviso aviso-forte pilha" style={{ gap: "8px", marginTop: "24px" }}>
-          <strong>{t("res_confianca_baixa_titulo")}</strong>
-          <p>{t(tudoIgual ? "res_uniforme" : "res_contraditorio")}</p>
-          <Link to="/" className="botao" style={{ justifySelf: "start", marginTop: "4px" }}>
-            {t("res_refazer_lendo")}
-          </Link>
-        </div>
-      )}
+  // Refazer comeca direto um teste novo, da mesma duracao (pela quantidade de
+  // respostas). Quem abriu o link de outra pessoa comeca o padrao.
+  function refazer() {
+    limpar();
+    const modo = !visitante && Object.keys(respostas).length >= 48 ? "completo" : "padrao";
+    navigate("/teste", { state: { modo } });
+  }
 
+  return (
+    <>
+    {bloqueado && (
+      <ResultadoBloqueado
+        alvo={pagina}
+        titulo={t(visitante ? "res_bloqueio_vis_titulo" : "res_bloqueio_titulo")}
+        texto={t(visitante ? "res_bloqueio_vis_texto" : tudoIgual ? "res_uniforme" : "res_contraditorio")}
+        nota={visitante ? null : t("res_bloqueio_nao_conta")}
+        acao={t(visitante ? "vis_comecar" : "res_refazer_lendo")}
+        onAcao={refazer}
+      />
+    )}
+    <main ref={pagina} className="coluna resultado" aria-hidden={bloqueado || undefined}>
       {/* Quem abriu o link de outra pessoa: o convite vem antes de tudo. */}
       {visitante && (
         <section className="faixa faixa-visitante">
@@ -577,5 +598,6 @@ export default function Resultado() {
         </section>
       )}
     </main>
+    </>
   );
 }

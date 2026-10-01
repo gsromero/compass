@@ -95,6 +95,7 @@ tela) e troca `og:image`, `og:title`, `og:url` com `HTMLRewriter`. Imagens em
 | `components/VitrineCards.jsx` | Os três modelos do card de compartilhar em leque, gerados com o próprio `montarCard` depois da primeira pintura, mais formato, chave da tradição e as ações (`children`) |
 | `components/Icones.jsx` | Ícones de linha dos botões de compartilhar (traço em `currentColor`) |
 | `components/SeletorModo.jsx` | Padrão e Completo numa linha (o Rápido saiu da escolha em 2026-10). Usado no início e no convite do visitante |
+| `components/ResultadoBloqueado.jsx` | Aviso no meio da tela, com o resultado borrado atrás, quando o teste não mediu nada (confiança baixa ou tudo igual). Só deixa refazer |
 | `components/AmostraResultado.jsx` | A prévia viva do resultado na página inicial: quatro exemplos, um por quadrante, com a `Bussola` em modo `amostra` (sem legenda nem chave; o ponto desliza por `transform`) |
 
 Menu e rodapé saem da mesma lista `LINKS` em `App.jsx`: Início, Tradições, Metodologia, Sobre.

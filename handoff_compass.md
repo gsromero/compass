@@ -21,6 +21,11 @@
    Cloudflare no canto da tela, sumindo 1,5 s depois do sucesso (antes abria um vão entre a capa e
    os atalhos).
 
+8. **Resultado sem medida bloqueado** (branch `feat/resultado-bloqueado`): confiança baixa ou tudo
+   igual não mostra resultado (tela borrada, aviso no meio, só refazer) e **não grava**. Conferido
+   no navegador: dono bloqueado sem Turnstile nem POST; resultado normal ainda grava; visitante vê
+   texto próprio; o botão abre /teste.
+
 **Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
 formatos, sem rolagem lateral).
 

@@ -159,12 +159,18 @@ Detalhe importante do teste 2: quem responde a mesma coisa em tudo cai no centro
 grande**, não com certeza. Cair no centro por indiferença e cair no centro por responder tudo igual
 são coisas diferentes, e a conta sabe distinguir.
 
-**E a tela precisa contar isso.** Quando a margem média fica alta, o resultado abre com um aviso
-dizendo que ele diz pouco, e no caso específico de resposta uniforme ele explica o mecanismo:
-metade das afirmações defende o contrário da outra metade, então responder tudo igual se anula.
-Sem esse aviso a pessoa cai no centro e conclui que o site está quebrado, quando na verdade é o
-teste funcionando como deveria. Isso não é detalhe de interface: é a diferença entre o mecanismo
-central do projeto ser percebido como qualidade ou como defeito.
+**E a tela precisa contar isso.** Quando a margem média passa de 3 (confiança "baixa") ou a
+pessoa deu a mesma resposta em tudo, **o resultado não é mostrado**: a página fica borrada atrás de
+um aviso que só deixa refazer, e no caso de resposta uniforme ele explica o mecanismo (metade das
+afirmações defende o contrário da outra metade, então responder tudo igual se anula). Sem isso a
+pessoa cai no centro e conclui que o site está quebrado, quando na verdade é o teste funcionando
+como deveria. Isso não é detalhe de interface: é a diferença entre o mecanismo central do projeto
+ser percebido como qualidade ou como defeito.
+
+**Essas respostas também não são gravadas** (decisão do dono, 2026-10-01): um ponto no centro com
+margem enorme não mede ninguém, e contá-lo puxaria os agregados para o meio. O corte é o mesmo da
+tela (`confianca()` e `respondeuTudoIgual()` em `lib/scoring.js`), então o que o site não mostra é
+exatamente o que ele não conta.
 
 ### Relatório de equilíbrio, versão 1 do banco
 

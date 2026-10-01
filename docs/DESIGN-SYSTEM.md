@@ -348,6 +348,14 @@ no centro: um ponto parado num quadrante sugeriria um lado, mas passando pelos q
 peso não sugere nenhum. A manchete reserva duas linhas para o cartão não mudar de altura. Com
 `prefers-reduced-motion`, fica parada no primeiro exemplo.
 
+## Resultado que não mede nada
+
+`ResultadoBloqueado.jsx` (`.bloqueio`): quando a confiança é baixa ou a resposta foi toda igual,
+a página inteira fica borrada (`backdrop-filter`, sobre o `--bg` translúcido) e a mensagem fica no
+meio da tela, com um botão só, que começa um teste novo. Não fecha com Esc nem clicando fora. A
+página por trás recebe `inert`. Quem abriu o link de outra pessoa vê um texto em terceira pessoa e
+"Começar o teste". Substituiu o `.aviso-forte` no topo da página.
+
 ## O radar de perfil
 
 Uma petala por eixo, apontando para o polo em que a pessoa pende, do tamanho da conviccao. Fica ao
