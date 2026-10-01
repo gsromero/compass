@@ -3,11 +3,14 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Bussola from "../components/Bussola.jsx";
 import BarraEixo from "../components/BarraEixo.jsx";
 import Radar from "../components/Radar.jsx";
+import Polegar from "../components/Polegar.jsx";
+import AtalhosSecoes from "../components/AtalhosSecoes.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num } from "../lib/i18n.js";
 import {
   EIXOS,
   EIXOS_PRINCIPAIS,
+  NAO_SEI,
   confianca,
   contribuicoes,
   pontuar,
@@ -16,12 +19,17 @@ import {
 } from "../lib/scoring.js";
 import { EIXOS_META, VERSAO_BANCO, enunciado, perguntasDoIdioma } from "../lib/questions.js";
 import { decodificar, versaoDoCodigo } from "../lib/permalink.js";
-import { maisProximas } from "../lib/tradicoes.js";
+import { TRADICOES, maisProximas } from "../lib/tradicoes.js";
+import { margemUnica, partesDaManchete } from "../lib/manchete.js";
 import { carregarAgregados, enviarResposta, ondeDestoa, percentil } from "../lib/agregados.js";
 import { LAYOUTS, montarCard } from "../lib/shareCard.js";
 import { baixarCanvasPng, compartilharCanvasPng } from "../lib/shareImage.js";
 
 const SECUNDARIOS = EIXOS.filter((eixo) => !EIXOS_PRINCIPAIS.includes(eixo));
+// Os ids das secoes, na ordem da pagina. Fora do componente de proposito: a
+// fileira de atalhos observa estes ids, e uma lista nova a cada render
+// religaria o observador o tempo todo.
+const SECOES = ["grafico", "eixos", "porque", "tradicoes", "comparar"];
 
 export default function Resultado() {
   const { codigo } = useParams();
@@ -104,6 +112,26 @@ export default function Resultado() {
 
   const tradicaoTopo = proximas[0]?.tradicao ?? null;
 
+  const manchete = (() => {
+    const [econ, aut] = partesDaManchete(resultado, EIXOS_META).map((parte) =>
+      t(`manchete_${parte.eixo}_${parte.intensidade}`, t(`polo_${parte.polo}`)),
+    );
+    return t("res_manchete", econ, aut);
+  })();
+  // Margem igual nos seis eixos vira uma linha so na manchete, em vez de se
+  // repetir em cada barra.
+  const margemComum = margemUnica(resultado, EIXOS);
+
+  /** A resposta da pessoa, do jeito que ela viu na tela do teste. */
+  function suaResposta(r) {
+    return (
+      <span className="sua-resposta">
+        <Polegar nota={r} tamanho={14} />
+        {t("res_voce_respondeu", r === NAO_SEI ? t("teste_nao_sei") : t(`resposta${r}`))}
+      </span>
+    );
+  }
+
   function gerarCanvas() {
     return montarCard({
       resultado,
@@ -141,8 +169,24 @@ export default function Resultado() {
         </div>
       )}
 
-      <div className="pilha">
+      <div className="pilha resultado-manchete">
         <span className="rotulo">{t("res_titulo")}</span>
+        <h1 className="manchete">{manchete}</h1>
+        <p className="apoio">
+          {tradicaoTopo && <>{t("res_tradicao_topo", pick(tradicaoTopo.nome))} </>}
+          {margemComum !== null
+            ? t("res_margem_todas", num(lang, margemComum, 1))
+            : t(
+                "res_margem_principais",
+                num(lang, resultado.economico.margem, 1),
+                num(lang, resultado.autoridade.margem, 1),
+              )}
+        </p>
+      </div>
+
+      <AtalhosSecoes secoes={SECOES} />
+
+      <section id="grafico" className="secao-resultado">
         <div className="grade grade-2" style={{ alignItems: "center", gap: "26px" }}>
           <Bussola
             resultado={resultado}
@@ -150,8 +194,28 @@ export default function Resultado() {
             populacao={agregados?.suficiente ? agregados.mapa : null}
           />
           <div className="pilha">
+            {/* Compartilhar logo abaixo do grafico: e a primeira coisa que muita
+                gente quer fazer, e antes ficava no ultimo andar da pagina. */}
+            <div className="acoes-topo">
+              <button
+                type="button"
+                className="botao"
+                onClick={() => compartilharCanvasPng(gerarCanvas(), "compass.png")}
+              >
+                {t("res_compartilhar")}
+              </button>
+              <button type="button" className="botao botao-secundario" onClick={copiarLink}>
+                {copiado ? t("res_link_copiado") : t("res_copiar_link")}
+              </button>
+            </div>
             {EIXOS_PRINCIPAIS.map((eixo) => (
-              <BarraEixo key={eixo} eixo={eixo} meta={EIXOS_META[eixo]} dados={resultado[eixo]} />
+              <BarraEixo
+                key={eixo}
+                eixo={eixo}
+                meta={EIXOS_META[eixo]}
+                dados={resultado[eixo]}
+                semMargem={margemComum !== null}
+              />
             ))}
             <p className="apoio" style={{ fontSize: "13.5px" }}>
               {t("res_esquerda_direita")}
@@ -161,22 +225,28 @@ export default function Resultado() {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <section className="pilha">
+      <section id="eixos" className="pilha secao-resultado">
         <h2 style={{ fontSize: "20px" }}>{t("res_perfil")}</h2>
         <p className="apoio">{t("res_perfil_intro")}</p>
         <div className="grade grade-2" style={{ alignItems: "center", gap: "26px" }}>
           <Radar resultado={resultado} />
           <div className="pilha">
             {SECUNDARIOS.map((eixo) => (
-              <BarraEixo key={eixo} eixo={eixo} meta={EIXOS_META[eixo]} dados={resultado[eixo]} />
+              <BarraEixo
+                key={eixo}
+                eixo={eixo}
+                meta={EIXOS_META[eixo]}
+                dados={resultado[eixo]}
+                semMargem={margemComum !== null}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="pilha">
+      <section id="porque" className="pilha secao-resultado">
         <h2 style={{ fontSize: "20px" }}>{t("res_por_que")}</h2>
         <p className="apoio">{t("res_por_que_intro")}</p>
         <div className="cartao">
@@ -190,6 +260,7 @@ export default function Resultado() {
                 <span style={{ fontFamily: "var(--fonte-texto)", fontSize: "16px" }}>
                   {enunciado(top.pergunta, lang)}
                 </span>
+                {suaResposta(respostas[top.pergunta.id].r)}
                 <span className="fonte-tag">
                   {t("res_puxou_para", t(`polo_${polo}`))} ·{" "}
                   {top.pergunta.derivacao === "adaptado"
@@ -201,17 +272,40 @@ export default function Resultado() {
             );
           })}
         </div>
+        {/* Todas as respostas, recolhidas: e o que transforma "por que caí
+            aqui" numa explicacao que da para conferir. Vem do proprio link,
+            sem banco. */}
+        <details className="todas-respostas">
+          <summary>{t("res_todas_respostas")}</summary>
+          <div className="cartao">
+            {perguntas
+              .filter((p) => respostas[p.id])
+              .map((p) => (
+                <div key={p.id} className="contribuicao">
+                  <span style={{ fontFamily: "var(--fonte-texto)", fontSize: "15.5px" }}>
+                    {enunciado(p, lang)}
+                  </span>
+                  {suaResposta(respostas[p.id].r)}
+                </div>
+              ))}
+          </div>
+        </details>
         <Link to="/metodologia" className="botao-discreto" style={{ justifySelf: "start" }}>
           {t("res_ver_metodologia")}
         </Link>
       </section>
 
-      <section className="pilha">
+      <section id="tradicoes" className="pilha secao-resultado">
         <h2 style={{ fontSize: "20px" }}>{t("res_tradicoes")}</h2>
         <p className="apoio">{t("res_tradicoes_intro")}</p>
         <div className="pilha">
           {proximas.map(({ tradicao }, i) => (
-            <div key={tradicao.id} className="cartao pilha" style={{ gap: "6px" }}>
+            <Link
+              key={tradicao.id}
+              to={`/tradicoes/${tradicao.id}`}
+              className="cartao pilha cartao-link"
+              style={{ gap: "6px" }}
+            >
               <div className="linha" style={{ justifyContent: "space-between" }}>
                 <strong style={{ fontSize: "16.5px" }}>{pick(tradicao.nome)}</strong>
                 <span className="fonte-tag">
@@ -220,12 +314,16 @@ export default function Resultado() {
               </div>
               <p className="apoio">{pick(tradicao.resumo)}</p>
               <p className="fonte-tag">{pick(tradicao.leituras).join(" · ")}</p>
-            </div>
+              <span className="cartao-link-acao">{t("res_ler_tradicao")}</span>
+            </Link>
           ))}
         </div>
+        <Link to="/tradicoes" className="botao-discreto" style={{ justifySelf: "start" }}>
+          {t("res_todas_tradicoes", TRADICOES.length)}
+        </Link>
       </section>
 
-      <section className="pilha">
+      <section id="comparar" className="pilha secao-resultado">
         <h2 style={{ fontSize: "20px" }}>{t("pop_titulo")}</h2>
         {!agregados ? (
           <p className="apoio">{t("carregando")}</p>

@@ -487,22 +487,68 @@ export default function Teste() {
           }
         : undefined;
 
+  // O peso vem ANTES das respostas, nos dois modos. Responder ja avanca para a
+  // proxima pergunta, entao um peso mostrado depois das respostas so valia
+  // para quem adivinhasse que precisava marca-lo primeiro.
+  const blocoPeso = (
+    <div className="peso">
+      <span className="peso-rotulo">{t("teste_importancia")}</span>
+      <div className="importancia">
+        {IMPORTANCIA_ORDEM.map((chave) => (
+          <button
+            key={chave}
+            type="button"
+            className="chip"
+            aria-pressed={importancia === chave}
+            onClick={() => {
+              setImportancia(chave);
+              // Ja respondeu e voltou para ajustar: aplica na hora.
+              if (respostaAtual) {
+                setRespostas({
+                  ...respostas,
+                  [idAtual]: { ...respostaAtual, m: IMPORTANCIAS[chave] },
+                });
+              }
+            }}
+          >
+            {t(`teste_importancia_${chave}`)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  // "Nao sei" e discreto de proposito. O defeito da resposta do meio nunca foi
+  // ela existir, foi ser o botao mais facil de apertar.
+  const botaoNaoSei = (
+    <button
+      type="button"
+      className="botao-discreto nao-sei"
+      aria-pressed={respostaAtual?.r === NAO_SEI}
+      title={t("teste_nao_sei_ajuda")}
+      onClick={() => responder(NAO_SEI)}
+    >
+      {t("teste_nao_sei")}
+    </button>
+  );
+
   return (
-    <main className="coluna tela-teste">
+    <main className={`coluna tela-teste ${noCartao ? "modo-cartao" : "modo-lista"}`}>
       <div className="pilha" style={{ gap: "10px" }}>
         <div className="linha" style={{ justifyContent: "space-between" }}>
           <button type="button" className="botao-discreto" onClick={() => navigate("/")}>
             {t("teste_sair")}
           </button>
-          <div className="linha" style={{ gap: "2px" }}>
+          <div className="linha" style={{ gap: "6px" }}>
             <button
               type="button"
               className="botao-discreto"
+              style={{ textDecoration: "underline" }}
               onClick={() => setComoResponder(noCartao ? "lista" : "cartao")}
             >
               {t(noCartao ? "teste_modo_lista" : "teste_modo_cartao")}
             </button>
-            <span className="rotulo">{t("teste_progresso", respondidas, total)}</span>
+            <span className="contador">{t("teste_progresso", posicao + 1, total)}</span>
           </div>
         </div>
         <div className="progresso">
@@ -511,92 +557,92 @@ export default function Teste() {
       </div>
 
       {noCartao ? (
-        <div className="palco">
-          <div
-            key={idAtual}
-            ref={cartao}
-            className={`cartao-pergunta ${
-              arrasto.ativo || saindoPara
-                ? "arrastando"
-                : demonstrando
-                  ? "demonstrando"
-                  : "entrando"
-            }`}
-            style={estiloCartao}
-            onPointerDown={aoPressionar}
-            onPointerMove={aoMover}
-            onPointerUp={aoSoltar}
-            onPointerCancel={() => {
-              inicio.current = null;
-              setArrasto(SEM_ARRASTO);
-            }}
-          >
-            <div className="cartao-conteudo">
-              <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
-            </div>
+        <>
+          {blocoPeso}
+          {/* O baralho: as beiradas dos proximos cartoes por tras dizem "tem
+              mais", sem texto nenhum. */}
+          <div className="palco baralho">
+            <div
+              key={idAtual}
+              ref={cartao}
+              className={`cartao-pergunta ${
+                arrasto.ativo || saindoPara
+                  ? "arrastando"
+                  : demonstrando
+                    ? "demonstrando"
+                    : "entrando"
+              }`}
+              style={estiloCartao}
+              onPointerDown={aoPressionar}
+              onPointerMove={aoMover}
+              onPointerUp={aoSoltar}
+              onPointerCancel={() => {
+                inicio.current = null;
+                setArrasto(SEM_ARRASTO);
+              }}
+            >
+              <div className="cartao-conteudo">
+                <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+              </div>
 
-            {/* A resposta que o arrasto daria, na base do cartao: o polegar uma
-                linha acima do texto. O espaco fica reservado mesmo quando ela
-                nao aparece, senao a afirmacao pula a cada arrasto. */}
-            <span className="previa" data-visivel={previa !== null} aria-hidden="true">
-              <Polegar nota={previa ?? 1} tamanho={22} />
-              <em>{t(`resposta${previa ?? 1}`)}</em>
-            </span>
+              {/* A resposta que o arrasto daria, na base do cartao: o polegar uma
+                  linha acima do texto. O espaco fica reservado mesmo quando ela
+                  nao aparece, senao a afirmacao pula a cada arrasto. */}
+              <span className="previa" data-visivel={previa !== null} aria-hidden="true">
+                <Polegar nota={previa ?? 1} tamanho={22} />
+                <em>{t(`resposta${previa ?? 1}`)}</em>
+              </span>
+            </div>
           </div>
 
-          <p className="apoio dica-arrasto">{t("teste_dica_arrasto")}</p>
-        </div>
+          {/* Os polegares sao botoes de verdade e ficam sempre na tela: lembram
+              para que lado e concordar depois que a demonstracao acaba, e sao o
+              caminho de quem usa leitor de tela, teclado ou prefere tocar. */}
+          <div className="pilha" style={{ gap: "8px" }}>
+            <div className="polegares-resposta">
+              {NOTAS.map((nota) => (
+                <button
+                  key={nota}
+                  type="button"
+                  aria-pressed={respostaAtual?.r === nota}
+                  onClick={() => responder(nota)}
+                >
+                  <Polegar nota={nota} tamanho={18} />
+                  <span>{t(`resposta${nota}`)}</span>
+                </button>
+              ))}
+            </div>
+            <div className="pontas-arrasto" aria-hidden="true">
+              <span>{t("teste_dica_arrasto_esq")}</span>
+              <span>{t("teste_dica_arrasto_dir")}</span>
+            </div>
+          </div>
+        </>
       ) : (
-        <div key={idAtual} className="entrando palco-lista">
-          <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
-        </div>
-      )}
-
-      {/* No modo cartao a lista fica invisivel, mas continua no DOM e VOLTA A
-          APARECER ao receber foco. E o unico caminho de quem usa leitor de tela
-          ou so o teclado, e esconder de vez seria trocar poluicao por exclusao. */}
-      <div className={`escala${noCartao ? " escala-oculta" : ""}`}>
-        {NOTAS.map((nota, i) => (
-          <button
-            key={nota}
-            type="button"
-            className="opcao"
-            aria-pressed={respostaAtual?.r === nota}
-            onClick={() => responder(nota)}
-          >
-            <kbd aria-hidden="true">{i + 1}</kbd>
-            <span>{t(`resposta${nota}`)}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="rodape-teste">
-        <div className="pilha bloco-importancia" style={{ gap: "8px" }}>
-          <span className="rotulo">{t("teste_importancia")}</span>
-          <div className="importancia">
-            {IMPORTANCIA_ORDEM.map((chave) => (
+        <>
+          <div key={idAtual} className="entrando">
+            <h1 className="afirmacao">{enunciado(perguntaAtual, lang)}</h1>
+          </div>
+          {blocoPeso}
+          <div className="escala">
+            {NOTAS.map((nota, i) => (
               <button
-                key={chave}
+                key={nota}
                 type="button"
-                className="chip"
-                aria-pressed={importancia === chave}
-                onClick={() => {
-                  setImportancia(chave);
-                  // Ja respondeu e voltou para ajustar: aplica na hora.
-                  if (respostaAtual) {
-                    setRespostas({
-                      ...respostas,
-                      [idAtual]: { ...respostaAtual, m: IMPORTANCIAS[chave] },
-                    });
-                  }
-                }}
+                className="opcao"
+                aria-pressed={respostaAtual?.r === nota}
+                onClick={() => responder(nota)}
               >
-                {t(`teste_importancia_${chave}`)}
+                <kbd aria-hidden="true">{i + 1}</kbd>
+                <span>{t(`resposta${nota}`)}</span>
               </button>
             ))}
           </div>
-        </div>
+          {botaoNaoSei}
+        </>
+      )}
 
+      <div className="rodape-teste">
         <div className="linha" style={{ justifyContent: "space-between" }}>
           <div className="linha" style={{ gap: "10px" }}>
             <button
@@ -607,19 +653,9 @@ export default function Teste() {
             >
               {t("teste_voltar")}
             </button>
-            {/* "Nao sei" e discreto de proposito. O defeito da resposta do meio
-                nunca foi ela existir, foi ser o botao mais facil de apertar. */}
-            <button
-              type="button"
-              className="botao-discreto nao-sei"
-              aria-pressed={respostaAtual?.r === NAO_SEI}
-              title={t("teste_nao_sei_ajuda")}
-              onClick={() => responder(NAO_SEI)}
-            >
-              {t("teste_nao_sei")}
-            </button>
+            {noCartao && botaoNaoSei}
           </div>
-          {!noCartao && <span className="apoio dica-teclado">{t("teste_dica_teclado")}</span>}
+          <span className="apoio dica-teclado">{t("teste_dica_teclado")}</span>
         </div>
       </div>
     </main>

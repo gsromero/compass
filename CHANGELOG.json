@@ -1,5 +1,38 @@
 [
   {
+    "version": "8.0",
+    "date": "2026-10-01T16:30:00",
+    "author": "claude",
+    "summary": "As seis propostas de interface aprovadas em mockup: manchete e atalhos no resultado, cartao com baralho e polegares, peso antes das respostas, sua resposta no por que, inicio enxuto, Tradicoes no menu.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/pages/Resultado.jsx",
+        "client/src/pages/Teste.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/App.jsx",
+        "client/src/components/AtalhosSecoes.jsx",
+        "client/src/components/BussolaAmostra.jsx",
+        "client/src/components/BarraEixo.jsx",
+        "client/src/lib/manchete.js",
+        "client/src/lib/manchete.test.js",
+        "client/src/lib/i18n.js",
+        "client/src/lib/i18n.test.js",
+        "client/src/index.css",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/ARQUITETURA.md",
+        "docs/PENDENCIAS.md"
+      ],
+      "technical": "Pesquisa na Mobbin (Headway, Tubi, Instagram, Paired, Liven, Noom, Oura, Obvious, Premier League, Visitors) e mockup em artefato Design aprovado pelo dono. manchete.js decide intensidade (cortes 1/3/7) e polo; texto no i18n. AtalhosSecoes usa IntersectionObserver e scrollIntoView sem hash na URL (o href da pagina e o link compartilhado). Modo cartao ganhou .polegares-resposta (botoes reais) e perdeu .escala-oculta; .baralho::before/::after com transform-origin na base. .peso antes das respostas nos dois modos (responder avanca, entao peso depois nunca era usado). .tela-teste max-width 42rem, .palco max-height 27rem. Home: .seletor-modo e .amostra com BussolaAmostra (ponto no centro). Menu e rodape de uma lista LINKS. Verificado com wrangler pages dev local, Chrome headless via CDP em 390 e 1366px, pt/en, claro/escuro; fluxo inteiro pelos polegares grava 1 linha.",
+      "pending": [
+        "commit, push e deploy quando o dono pedir",
+        "registrar modo de resposta (cartao ou lista), precisa de autorizacao e migration",
+        "Turnstile esperando as chaves",
+        "og:image por quadrante"
+      ]
+    }
+  },
+  {
     "version": "7.0",
     "date": "2026-10-01T12:00:00",
     "author": "claude",
@@ -125,31 +158,6 @@
         "revisao das 48 afirmacoes pelo dono",
         "piloto com 4 a 6 pessoas antes de divulgar o link",
         "og:image estatica por quadrante"
-      ]
-    }
-  },
-  {
-    "version": "3.0",
-    "date": "2026-08-11T02:30:00",
-    "author": "claude",
-    "summary": "Todos os textos do site reescritos: as 48 afirmacoes perderam o tom de memorando, e as paginas Sobre e Metodologia ganharam a acentuacao que faltava.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/data/questions.json",
-        "client/src/lib/i18n.js",
-        "client/src/data/tradicoes.json",
-        "client/src/pages/Sobre.jsx",
-        "client/src/pages/Metodologia.jsx",
-        "functions/api/_versao.js",
-        "docs/"
-      ],
-      "technical": "Auditoria contou os tiques antes de reescrever: 25 das 48 afirmacoes usavam 'deveria', 8 usavam 'mesmo que', 3 tinham a antitese 'X e nao Y'. Depois: deveria 0, mesmo que 3 (onde a concessao E o que se mede), antitese 0. Sentido preservado em todas, porque cada uma cita um item real e mudar o sentido tornaria a citacao falsa. Banco na versao 3 e _versao.js sincronizado; link antigo e recusado. Achado grave no caminho: as paginas Sobre e Metodologia renderizavam portugues SEM ACENTO ('O Compass e um teste politico'), porque o habito de escrever comentario sem acento vazou para as strings de tela. 36 travessoes removidos dos documentos, incluindo o README publico.",
-      "pending": [
-        "revisao das afirmacoes pelo dono",
-        "melhorias de interface",
-        "og:image por quadrante",
-        "deploy"
       ]
     }
   }

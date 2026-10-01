@@ -171,12 +171,25 @@ experiência pior do que qualquer um deles sozinho; foi assim na primeira versã
 - **O padrão segue o aparelho**: `(pointer: coarse)` abre no cartão, o resto na lista. Arrastar com
   o dedo é ótimo, arrastar com o mouse é pior que clicar.
 - **O botão de trocar fica no topo**, ao lado do progresso, e a escolha fica guardada no navegador.
-- **No modo cartão a lista continua no DOM**, invisível, e **reaparece ao receber foco**
-  (`.escala-oculta:focus-within`). Ela é o único caminho de quem usa leitor de tela ou só o
-  teclado; escondê-la de vez trocaria poluição por exclusão.
-- **O cartão ocupa a altura da tela** (`.tela-teste` em coluna, `.palco` com `flex: 1`). Todos os
+- **No modo cartão, uma fileira de quatro polegares fica sempre embaixo do cartão**
+  (`.polegares-resposta`, 2026-10-01). Revisita a regra acima de propósito, com aprovação do dono
+  em mockup: não é a lista inteira, é uma fileira compacta que serve de botão e de legenda do
+  gesto. Antes, depois da demonstração nada na tela lembrava para que lado era concordar, e todos
+  os apps de cartão pesquisados na Mobbin (Tubi, Instagram, Headway) mostram botões embaixo. Os
+  polegares são botões de verdade com o texto da resposta, então substituíram a lista escondida
+  que reaparecia ao foco (`.escala-oculta`, removida): são eles o caminho de leitor de tela e
+  teclado no modo cartão.
+- **O cartão estica com a tela até um teto** (`.palco`: `flex: 1`, `max-height: 27rem`). Todos os
   cartões têm a mesma altura mesmo com afirmações curtas: num baralho que se arrasta, cartão que
-  muda de tamanho a cada pergunta fica inquieto.
+  muda de tamanho a cada pergunta fica inquieto. Sem o teto, no computador ele virava uma parede
+  branca de 500px.
+- **O baralho aparece por trás** (`.baralho::before/::after`): as beiradas dos próximos cartões
+  dizem "tem mais" sem texto. Encolhem a partir da **base** (`transform-origin: 50% 100%`); a
+  partir do centro a borda de baixo ficava escondida atrás do cartão da frente.
+- **A tela do teste é uma coluna de 42rem**, mesmo no computador, nos dois modos.
+- **O peso da resposta vem ANTES das respostas** (`.peso`), nos dois modos. Responder já avança
+  para a próxima pergunta, então um peso mostrado depois só valia para quem adivinhasse que
+  precisava marcá-lo primeiro.
 
 ### A demonstração que ensina o gesto
 
@@ -241,15 +254,12 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
   altura em 21px e fazia a afirmação pular a cada arrasto. Reservar altura na mão seria chute que
   quebra em outra fonte.
 
-  **Atenção à grade do `.palco`:** duas faixas, `1fr auto`, com o cartão esticando e a dica colada
-  embaixo. Já teve três; sobrar uma faixa faz o cartão pegar a que não estica e encolher de 564px
-  para 211px.
-- **A ordem da tela é por frequência de uso:** cartão, dica, importância, "não sei", e por último a
-  lista de botões. No celular a lista é a alternativa; no desktop mandam o mouse e o teclado.
-- **No modo cartão tudo é centralizado**, e no modo lista o conteúdo fica no meio vertical da tela
-  em vez de colado no topo. O bloco de importância é centralizado nos dois modos.
-- **A lista de botões e o teclado nunca podem sumir.** São o único caminho para quem usa leitor de
-  tela ou só o teclado, e arrastar com mouse é pior que clicar.
+- **A ordem da tela segue a ordem do que a pessoa faz:** no cartão, peso, cartão, polegares e as
+  pontas do gesto ("← arraste para discordar", "para concordar →"); na lista, afirmação no alto,
+  peso, as quatro opções e "não sei" logo abaixo. A afirmação da lista ficava no meio vertical da
+  tela, com um vazio grande em cima; subiu para onde o olho começa.
+- **Botões de resposta e teclado nunca podem sumir**, em nenhum dos modos. São o único caminho para
+  quem usa leitor de tela ou só o teclado, e arrastar com mouse é pior que clicar.
 - Sob `prefers-reduced-motion`, o cartão troca na hora, sem voar.
 
 ### Polegares
@@ -257,8 +267,9 @@ Um pouco é "concordo", muito é "concordo muito". Nada de quatro sentidos para 
 Um polegar para "concordo", dois para "concordo muito", e virados para baixo do lado de discordar.
 Desenhados à mão em SVG, porque a regra é não trazer biblioteca de ícone para dois traços.
 
-**Só na etiqueta do arrasto**, no modo cartão. Na lista não entram: lá o número da tecla e o rótulo
-já bastam, e o ícone só apertava o botão.
+**Três lugares:** a etiqueta do arrasto e a fileira de botões, no modo cartão, e o selo "Você:
+discordo muito" no "Por que você caiu aqui" do resultado. Na lista não entram: lá o número da
+tecla e o rótulo já bastam, e o ícone só apertava o botão.
 
 **São decorativos, e por isso ficam com `aria-hidden`.** Quem carrega o sentido é o texto ao lado:
 ícone sozinho não é lido por leitor de tela e não é entendido do mesmo jeito por todo mundo.
@@ -276,6 +287,31 @@ notar. Se voltar a existir, mantenha tudo junto e do mais amplo para o mais estr
 **"Não sei dizer" é discreto de propósito.** O defeito da resposta do meio nunca foi ela existir,
 foi ser o botão mais fácil de apertar, no meio da lista e na altura do polegar. Lados sem esforço,
 "não sei" deliberado.
+
+## A página de resultado
+
+- **Abre com uma manchete em palavras** (`.manchete`): "Bem à Direita e mais para Autoridade".
+  A regra da intensidade mora em `lib/manchete.js` (cortes 1, 3 e 7 na escala de -10 a +10), o
+  texto no i18n. Usa só os nomes de polo do gráfico; nenhum rótulo novo que carregue juízo.
+- **A margem igual nos seis eixos vira uma linha na manchete**, e some de cada barra
+  (`BarraEixo semMargem`). Margens diferentes continuam em cada barra.
+- **Atalhos de seção presos no topo** (`.atalhos`, `AtalhosSecoes.jsx`): a página tem uns cinco
+  andares no celular. Rolam até a seção sem pôr `#` na URL, porque o endereço da página é o link
+  que a pessoa compartilha.
+- **Compartilhar e Copiar link logo abaixo da bússola** (`.acoes-topo`). A seção do fim continua,
+  com a escolha do modelo do card e o Baixar.
+- **Cada afirmação do "por quê" mostra a resposta da pessoa** (`.sua-resposta`, borda de tinta e
+  não cor: concordar e discordar têm o mesmo peso visual). "Ver todas as suas respostas" é um
+  `<details>` nativo.
+- **Cartão de tradição é link** para a página dela (`.cartao-link`).
+
+## A página inicial
+
+Convite à esquerda e amostra do resultado à direita no computador; um embaixo do outro no celular.
+A duração é um seletor de três partes numa linha (`.seletor-modo`), com o escolhido em bloco
+sólido como o seletor de idioma. A amostra (`.amostra`, `BussolaAmostra.jsx`) é tracejada porque é
+exemplo, não dado, e o ponto fica **no centro**, pelo mesmo motivo da imagem de prévia: um ponto
+de exemplo num quadrante sugeriria um lado.
 
 ## O radar de perfil
 
