@@ -7,6 +7,14 @@
 
 const VAZIO = { suficiente: false, total: 0, minimo: 50 };
 
+/**
+ * Por onde cada resposta foi dada. Vai junto de cada item no POST, para medir
+ * se o arrasto puxa respostas mais extremas que o toque.
+ * GOTCHA: functions/api/respostas.js valida contra uma COPIA desta lista
+ * (runtime separado). sincronia.test.js compara as duas.
+ */
+export const VIAS = ["arrasto", "botao", "teclado"];
+
 export async function carregarAgregados() {
   try {
     const resposta = await fetch("/api/agregados");

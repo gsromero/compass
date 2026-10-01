@@ -4,3 +4,8 @@ dist/
 .dev.vars
 .DS_Store
 *.log
+
+# Dados brutos do Brazilian Legislative Surveys: baixados com cadastro na
+# Harvard Dataverse e com respostas individuais (anonimas). Nunca no repo publico;
+# so as medias por partido, calculadas a partir deles, entram no site.
+dados-bls/

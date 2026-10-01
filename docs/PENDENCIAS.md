@@ -134,9 +134,8 @@
 - [x] Título da aba por página e rolagem ao topo ao trocar de página
 - [x] `criado_em` só com o dia; idioma e tema não derrubam o site com armazenamento bloqueado
 - [x] `0002_demografia.sql` aplicada em produção e revisão publicada (2026-10-01, autorizado)
-- [ ] Turnstile no POST: **autorizado pelo dono em 2026-10-01**, parado esperando a Site Key e a
-      Secret Key (o login OAuth do wrangler não tem escopo de Turnstile). Plano: verificar dentro de
-      `functions/api/respostas.js` (sem Worker separado) e citar o script na página Sobre
+- [x] Turnstile no POST (2026-10-01): widget criado pelo dono, segredo gravado por ele no Pages,
+      verificação dentro de `functions/api/respostas.js`, aviso na página Sobre
 - [ ] `og:image` por quadrante: dono perguntou se é só autorizar; falta o "pode fazer". Mostrar as
       quatro imagens antes de codar
 
@@ -148,8 +147,18 @@
 - [x] 4 · "Por que você caiu aqui" mostrando a resposta da pessoa, e todas as respostas recolhidas
 - [x] 5 · Início com seletor de duração numa linha e amostra do resultado
 - [x] 6 · Tradições no menu e no rodapé; cartão de tradição vira link
-- [ ] **Registrar o modo de resposta (cartão ou lista)** junto do resultado, para comparar se o
-      arrasto produz respostas mais extremas que a lista. Sugerido ao dono, sem resposta ainda
+- [x] Registrar por onde cada resposta veio (`itens.via`: arrasto, botao, teclado), autorizado
+      pelo dono em 2026-10-01. Migration `0003_via_resposta.sql`
+- [ ] Quando houver volume: comparar a distribuição de respostas por `via` (o arrasto produz mais
+      "muito" que o toque?). Se sim, ajustar os limiares de `lib/gesto.js` ou o padrão do celular
+- [x] `og:image` por quadrante (2026-10-01): `functions/resultado/[codigo].js` + `client/public/og/`
+- [x] Redesenho da página de resultado e da bússola (2026-10-01, mockup aprovado)
+- [x] Página "Onde ficam os partidos" com o BLS 2021 (2026-10-01): mínimo de 10 notas; PV e Rede
+      de fora por terem 1 nota cada
+- [x] Card social: faixa da margem vazava da barra no extremo (+10). Corrigido em `shareCard.js`
+- [ ] Quando a 10ª rodada do BLS (2025) for publicada: baixar, rodar `node scripts/partidos-bls.mjs`
+      e trocar a rodada; ela terá União Brasil e PRD com nome próprio
+- [ ] Antes do deploy: aplicar `0003_via_resposta.sql` em produção
 - [ ] No piloto: observar quem usa cada modo e se o arrasto deu resposta diferente da pretendida
 
 ## Depois do lançamento

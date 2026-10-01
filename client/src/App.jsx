@@ -10,6 +10,7 @@ import Resultado from "./pages/Resultado.jsx";
 import Sobre from "./pages/Sobre.jsx";
 import Metodologia from "./pages/Metodologia.jsx";
 import Tradicoes from "./pages/Tradicoes.jsx";
+import Partidos from "./pages/Partidos.jsx";
 
 function SeletorIdioma() {
   const { lang, setLang, t } = useLang();
@@ -140,6 +141,7 @@ const TITULO_DA_ROTA = [
   ["/sobre", "sobre_titulo"],
   ["/metodologia", "metodologia_titulo"],
   ["/tradicoes", "tradicoes_titulo"],
+  ["/partidos", "partidos_titulo"],
 ];
 
 /**
@@ -190,6 +192,7 @@ export default function App() {
           <Route path="/metodologia" element={<Metodologia />} />
           <Route path="/tradicoes" element={<Tradicoes />} />
           <Route path="/tradicoes/:id" element={<Tradicoes />} />
+          <Route path="/partidos" element={<Partidos />} />
           <Route path="*" element={<NaoEncontrado />} />
         </Routes>
       </ErroLimite>

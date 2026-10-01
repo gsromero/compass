@@ -87,15 +87,15 @@ const TEXTO = {
     cat_metodo: "Método",
     limites_t: "O que este teste não é",
     limites: [
-      "Os itens de origem usam formatos variados: escala de 1 a 10 entre duas frases, escolha forçada, concordância de 4 pontos. Aqui tudo virou uma escala única de 5 pontos. A derivação e rastreável, mas o resultado não e o instrumento original e não herda a validação dele.",
+      "Os itens de origem usam formatos variados: escala de 1 a 10 entre duas frases, escolha forçada, concordância de 4 pontos. Aqui tudo virou uma escala única de 5 pontos. A derivação é rastreável, mas o resultado não é o instrumento original e não herda a validação dele.",
       "A redação em inglês foi conferida no questionário oficial. A redação em português é adaptação nossa, seguindo equivalência conceitual, porque os questionários nacionais são distribuídos junto dos microdados e não como documentos avulsos.",
       "Onde fica o zero é decisão normativa, e não um fato. Aqui o zero é o meio da escala de resposta, e não a média de quem respondeu, para o centro não andar conforme o público do site muda.",
       "Os testes provam equilíbrio estrutural, e não equilíbrio de tom. Nenhuma máquina detecta uma afirmação escrita de um jeito que soa mais razoável de um lado.",
-      "Ainda não ha validação empírica. Provar que as perguntas medem o que dizem medir exige respostas reais e análise fatorial.",
+      "Ainda não há validação empírica. Provar que as perguntas medem o que dizem medir exige respostas reais e análise fatorial.",
     ],
     privacidade_t: "Privacidade",
     privacidade:
-      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na próxima visita. Fica guardado o vetor de respostas solto, usado para os números de comparação, e faixa etária e gênero, só se você escolher informar: é opcional, pode pular, e não muda o seu resultado. O link do seu resultado carrega o resultado inteiro codificado na própria URL, e por isso funciona sem consultar banco nenhum.",
+      "Nada identifica quem respondeu: sem IP, sem navegador, sem conta, sem identificador que volte na próxima visita. Fica guardado o vetor de respostas solto, usado para os números de comparação, se cada resposta veio de arrasto, toque ou teclado (para conferir se o jeito de responder muda a resposta), e faixa etária e gênero, só se você escolher informar: é opcional, pode pular, e não muda o seu resultado. O link do seu resultado carrega o resultado inteiro codificado na própria URL, e por isso funciona sem consultar banco nenhum. Para os números de comparação não serem inventados por robôs, ao fim do teste o site usa a verificação Turnstile, da Cloudflare: ela analisa sinais do navegador para distinguir pessoa de robô, quase sempre sem você ver nada. O Compass não recebe nem guarda nada dessa análise, só o sim ou não, e não envia o seu IP.",
     ver_metodologia: "Ver a conta completa",
   },
   en: {
@@ -124,7 +124,7 @@ const TEXTO = {
     ],
     privacidade_t: "Privacy",
     privacidade:
-      "Nothing identifies who answered: no IP, no browser, no account, no identifier that comes back on the next visit. The bare answer vector is stored, used for the comparison numbers, along with age range and gender, only if you choose to share them: it is optional, you can skip it, and it does not change your result. Your result link carries the entire result encoded in the URL itself, which is why it works without consulting any database.",
+      "Nothing identifies who answered: no IP, no browser, no account, no identifier that comes back on the next visit. The bare answer vector is stored, used for the comparison numbers, along with whether each answer came from a drag, a tap or the keyboard (to check whether the way of answering changes the answer), and age range and gender, only if you choose to share them: it is optional, you can skip it, and it does not change your result. Your result link carries the entire result encoded in the URL itself, which is why it works without consulting any database. So that the comparison numbers cannot be made up by bots, at the end of the test the site uses Cloudflare's Turnstile check: it looks at browser signals to tell a person from a bot, almost always without you seeing anything. Compass neither receives nor stores anything from that check, only the yes or no, and does not send your IP.",
     ver_metodologia: "See the full scoring",
   },
 };

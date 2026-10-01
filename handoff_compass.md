@@ -1,3 +1,56 @@
+## 2026-10-01 (madrugada), claude
+
+**O que foi feito:** tudo que o dono aprovou em mockup, na branch `feat/turnstile-modo-resposta`,
+junto do Turnstile e da `via` já prontos. **Sem commit e sem deploy: o dono quer publicar tudo
+junto.**
+
+1. **Página de partidos** (`/partidos`): BLS 2021, 20 partidos, mínimo de 10 notas (PV e Rede de
+   fora, 1 nota cada; o dono pediu que o PCdoB entrasse, e com 10 ele entra). Fusões conferidas
+   no TSE. Dados brutos em `dados-bls/` (gitignored), médias geradas por `scripts/partidos-bls.mjs`.
+   Link discreto no fim da seção de tradições do resultado.
+2. **Prévia por quadrante:** Function `functions/resultado/[codigo].js` com `HTMLRewriter`. Imagens
+   refeitas com os polos na horizontal, coerentes com a bússola nova.
+3. **Redesenho do resultado e da bússola**, conforme o artefato "Resultado Redesenhado".
+4. **Card:** a faixa da margem vazava no extremo (+10).
+
+**Verificado:** 389 testes e build; `wrangler pages dev` local, celular e computador, pt e en,
+claro e escuro; teste inteiro passa pelo Turnstile de teste e grava 1 linha; F5 não reenvia;
+`curl` na Function devolve `og:image` do quadrante e a geral para link quebrado. Três defeitos
+achados só ao renderizar e corrigidos: cartões de eixo estourando em duas colunas no celular,
+"↓ Liberdade" encostando no nome do quadrante, e a etiqueta "Você" saindo do desenho com margem
+grande.
+
+**Para publicar:** `npm run db:migrate:prod` (aplica a 0003) ANTES de `npm run deploy`.
+
+## 2026-10-01 (noite), claude
+
+**O que foi feito:** Turnstile ligado, na branch `feat/turnstile`. O dono criou o widget no painel
+(Managed, domínios `compass.gsromerolab.com` e `localhost`) e gravou ele mesmo o segredo no Pages
+(`wrangler pages secret put TURNSTILE_SECRET_KEY`). A Secret Key nunca passou pelo chat.
+
+- `lib/turnstile.js`: carrega o script da Cloudflare só no fim do teste, `interaction-only`
+  (quase sempre invisível), e devolve o token. Abrir um link compartilhado não carrega nada.
+- `respostas.js`: valida o corpo, depois confere o token no `siteverify` (sem `remoteip`), 403 se
+  falhar. Falha não tira o resultado de ninguém; a resposta só não conta.
+- Sobre: o parágrafo de privacidade explica a verificação, nos dois idiomas. No caminho, três
+  palavras sem acento corrigidas nos limites ("é rastreável", "não é o instrumento", "há").
+- Local: `.dev.vars` com o segredo oficial de teste da Cloudflare, par da chave de teste usada em
+  localhost.
+
+**Junto, na mesma branch (renomeada para `feat/turnstile-modo-resposta`):** o dono decidiu que
+o site anota por onde cada resposta veio. `itens.via` (migration 0003, aplicada só no D1 local):
+`arrasto`, `botao` ou `teclado`. Testado respondendo pelos três jeitos: 6/5/5 gravados certos.
+**Antes do deploy, aplicar a 0003 em produção.** O texto de privacidade do Sobre menciona isso.
+
+**Imagem de prévia por quadrante:** dono disse sim. Quatro imagens em mockup no artefato Design
+"Prévias por Quadrante", esperando aprovação. Plano técnico: Function em
+`functions/resultado/[codigo].js` com HTMLRewriter trocando `og:image`; ela pode importar
+`lib/permalink.js`, `lib/scoring.js` e `questions.json` (puros, sem DOM; nenhuma pergunta usa
+`so_no_idioma`, então o código decodifica igual em pt e en).
+
+**Verificado:** POST sem token recebe 403; teste inteiro no navegador local passa pela verificação
+e grava 1 linha (201); F5 não reenvia; 381 testes e build.
+
 ## 2026-10-01 (tarde), claude
 
 **O que foi feito:** as seis propostas de interface, pesquisadas na Mobbin e aprovadas pelo dono
@@ -26,71 +79,3 @@ do centro; agora da base).
 
 **Para o próximo agente:** o dono gostou da ideia de gravar o modo de resposta (cartão ou lista)
 para medir se o arrasto puxa respostas mais extremas, mas ainda não autorizou. Exige migration.
-
-## 2026-10-01, claude
-
-**O que foi feito:** revisão geral do site a pedido do dono, e depois correção de tudo que ela
-achou, na branch `fix/revisao-geral` (sem commit, aguardando o dono). A etapa de idade e gênero, que
-estava pronta mas sem commit direto na `main` e sem registro aqui, veio junto para a branch.
-
-**Os três que estragavam dados em silêncio:**
-1. Abrir um link de resultado compartilhado, ou recarregar, gravava a resposta de novo. Agora só
-   grava com `state.doTeste` (posto por `Teste.jsx`), e o state é apagado após o envio, porque ele
-   sobrevive ao F5 (a ARQUITETURA dizia o contrário, corrigido).
-2. A mancha da população usava `CAST(eixo / 2)`, que trunca para o zero: -1,9 era desenhado em +1.
-   Agora usa a mesma faixa da distribuição, centros -9 a +9.
-3. O POST aceitava qualquer id de pergunta. Agora confere contra `_perguntas.js`, recusa repetição e
-   quadrante incoerente com o sinal dos eixos (zero aceita os dois lados, por causa do arredondamento).
-
-**O resto:** tradições por posição (1ª, 2ª, 3ª) em vez de "% de proximidade"; mensagem própria para
-link de versão antiga e link quebrado; explicação e "Pular" na tela de demografia; título da aba e
-rolagem ao topo por página; `og.png`, favicon e meta tags com acento; `criado_em` só com o dia;
-`lang.jsx` e `tema.jsx` não derrubam mais o site com armazenamento bloqueado.
-
-**Verificado de verdade:** 374 testes, build, POSTs à mão contra `wrangler pages dev` com o D1 local,
-e o fluxo inteiro num Chrome sem janela via DevTools Protocol: o teste grava 1 linha, F5 e "amigo
-abrindo o link" gravam 0, tradições e mensagens nos dois idiomas, aba e rolagem certas, sem erro no
-console.
-
-**Publicado no mesmo dia**, com autorização do dono: merge `--no-ff` na `main`, `0002_demografia.sql`
-aplicada em produção ANTES do deploy, deploy, e conferido em compass.gsromerolab.com (páginas, og.png,
-favicon, POST falso recusado, abrir link de resultado não grava). O dono liberou `npm run
-db:migrate:prod` e `npm run deploy` nas permissões locais do Claude Code; outras ações de produção
-continuam pedindo permissão.
-
-**Para o próximo agente:** Turnstile está autorizado e esperando as chaves (ver PENDENCIAS). Os POSTs
-para caminhos aleatórios no domínio são a detecção de robôs da Cloudflare (zona), não o Compass. A
-página de resultado não tem `<h1>` (só um rótulo), vale corrigir junto de outra mudança nela.
-
-## 2026-08-17, claude
-
-**O que foi feito:** o dono relatou, ao vivo, que terminou o teste no modo completo (48 perguntas)
-e caiu numa tela em branco em vez do resultado. Investiguei o caminho inteiro (`Teste.jsx` →
-`scoring.js` → `permalink.js` → `Resultado.jsx`), rodei os 371 testes e simulei sessões completas
-de 48 respostas em vários padrões direto contra o código real. Nada disso reproduziu uma exceção.
-
-**O achado que explica a tela em branco, mesmo sem reproduzir a causa exata:** o site não tinha
-NENHUM `ErrorBoundary`. `main.jsx` ia direto de `StrictMode` para `App`, então qualquer exceção de
-render, em qualquer componente, em qualquer página, virava tela em branco sem pista nenhuma — o
-React desmonta a árvore toda e não sobra nada. Não consegui reproduzir a exceção sem o navegador e
-as respostas reais do dono, então tratei os dois lados: consertei o que já sabia que estava errado,
-e instrumentei o site para que, se acontecer de novo, a causa apareça.
-
-**`ErroLimite.jsx` (novo, `client/src/components`)**: `ErrorBoundary` em volta de `<Routes>` dentro
-de `App.jsx`, por fora de `Topo`/`Rodape` — uma página que quebra mostra mensagem no lugar dela, mas
-cabeçalho e rodapé continuam de pé, e trocar de rota reseta o limite (`key={pathname}`). O erro
-completo vai para `console.error`; sem telemetria nova, por decisão de privacidade do projeto.
-Testado forçando um `throw` de propósito numa página, confirmando a mensagem, o console e o reset
-ao navegar, e removendo o `throw` depois.
-
-**Bug real encontrado no caminho, corrigido junto**: `proximoPar` em `scoring.js` parava de
-perguntar cedo no modo **completo** também, apesar de prometer "48 perguntas, precisão máxima".
-Simulei um padrão de resposta coerente e o completo parou em 24/48. Corrigido: o corte antecipado
-por confiança suficiente só vale para modos com limite finito (`limite !== Infinity`). Testado com
-um teste novo em `fluxo.test.js` e confirmado no navegador de verdade, terminando o modo completo
-com um padrão que antes cortaria cedo: 48 respostas, chegou no resultado sem erro.
-
-**Para o próximo agente:** se a tela em branco acontecer de novo, o `ErrorBoundary` agora existe, e
-o console do navegador vai ter o erro real (mensagem + stack). Pedir pro dono abrir o DevTools e
-mandar o que aparecer em vermelho é o caminho mais rápido para a causa raiz de verdade, porque a
-lógica de pontuação e codificação já está provada correta por simulação.

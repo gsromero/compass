@@ -144,6 +144,9 @@ button {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  /* As faixas de ponta a ponta do resultado usam 100vw, que inclui a barra de
+     rolagem no computador: sem isto a pagina rolaria de lado alguns pixels. */
+  overflow-x: clip;
 }
 
 .coluna {
@@ -1004,6 +1007,12 @@ button.topo-hamburguer {
   max-width: 40rem;
 }
 
+/* Vazia quase sempre: sem caixa propria, nao vira um vao na grade da pagina.
+   So ganha corpo quando a verificacao contra robo precisa mostrar algo. */
+.caixa-verificacao:empty {
+  display: none;
+}
+
 /* A fileira de atalhos fica presa no topo ao rolar. Fundo solido, senao o
    texto da pagina passa por baixo dela e os dois se misturam. */
 .atalhos {
@@ -1150,50 +1159,92 @@ button.topo-hamburguer {
   display: grid;
   grid-template-columns: 1fr;
   gap: 6px;
+  min-width: 0;
 }
 
-.barra-trilho {
-  position: relative;
-  height: 30px;
-  border-radius: var(--raio-pequeno);
-  background: var(--raised);
+/* Versao em cartao, no painel dos seis eixos: numero grande e frase de leitura. */
+.barra-eixo-destaque {
+  background: var(--panel);
   border: 1px solid var(--line);
-  overflow: hidden;
+  border-radius: var(--raio);
+  padding: 16px;
+  gap: 8px;
 }
 
-.barra-centro {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line-forte);
+.barra-numero {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.barra-margem {
+.barra-numero strong {
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.barra-numero span {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.barra-leitura {
+  font-size: 13px;
+  color: var(--ink-mid);
+}
+
+/* A regua: linha fina, marcas a cada 2 pontos (11 marcas, a do meio mais
+   alta), desenhadas como fundo para nao criar um elemento por marca. */
+.regua {
+  position: relative;
+  height: 26px;
+  margin-inline: 7px;
+  background:
+    linear-gradient(var(--line-forte), var(--line-forte)) center / 100% 1.5px no-repeat,
+    linear-gradient(var(--ink-mid), var(--ink-mid)) center / 1.5px 14px no-repeat,
+    repeating-linear-gradient(
+        to right,
+        var(--line-forte) 0 1.2px,
+        transparent 1.2px 10%
+      )
+      center / 100% 7px no-repeat,
+    linear-gradient(var(--line-forte), var(--line-forte)) right center / 1.2px 7px no-repeat;
+}
+
+.regua-margem {
   position: absolute;
-  top: 6px;
-  bottom: 6px;
-  background: var(--populacao);
-  opacity: 0.28;
+  top: 50%;
+  height: 7px;
+  transform: translateY(-50%);
   border-radius: 4px;
+  background: var(--ink);
+  opacity: 0.25;
 }
 
-.barra-ponto {
+.regua-ponto {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
-  width: 3px;
-  border-radius: 99px;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
   background: var(--ink);
-  transform: translateX(-50%);
+  box-shadow: 0 0 0 2.5px var(--panel);
+  transform: translate(-50%, -50%);
 }
 
 .barra-pontas {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   font-size: 12.5px;
   color: var(--ink-dim);
+}
+
+.barra-pontas [data-ativo="true"] {
+  color: var(--ink);
+  font-weight: 650;
 }
 
 .grade {
@@ -1359,5 +1410,699 @@ td.texto-longo {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* --- partidos (Brazilian Legislative Surveys) ---------------------------- */
+
+/* Uma linha por partido: nome, regua de 1 a 10 e valor. Lista em HTML, e nao
+   um SVG unico, para quebrar bem no celular e ser lida por leitor de tela. */
+.partidos-aviso {
+  font-size: 14px;
+  background: var(--raised);
+  border-radius: var(--raio-pequeno);
+  padding: 10px 12px;
+}
+
+.partidos-grade {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .partidos-grade {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+.partidos-grafico {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 14px 12px 12px;
+}
+
+.partidos-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.partidos-linha {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 3.6rem;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border-bottom: 1px solid var(--line);
+}
+
+.partidos-escala,
+.partidos-pontas {
+  border-bottom: none;
+  min-height: 26px;
+}
+
+.partidos-nome,
+.partidos-valor {
+  display: grid;
+  line-height: 1.2;
+}
+
+.partidos-nome strong {
+  font-size: 14px;
+}
+
+.partidos-nome small,
+.partidos-valor small {
+  font-size: 10.5px;
+  color: var(--ink-mid);
+}
+
+.partidos-valor {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.partidos-trilho {
+  position: relative;
+  height: 100%;
+  min-height: 26px;
+  /* As linhas verticais de 1 a 10, e o meio (5,5) tracejado, desenhados como
+     fundo: sem um elemento por marca em cada linha. */
+  background:
+    linear-gradient(var(--line-forte), var(--line-forte)) calc(50% - 0.5px) 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(
+      to right,
+      var(--line) 0 1px,
+      transparent 1px calc(100% / 9)
+    );
+}
+
+.partidos-escala .partidos-trilho,
+.partidos-pontas .partidos-trilho {
+  background: none;
+}
+
+.partidos-marca {
+  position: absolute;
+  top: 4px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+.partidos-margem {
+  position: absolute;
+  top: 50%;
+  height: 7px;
+  transform: translateY(-50%);
+  border-radius: 4px;
+  background: var(--ink);
+  opacity: 0.22;
+}
+
+.partidos-ponto,
+.partidos-losango {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 2.5px var(--panel);
+  transform: translate(-50%, -50%);
+}
+
+.partidos-losango {
+  border-radius: 2px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.partidos-voce {
+  background: var(--raised);
+  border-radius: var(--raio-pequeno);
+  border-bottom: none;
+  padding-inline: 6px;
+  margin-inline: -6px;
+}
+
+.partidos-pontas-texto {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-mid);
+}
+
+/* No celular a regua precisa de largura: sai a contagem de notas (o traco
+   da margem ja mostra quanta gente avaliou; no computador ela aparece). */
+@media (max-width: 30rem) {
+  .partidos-linha {
+    grid-template-columns: 5rem minmax(0, 1fr) 2.4rem;
+    gap: 6px;
+  }
+
+  .partidos-valor small {
+    display: none;
+  }
+
+  .partidos-pontas-texto {
+    font-size: 11px;
+  }
+}
+
+/* --- resultado: estrutura em faixas ---------------------------------------- */
+
+.resultado {
+  display: grid;
+  padding-bottom: 0;
+}
+
+/* Faixa de ponta a ponta dentro da coluna: o fundo vai ate a borda da tela, o
+   conteudo continua alinhado com a coluna. Alternar o tom entre as secoes e o
+   que faz a pagina se ler como relatorio, e nao como uma lista de caixas. */
+.faixa {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  padding-block: 40px;
+  display: grid;
+  gap: 24px;
+}
+
+.faixa-tom,
+.faixa-capa {
+  background: var(--raised);
+  border-block: 1px solid var(--line);
+}
+
+.faixa-capa {
+  border-top: none;
+  padding-block: 28px 32px;
+}
+
+@media (min-width: 900px) {
+  .faixa {
+    padding-block: 64px;
+    gap: 28px;
+  }
+
+  .faixa-capa {
+    padding-block: 52px;
+  }
+}
+
+.cabecalho-secao {
+  display: grid;
+  gap: 8px;
+  max-width: 44rem;
+}
+
+.cabecalho-secao-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cabecalho-secao h2 {
+  font-size: clamp(24px, 4.4vw, 30px);
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.cabecalho-secao .apoio {
+  font-size: 15px;
+}
+
+.botao-ajuda {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line-forte);
+  background: none;
+  color: var(--ink-mid);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.botao-ajuda[aria-expanded="true"] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+@media (pointer: coarse) {
+  .botao-ajuda {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.ajuda {
+  font-size: 14px;
+  color: var(--ink-mid);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--raio-pequeno);
+  padding: 12px 14px;
+}
+
+/* --- a capa ----------------------------------------------------------------- */
+
+.capa {
+  display: grid;
+  gap: 22px;
+}
+
+.capa-texto {
+  display: grid;
+  gap: 22px;
+  align-content: center;
+}
+
+.capa-subtitulo {
+  font-size: 15.5px;
+  max-width: 34rem;
+}
+
+.capa-destaques {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-block: 16px;
+  border-block: 1px solid var(--line);
+}
+
+.destaque-eixo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.destaque-eixo strong {
+  font-size: clamp(38px, 8vw, 52px);
+  line-height: 1;
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.destaque-eixo > span:last-child {
+  font-size: 14px;
+  color: var(--ink-mid);
+}
+
+/* No celular os botoes vem DEPOIS da bussola; no computador, no texto. */
+.capa-acoes-largo {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .capa {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+  }
+
+  .capa-acoes-largo {
+    display: block;
+  }
+
+  .capa-acoes-estreito {
+    display: none;
+  }
+}
+
+/* --- a bussola -------------------------------------------------------------- */
+
+.bussola-cartao {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--sombra);
+  padding: 14px 10px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 900px) {
+  .bussola-cartao {
+    padding: 22px 22px 20px;
+  }
+}
+
+/* O seu ponto sai do centro e desliza ate a posicao ao abrir. Zerada pelo
+   bloco global de prefers-reduced-motion. */
+.bussola-voce {
+  transition: transform 760ms cubic-bezier(0.2, 0, 0.1, 1);
+}
+
+.bussola text {
+  font-family: var(--fonte-ui);
+}
+
+.bussola-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding-inline: 8px;
+  font-size: 12.5px;
+  color: var(--ink-mid);
+}
+
+.bussola-legenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bussola-chave {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--ink-mid);
+}
+
+/* Liga e desliga. Botao com role="switch": o leitor de tela anuncia o estado. */
+.chave {
+  flex: none;
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 13px;
+  border: none;
+  background: var(--line-forte);
+  cursor: pointer;
+  transition: background var(--transicao);
+}
+
+.chave > span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--panel);
+  transition: transform var(--transicao);
+}
+
+.chave[aria-checked="true"] {
+  background: var(--ink);
+}
+
+.chave[aria-checked="true"] > span {
+  transform: translateX(18px);
+}
+
+.bussola-aviso {
+  font-size: 12.5px;
+  color: var(--ink-mid);
+  padding-inline: 8px;
+}
+
+/* --- seis eixos ------------------------------------------------------------- */
+
+.eixos-painel {
+  display: grid;
+  gap: 24px;
+  align-items: center;
+}
+
+.eixos-painel .grafico {
+  max-width: 400px;
+  justify-self: center;
+  width: 100%;
+}
+
+.eixos-grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 900px) {
+  .eixos-painel {
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .eixos-grade {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+/* No celular, uma coluna: em duas, "Sustentabilidade" e "Crescimento" nao
+   cabiam lado a lado e a regua estourava o cartao vizinho. */
+@media (max-width: 40rem) {
+  .eixos-grade {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- por que voce caiu aqui: citacoes --------------------------------------- */
+
+.citacoes {
+  display: grid;
+  column-gap: 48px;
+}
+
+@media (min-width: 900px) {
+  .citacoes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.citacao {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  padding-block: 20px;
+  border-top: 1px solid var(--line-forte);
+}
+
+.citacao blockquote {
+  margin: 0;
+  font-family: var(--fonte-texto);
+  font-size: clamp(18px, 3.6vw, 21px);
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.citacao blockquote::before {
+  content: "\201C";
+  color: var(--ink-dim);
+  margin-right: 2px;
+}
+
+.citacao-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font-size: 13px;
+}
+
+/* --- tradicoes -------------------------------------------------------------- */
+
+.tradicoes-grade {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 900px) {
+  .tradicoes-grade {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tradicao-cartao {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.tradicao-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tradicao-posicao {
+  font-family: var(--fonte-texto);
+  font-size: 42px;
+  line-height: 1;
+  color: var(--ink-dim);
+}
+
+.tradicao-nome {
+  font-size: 17.5px;
+  line-height: 1.2;
+}
+
+.tradicao-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+  color: var(--ink-mid);
+}
+
+.tradicao-legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tradicao-legenda i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.tradicao-legenda-voce {
+  background: var(--voce);
+}
+
+.tradicao-legenda-ela {
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+}
+
+.partidos-chamada {
+  display: grid;
+  gap: 4px;
+  max-width: 34rem;
+}
+
+/* --- faixa final: comparacao e compartilhar --------------------------------- */
+
+.fim-resultado {
+  gap: 48px;
+}
+
+@media (min-width: 900px) {
+  .fim-resultado {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.medidor-numero {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.medidor-numero strong {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 720;
+  font-variant-numeric: tabular-nums;
+}
+
+.medidor-numero span {
+  color: var(--ink-mid);
+}
+
+.medidor-barra {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.medidor-barra > i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}
+
+/* A vitrine: o card escolhido grande no meio, os outros dois menores dos lados. */
+.vitrine {
+  display: grid;
+  gap: 14px;
+}
+
+.vitrine-palco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.vitrine-card {
+  flex: none;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 34%;
+  max-width: 190px;
+  opacity: 0.4;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: opacity var(--transicao);
+}
+
+.vitrine-card:hover {
+  opacity: 0.7;
+}
+
+.vitrine-card-atual {
+  width: 68%;
+  max-width: 340px;
+  opacity: 1;
+  cursor: default;
+  box-shadow: var(--sombra);
+  border-radius: 16px;
+}
+
+.vitrine-card-atual:hover {
+  opacity: 1;
+}
+
+.vitrine-card img,
+.vitrine-vazio {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.vitrine-vazio {
+  background: var(--line);
+}
+
+.acoes-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 30rem) {
+  .acoes-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .acoes-card > :first-child {
+    grid-column: 1 / -1;
   }
 }
