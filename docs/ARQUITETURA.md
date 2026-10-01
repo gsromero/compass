@@ -48,6 +48,7 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 | `shareImage.js` | `shareCanvasPng()` e `downloadCanvasPng()`: compartilhamento nativo quando o navegador aceita arquivo, download quando não. Portado do BBB, sem a parte de Capacitor |
 | `permalink.js` | Codifica e decodifica o resultado na URL. É o que faz o link de resultado funcionar sem banco. `versaoDoCodigo()` separa "link de versão anterior do teste" de "link quebrado", que pedem mensagens diferentes |
 | `agregados.js` | Busca `GET /api/agregados` e nunca lança: sem servidor, devolve "dados insuficientes" e a tela esconde as seções que dependem de volume |
+| `manchete.js` | A frase que abre o resultado: intensidade de cada eixo principal (`centro`, `leve`, `media`, `forte`) e o polo para onde aponta. O texto fica no i18n (`manchete_<eixo>_<intensidade>`). Também `margemUnica()`, que diz se a margem é igual nos seis eixos |
 | `demografia.js` | `FAIXAS_ETARIAS` e `GENEROS`: as listas fechadas da etapa opcional antes da primeira pergunta. `functions/api/respostas.js` valida contra uma CÓPIA dessas listas (runtime separado, não importa daqui). Mudou uma lista, muda a outra |
 
 ## Dados (`client/src/data`)
@@ -64,6 +65,15 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 | `respostas.js` | `POST`. Valida faixa e tipo de tudo, aceita só ids de pergunta que existem (`_perguntas.js`), sem repetição, e quadrante coerente com o sinal dos eixos. Grava uma linha em `respostas` e as linhas de `itens` **em lote**. `criado_em` guarda só o dia, nunca a hora. Não guarda nada que identifique quem respondeu |
 | `_versao.js`, `_perguntas.js` | Cópias da versão e dos ids de `questions.json` (as Functions não importam do client). `client/src/lib/sincronia.test.js` compara as cópias, inclusive as listas de demografia de `respostas.js`, e barra o build se divergirem |
 | `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta |
+
+## Componentes novos de 2026-10-01
+
+| Arquivo | O que faz |
+|---|---|
+| `components/AtalhosSecoes.jsx` | Fileira de atalhos presa no topo do resultado. Marca a seção visível com `IntersectionObserver` e rola sem pôr `#` na URL. Os ids vêm de `SECOES`, fora do componente em `Resultado.jsx` (lista nova a cada render religaria o observador) |
+| `components/BussolaAmostra.jsx` | A bússola pequena da página inicial, com o ponto no centro de propósito |
+
+Menu e rodapé saem da mesma lista `LINKS` em `App.jsx`: Início, Tradições, Metodologia, Sobre.
 
 ## Erro de render (`client/src/components/ErroLimite.jsx`)
 

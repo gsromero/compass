@@ -1,3 +1,31 @@
+## 2026-10-01 (tarde), claude
+
+**O que foi feito:** as seis propostas de interface, pesquisadas na Mobbin e aprovadas pelo dono
+em mockup (artefato Design "Propostas de Tela Compass"), implementadas na branch
+`feat/propostas-interface`. **Sem commit e sem deploy**: o dono ainda não pediu.
+
+1. **Resultado:** manchete em palavras (`lib/manchete.js` + i18n), atalhos de seção presos no topo
+   (`AtalhosSecoes.jsx`), Compartilhar e Copiar link logo abaixo da bússola, margem igual dita uma
+   vez só (`BarraEixo semMargem`).
+2. **Cartão:** coluna de 42rem, cartão com teto de altura, baralho por trás em CSS, fileira de
+   quatro polegares sempre visível. A `.escala-oculta` (lista escondida que reaparecia ao foco)
+   saiu: os polegares são botões de verdade e cumprem esse papel.
+3. **Lista:** afirmação no alto, peso ("Peso desta resposta") ANTES das opções nos dois modos.
+4. **Por quê:** selo "Você: discordo muito" e `<details>` com todas as respostas.
+5. **Início:** seletor de duração numa linha, amostra do resultado com ponto no centro
+   (`BussolaAmostra.jsx`), duas colunas no computador.
+6. **Navegação:** Tradições no menu e no rodapé (lista `LINKS` única em `App.jsx`), cartão de
+   tradição vira link.
+
+**Verificado de verdade:** 381 testes, build, `wrangler pages dev` local fotografado em 390px e
+1366px, pt e en, claro e escuro; teste inteiro respondido só pelos polegares chega ao resultado e
+grava 1 linha; nenhum erro no console. Dois defeitos achados só ao renderizar e corrigidos: o peso
+quebrava em duas linhas no celular, e as beiradas do baralho ficavam escondidas (escala a partir
+do centro; agora da base).
+
+**Para o próximo agente:** o dono gostou da ideia de gravar o modo de resposta (cartão ou lista)
+para medir se o arrasto puxa respostas mais extremas, mas ainda não autorizou. Exige migration.
+
 ## 2026-10-01, claude
 
 **O que foi feito:** revisão geral do site a pedido do dono, e depois correção de tudo que ela
@@ -65,48 +93,3 @@ com um padrão que antes cortaria cedo: 48 respostas, chegou no resultado sem er
 o console do navegador vai ter o erro real (mensagem + stack). Pedir pro dono abrir o DevTools e
 mandar o que aparecer em vermelho é o caminho mais rápido para a causa raiz de verdade, porque a
 lógica de pontuação e codificação já está provada correta por simulação.
-
-## 2026-08-16, claude
-
-**O que foi feito:** Revisão completa do site no celular (o dono relatou "tudo está muito ruim,
-principalmente o header"), depois o topo ganhou menu hamburguer e um seletor de idioma segmentado,
-e por fim o site foi ao ar pela primeira vez.
-
-**A revisão de celular:** auditoria automatizada em 375px e 320px achou o topo em três linhas
-(114px, botão de tema órfão), alvos de toque de 34px em vez de 44px, e a tabela de afirmações
-cortando o texto sem avisar que rolava para o lado. Corrigido com topo em duas linhas, um bloco
-`(pointer: coarse)` padronizando alvo mínimo, e sombra de rolagem em CSS puro na classe `.rolagem`.
-
-**O topo, de novo:** com os três links por extenso (Início, Sobre, Metodologia) mais idioma e tema,
-o topo voltou a não caber no celular. Os três links saíram para um menu hamburguer; idioma e tema
-continuam sempre visíveis, por serem escolha de estado e não navegação. O idioma trocou de um ciclo
-por clique para um controle segmentado (PT-BR | EN-US), nos dois tamanhos de tela.
-
-**Dois bugs de especificidade de CSS**, achados só ao testar no navegador: `.linha` e
-`.botao-discreto` (utilitários que dão `display:flex`/`inline-flex`) empatavam em especificidade
-com as classes novas que escondem esses elementos, e venciam a cascata por virem depois no arquivo.
-O CSS parecia certo lendo o código; só quebrou ao renderizar. Corrigido com seletores mais
-específicos (`.topo-direita .topo-links`, `button.topo-hamburguer`), não reordenando o arquivo.
-
-**O site foi ao ar:** banco de produção migrado (existia mas estava vazio), projeto `compass`
-criado no Cloudflare Pages, primeiro deploy publicado e testado (`/`, `/sobre`, `/metodologia` e
-`/api/agregados` respondendo contra o banco real). **Falta só conectar o domínio
-`compass.gsromerolab.com`**, passo manual no painel da Cloudflare que o dono ainda não fez.
-
-**Depois do ar, o dono pediu três ajustes de layout**, cada um testado num deploy de prévia (URL
-separada, sem afetar produção) antes de aprovar:
-
-1. **Coluna larga demais de vazio nas laterais.** As duas larguras de container (42rem leitura,
-   58rem dados) viraram uma só, `--coluna: 75rem` (1200px), usada em toda página.
-2. **Header e rodapé de ponta a ponta.** Eles saíram de dentro de `.coluna`: agora o fundo e a
-   borda vão até a borda da tela, só o conteúdo interno mantém a margem lateral de 20px.
-3. **Header do celular em duas linhas.** Virou uma linha só até 320px: o seletor de idioma perdeu
-   padding horizontal (não a altura do alvo de toque) só nesse breakpoint.
-
-No caminho, os três cards de "diferença" da Home saíram (repetiam o que a página Sobre já explica),
-e a escolha de modo (Rápido/Padrão/Completo) virou três colunas lado a lado e mais altas em vez de
-lista empilhada. Aprovado e publicado em produção.
-
-**Para o próximo agente:** o dono ainda não revisou as 48 afirmações procurando tom tendencioso, e
-não fez o piloto com 4 a 6 pessoas. Nenhum dos dois bloqueia o site estar no ar, mas os dois
-deveriam acontecer antes de divulgar o link amplamente. Ver `docs/PENDENCIAS.md`.

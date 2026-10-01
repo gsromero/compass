@@ -202,8 +202,15 @@ button.topo-hamburguer {
 }
 
 .topo-menu-mobile .botao-discreto {
-  justify-content: flex-start;
+  justify-content: space-between;
+  gap: 12px;
   padding: 10px 8px;
+}
+
+/* "12 correntes de pensamento", ao lado de Tradicoes no menu do celular. */
+.link-detalhe {
+  font-size: 13px;
+  color: var(--ink-dim);
 }
 
 /* No celular a barra do topo nao cabe em uma linha com Inicio, Sobre e
@@ -265,10 +272,42 @@ button.topo-hamburguer {
   border-top: 1px solid var(--line);
   color: var(--ink-dim);
   font-size: 13.5px;
+  display: grid;
+  gap: 10px;
+}
+
+.rodape-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-size: 14.5px;
+}
+
+.rodape-links a {
+  color: var(--ink-mid);
+  text-decoration: none;
+}
+
+.rodape-links a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.rodape-base {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 18px;
+}
+
+/* No celular os quatro links viram duas colunas: em linha corrida eles
+   quebravam no meio, e o dedo acerta melhor uma grade. */
+@media (max-width: 30rem) {
+  .rodape-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+  }
 }
 
 .rotulo {
@@ -412,23 +451,55 @@ button.topo-hamburguer {
 
 /* A tela do teste ocupa a altura toda: e o que permite o cartao crescer em vez
    de sobrar espaco em baixo. */
+/* A tela do teste e uma coluna estreita mesmo no computador: com os 1200px do
+   resto do site, o cartao esticava ate 1160px e a frase se perdia no meio. */
 .tela-teste {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   padding-block: 16px 20px;
+  max-width: 42rem;
 }
 
+/* O cartao estica com a tela, mas so ate um teto: sem ele, no computador o
+   cartao virava uma parede branca de 500px com uma frase no meio. */
 .palco {
   flex: 1;
   display: grid;
-  /* Duas faixas: o cartao estica, a dica fica colada embaixo. Eram tres quando
-     os rotulos ficavam acima do cartao; com eles agora dentro do cartao, sobrar
-     uma faixa fazia o cartao pegar a linha que nao estica e encolher. */
-  grid-template-rows: 1fr auto;
-  gap: 10px;
-  min-height: 0;
+  min-height: 15rem;
+  max-height: 27rem;
+  position: relative;
+}
+
+/* As beiradas dos proximos cartoes por tras do atual: e o jeito visual de
+   dizer "tem mais". Decorativas, so CSS. */
+.baralho {
+  margin-bottom: 18px;
+}
+
+.baralho::before,
+.baralho::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--raio);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  /* Encolhe a partir da BASE: a partir do centro, a borda de baixo subia junto
+     e ficava escondida atras do cartao da frente. */
+  transform-origin: 50% 100%;
+}
+
+.baralho::before {
+  transform: translateY(18px) scale(0.9);
+  opacity: 0.45;
+}
+
+.baralho::after {
+  transform: translateY(9px) scale(0.95);
+  opacity: 0.75;
 }
 
 .rodape-teste {
@@ -437,29 +508,103 @@ button.topo-hamburguer {
   margin-top: auto;
 }
 
-/* Modo lista: o enunciado e as opcoes ficam no MEIO da tela, e nao colados no
-   topo. Duas margens automaticas (uma aqui e outra no rodape) dividem o espaco
-   livre em partes iguais, e o bloco do meio se centraliza sozinho. */
-.palco-lista {
-  display: grid;
-  gap: 26px;
-  margin-top: auto;
+.contador {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-/* No cartao tudo e centralizado: a afirmacao, a previa e a dica. */
+/* No cartao tudo e centralizado: a afirmacao e a previa. */
 .palco .cartao-pergunta,
 .palco .afirmacao,
-.palco .previa,
-.palco .dica-arrasto {
+.palco .previa {
   text-align: center;
 }
 
-.bloco-importancia {
-  justify-items: center;
+/* O peso da resposta, numa faixa so, ANTES das respostas. */
+.peso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--raio-pequeno);
+  background: var(--panel);
 }
 
-.bloco-importancia .importancia {
+.peso-rotulo {
+  font-size: 13.5px;
+  color: var(--ink-mid);
+}
+
+.peso .importancia {
+  gap: 4px;
+}
+
+/* Mais justo que o chip comum (ate no toque, que pede 14px de lado), para o
+   rotulo e os tres chips caberem numa linha so em 360px. A altura de toque
+   continua a mesma. */
+.peso .chip {
+  padding-inline: 10px;
+}
+
+/* Os quatro polegares embaixo do cartao. Botoes de verdade, com o texto da
+   resposta: o icone sozinho nao e lido por leitor de tela. */
+.polegares-resposta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.polegares-resposta button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 5px;
+  min-height: 68px;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--raio-pequeno);
+  background: var(--panel);
+  font-size: 12.5px;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao);
+}
+
+.polegares-resposta button:hover {
+  border-color: var(--line-forte);
+  background: var(--raised);
+}
+
+.polegares-resposta button[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--raised);
+  font-weight: 560;
+}
+
+.polegares-resposta .polegares {
+  color: var(--ink);
+}
+
+.pontas-arrasto {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--ink-mid);
+}
+
+.modo-lista .afirmacao {
+  margin-top: 12px;
+}
+
+.modo-lista .nao-sei {
+  align-self: flex-start;
 }
 
 /* Os polegares. Decorativos: quem carrega o sentido e o texto ao lado. */
@@ -488,6 +633,7 @@ button.topo-hamburguer {
 
 .cartao-pergunta {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 18px;
@@ -559,16 +705,12 @@ button.topo-hamburguer {
   opacity: 1;
 }
 
-.dica-arrasto {
-  font-size: 13px;
-  text-align: center;
-}
-
 .dica-teclado {
   font-size: 13px;
 }
 
-@media (max-width: 30rem) {
+/* Dica de tecla nao serve para quem so tem dedo. */
+@media (max-width: 30rem), (pointer: coarse) {
   .dica-teclado {
     display: none;
   }
@@ -585,39 +727,12 @@ button.topo-hamburguer {
   font-weight: 600;
 }
 
-@media (pointer: coarse) {
-  .dica-arrasto {
-    text-align: left;
-  }
-}
-
 .afirmacao {
   font-family: var(--fonte-texto);
   font-size: clamp(20px, 3.9vw, 27px);
   line-height: 1.32;
   letter-spacing: -0.01em;
   text-wrap: balance;
-}
-
-/* No modo cartao a lista fica invisivel mas continua acessivel, e REAPARECE ao
-   receber foco. Esconder de vez trocaria poluicao por exclusao: ela e o unico
-   caminho de quem usa leitor de tela ou so o teclado. */
-.escala-oculta {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.escala-oculta:focus-within {
-  position: static;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  clip-path: none;
-  white-space: normal;
 }
 
 .escala {
@@ -631,21 +746,133 @@ button.topo-hamburguer {
   }
 }
 
-/* So a escolha de modo na Home usa isto: as tres opcoes lado a lado, mais
-   altas que uma linha de lista comum. A escala de resposta do questionario
-   continua empilhada, sem essa classe. */
-.escala-modos {
-  grid-template-columns: repeat(3, 1fr);
+/* --- pagina inicial ------------------------------------------------------ */
+
+/* No computador, o convite a esquerda e a amostra do resultado a direita: antes
+   a metade de baixo da tela ficava vazia. No celular, um embaixo do outro. */
+.inicio {
+  display: grid;
+  gap: 32px;
+  align-content: start;
+  padding-block: 36px 56px;
 }
 
-.escala-modos .opcao {
-  align-items: flex-start;
-  min-height: 96px;
+@media (min-width: 900px) {
+  .inicio {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    align-content: center;
+    gap: 64px;
+    flex: 1;
+    padding-block: 48px;
+  }
+}
+
+.inicio-titulo {
+  font-size: clamp(30px, 6vw, 48px);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+/* A duracao do teste em tres partes numa linha so. O escolhido vira bloco
+   solido, como o seletor de idioma: opcoes exclusivas, sem comparar bordas. */
+.seletor-modo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 32rem;
+  border: 1px solid var(--line-forte);
+  border-radius: var(--raio-pequeno);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.seletor-modo button {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  padding: 12px 6px;
+  border: none;
+  border-left: 1px solid var(--line-forte);
+  background: none;
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+  transition: background var(--transicao), color var(--transicao);
+}
+
+.seletor-modo button:first-child {
+  border-left: none;
+}
+
+.seletor-modo strong {
+  font-size: 15px;
+  font-weight: 620;
+  color: var(--ink);
+}
+
+.seletor-modo button:hover:not([aria-pressed="true"]) {
+  background: var(--raised);
+}
+
+.seletor-modo button[aria-pressed="true"] {
+  background: var(--acao);
+  color: color-mix(in oklab, var(--acao-tinta) 82%, var(--acao));
+}
+
+.seletor-modo button[aria-pressed="true"] strong {
+  color: var(--acao-tinta);
+}
+
+.botao-comecar {
+  justify-self: start;
+  padding: 14px 34px;
+  font-size: 16.5px;
 }
 
 @media (max-width: 30rem) {
-  .escala-modos {
+  .botao-comecar {
+    justify-self: stretch;
+  }
+}
+
+/* A amostra do que a pessoa recebe no fim. Tracejada: e exemplo, nao dado. */
+.amostra {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px dashed var(--line-forte);
+  border-radius: var(--raio);
+}
+
+.amostra ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--ink-mid);
+}
+
+@media (min-width: 900px) {
+  .amostra {
     grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 32px;
+    gap: 22px;
+  }
+
+  .amostra .bussola-amostra {
+    width: 240px;
+    height: 240px;
+  }
+
+  .amostra ul {
+    font-size: 15px;
   }
 }
 
@@ -762,6 +989,117 @@ button.topo-hamburguer {
 }
 
 /* --- resultado ----------------------------------------------------------- */
+
+/* A frase que diz onde a pessoa caiu. Sem ela a pagina abria com um rotulo
+   pequeno e o grafico, e o resultado nunca era dito em palavras. */
+.manchete {
+  font-size: clamp(28px, 5.4vw, 40px);
+  line-height: 1.1;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.resultado-manchete .apoio {
+  font-size: 15px;
+  max-width: 40rem;
+}
+
+/* A fileira de atalhos fica presa no topo ao rolar. Fundo solido, senao o
+   texto da pagina passa por baixo dela e os dois se misturam. */
+.atalhos {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: -20px;
+  padding: 10px 20px;
+  background: var(--bg);
+  border-block: 1px solid var(--line);
+}
+
+.atalhos::-webkit-scrollbar {
+  display: none;
+}
+
+.atalhos .chip {
+  flex: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.atalhos .chip[aria-current="true"] {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 560;
+}
+
+/* A secao para logo abaixo da fileira de atalhos, e nao escondida atras dela. */
+.secao-resultado {
+  scroll-margin-top: 72px;
+}
+
+.acoes-topo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* "Voce: discordo muito", embaixo de cada afirmacao do "por que". Borda de
+   tinta, e nao cor: concordar e discordar tem o mesmo peso visual. */
+.sua-resposta {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--ink);
+  border-radius: 99px;
+  padding: 2px 10px 2px 8px;
+}
+
+.sua-resposta .polegares {
+  color: var(--ink);
+  vertical-align: baseline;
+}
+
+.todas-respostas {
+  display: grid;
+  gap: 12px;
+}
+
+.todas-respostas > summary {
+  cursor: pointer;
+  font-weight: 560;
+  font-size: 15px;
+  padding-block: 6px;
+  justify-self: start;
+}
+
+.todas-respostas[open] > summary {
+  margin-bottom: 10px;
+}
+
+/* Cartao de tradicao que leva para a pagina dela. */
+.cartao-link {
+  text-decoration: none;
+  transition: border-color var(--transicao);
+}
+
+.cartao-link:hover {
+  border-color: var(--line-forte);
+}
+
+.cartao-link-acao {
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 .grafico {
   margin: 0;

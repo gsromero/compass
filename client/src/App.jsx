@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
 import { useTema } from "./lib/tema.jsx";
+import { TRADICOES } from "./lib/tradicoes.js";
 import ErroLimite from "./components/ErroLimite.jsx";
 import Home from "./pages/Home.jsx";
 import Teste from "./pages/Teste.jsx";
@@ -24,21 +25,26 @@ function SeletorIdioma() {
   );
 }
 
-function LinksPrincipais({ onNavegar }) {
+// Tradicoes antes de Metodologia e Sobre: sao 12 paginas de conteudo que, sem
+// este link, so eram achadas por quem terminava o teste.
+const LINKS = [
+  ["/", "nav_inicio"],
+  ["/tradicoes", "nav_tradicoes"],
+  ["/metodologia", "nav_metodologia"],
+  ["/sobre", "nav_sobre"],
+];
+
+/** `detalhado`: no menu do celular, Tradicoes diz quantas sao. */
+function LinksPrincipais({ onNavegar, detalhado = false }) {
   const { t } = useLang();
-  return (
-    <>
-      <Link to="/" className="botao-discreto" onClick={onNavegar}>
-        {t("nav_inicio")}
-      </Link>
-      <Link to="/sobre" className="botao-discreto" onClick={onNavegar}>
-        {t("nav_sobre")}
-      </Link>
-      <Link to="/metodologia" className="botao-discreto" onClick={onNavegar}>
-        {t("nav_metodologia")}
-      </Link>
-    </>
-  );
+  return LINKS.map(([para, chave]) => (
+    <Link key={para} to={para} className="botao-discreto" onClick={onNavegar}>
+      {t(chave)}
+      {detalhado && para === "/tradicoes" && (
+        <span className="link-detalhe">{t("nav_tradicoes_detalhe", TRADICOES.length)}</span>
+      )}
+    </Link>
+  ));
 }
 
 function Topo() {
@@ -95,7 +101,7 @@ function Topo() {
 
       {menuAberto && (
         <nav id="topo-menu-mobile" className="topo-menu-mobile" aria-label={t("nav_principal")}>
-          <LinksPrincipais onNavegar={() => setMenuAberto(false)} />
+          <LinksPrincipais onNavegar={() => setMenuAberto(false)} detalhado />
         </nav>
       )}
     </header>
@@ -109,10 +115,20 @@ function Rodape() {
 
   return (
     <footer className="rodape">
-      <span>{t("rodape_privacidade")}</span>
-      <a href="https://github.com/gsromero/compass" target="_blank" rel="noreferrer">
-        {t("rodape_codigo")}
-      </a>
+      {/* O fim de uma pagina longa e onde o dedo procura para onde ir. */}
+      <nav className="rodape-links" aria-label={t("nav_rodape")}>
+        {LINKS.map(([para, chave]) => (
+          <Link key={para} to={para}>
+            {t(chave)}
+          </Link>
+        ))}
+      </nav>
+      <div className="rodape-base">
+        <span>{t("rodape_privacidade")}</span>
+        <a href="https://github.com/gsromero/compass" target="_blank" rel="noreferrer">
+          {t("rodape_codigo")}
+        </a>
+      </div>
     </footer>
   );
 }

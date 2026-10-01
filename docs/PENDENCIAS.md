@@ -140,6 +140,18 @@
 - [ ] `og:image` por quadrante: dono perguntou se é só autorizar; falta o "pode fazer". Mostrar as
       quatro imagens antes de codar
 
+## Propostas de interface (pesquisa na Mobbin, mockup aprovado em 2026-10-01)
+
+- [x] 1 · Resultado com manchete, atalhos de seção e Compartilhar no topo
+- [x] 2 · Cartão menor, baralho por trás e polegares embaixo (celular e computador)
+- [x] 3 · Lista com a afirmação no alto e o peso antes das respostas
+- [x] 4 · "Por que você caiu aqui" mostrando a resposta da pessoa, e todas as respostas recolhidas
+- [x] 5 · Início com seletor de duração numa linha e amostra do resultado
+- [x] 6 · Tradições no menu e no rodapé; cartão de tradição vira link
+- [ ] **Registrar o modo de resposta (cartão ou lista)** junto do resultado, para comparar se o
+      arrasto produz respostas mais extremas que a lista. Sugerido ao dono, sem resposta ainda
+- [ ] No piloto: observar quem usa cada modo e se o arrasto deu resposta diferente da pretendida
+
 ## Depois do lançamento
 
 - [ ] Análise fatorial com dados reais: as perguntas medem mesmo o eixo declarado?
