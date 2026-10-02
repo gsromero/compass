@@ -348,6 +348,20 @@ no centro: um ponto parado num quadrante sugeriria um lado, mas passando pelos q
 peso não sugere nenhum. A manchete reserva duas linhas para o cartão não mudar de altura. Com
 `prefers-reduced-motion`, fica parada no primeiro exemplo.
 
+## Quem já respondeu, no gráfico
+
+Um ponto por pessoa (`r` 3,2, `--populacao` a 50%, contorno do painel), por cima da grade e por
+baixo dos polos e do "Você". Onde eles se juntam, caiu mais gente. Substituiu a mancha borrada em
+2026-10-02 (o dono achou feia; a grade de bolinhas por tamanho também foi recusada). Sem
+`resultado`, a `Bussola` marca a média (anel vazio com "Média"): é o que a página de Resultados usa.
+
+## Página de Resultados
+
+`/resultados` (`Panorama.jsx`, classes `.pub-*`), mockup aprovado em 2026-10-02. O aviso "Isto não
+é uma pesquisa de opinião" fica no topo, com borda de tinta, porque é o que precisa sair no print.
+Grupo pequeno: barra listrada (`.pub-barra-oculta`) e "menos de 10". A escolha de ordem usa
+`.pilulas-escolha`, a mesma pílula dos formatos do card (antes `.vitrine-formato`).
+
 ## Prévia de link (WhatsApp, X)
 
 1200x630, fundo `COR.fundo`, a bússola num cartão branco à esquerda (mesma receita do site e do

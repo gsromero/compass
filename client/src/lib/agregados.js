@@ -1,4 +1,4 @@
-// Os numeros da populacao: percentil, mancha no grafico e "onde voce destoa".
+// Os numeros da populacao: percentil, pontos no grafico e "onde voce destoa".
 //
 // Nunca lanca. Sem servidor, sem banco ou com resposta estranha, o site
 // continua funcionando: o resultado individual nao depende disso em nada, e as
@@ -15,13 +15,23 @@ const VAZIO = { suficiente: false, total: 0, minimo: 50 };
  */
 export const VIAS = ["arrasto", "botao", "teclado"];
 
+/**
+ * Busca os numeros e LANCA se nao conseguir. Para a pagina de Resultados, que
+ * precisa distinguir "ainda sao poucas respostas" de "deu erro" (e oferecer
+ * tentar de novo), em vez de mostrar vazio falso.
+ */
+export async function buscarAgregados() {
+  const resposta = await fetch("/api/agregados");
+  if (!resposta.ok) throw new Error(`agregados: ${resposta.status}`);
+  const dados = await resposta.json();
+  if (typeof dados?.total !== "number") throw new Error("agregados: formato");
+  return dados;
+}
+
+/** Para a tela de resultado: nunca lanca, e sem numeros a comparacao some. */
 export async function carregarAgregados() {
   try {
-    const resposta = await fetch("/api/agregados");
-    if (!resposta.ok) return VAZIO;
-    const dados = await resposta.json();
-    if (typeof dados?.total !== "number") return VAZIO;
-    return dados;
+    return await buscarAgregados();
   } catch {
     return VAZIO;
   }

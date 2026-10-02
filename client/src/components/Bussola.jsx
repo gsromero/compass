@@ -2,7 +2,7 @@ import { useEffect, useId, useState } from "react";
 import { useLang } from "../lib/lang.jsx";
 import { numSinal } from "../lib/i18n.js";
 import { TRADICOES } from "../lib/tradicoes.js";
-import { lugarDaEtiqueta } from "../lib/compass.js";
+import { lugarDaEtiqueta, pontosEspalhados } from "../lib/compass.js";
 
 // Coordenadas do desenho (viewBox). O quadrado do grafico fica entre as
 // margens; a esquerda e embaixo sobra espaco para os numeros da escala.
@@ -46,7 +46,7 @@ const LADO_DO_NOME = {
 };
 
 /**
- * A bussola: quadrantes, escala, a mancha de quem ja respondeu, e a sua posicao
+ * A bussola: quadrantes, escala, um ponto por pessoa que ja respondeu, e a sua posicao
  * como ELIPSE, nao como ponto. A elipse e a margem de erro, e ela existe
  * porque um ponto com duas casas decimais promete uma precisao que nenhum
  * questionario de 48 perguntas tem.
@@ -70,6 +70,7 @@ export default function Bussola({
   proximas = [],
   etiqueta = null,
   amostra = false,
+  media = null,
 }) {
   const { t, lang, pick } = useLang();
   const id = useId();
@@ -82,13 +83,17 @@ export default function Bussola({
     return () => cancelAnimationFrame(quadro);
   }, []);
 
-  const econ = resultado.economico.posicao;
-  const aut = resultado.autoridade.posicao;
+  // Sem `resultado`, a bussola marca a `media` de quem respondeu (pagina de
+  // Resultados): anel vazio com "Media", sem margem de erro.
+  const ehMedia = !resultado && media !== null;
+  const econ = ehMedia ? media.economico : resultado.economico.posicao;
+  const aut = ehMedia ? media.autoridade : resultado.autoridade.posicao;
   const vx = X(econ);
   const vy = Y(aut);
-  const rx = (resultado.economico.margem / 20) * LADO;
-  const ry = (resultado.autoridade.margem / 20) * LADO;
-  const celulas = populacao?.celulas ?? [];
+  const rx = ehMedia ? 0 : (resultado.economico.margem / 20) * LADO;
+  const ry = ehMedia ? 0 : (resultado.autoridade.margem / 20) * LADO;
+  // Um ponto por pessoa que ja respondeu (ver pontosEspalhados).
+  const outros = pontosEspalhados(populacao?.pontos);
   // Na amostra da pagina inicial o ponto troca de lugar a cada poucos
   // segundos: o grupo "Voce" e desenhado no centro e levado ate a posicao por
   // transform, que o CSS anima. Fora dela, desenha direto na posicao.
@@ -101,7 +106,8 @@ export default function Bussola({
   // grande e ponto alto, "em cima" saia para fora do desenho.
   // Mesma regra do card (lib/shareCard.js): a primeira das quatro posicoes em
   // volta da margem que nao encosta nos nomes dos polos.
-  const larguraEtiqueta = (etiqueta ?? t("bus_voce")).length * 6.4 + 20;
+  const textoEtiqueta = etiqueta ?? t(ehMedia ? "bus_media" : "bus_voce");
+  const larguraEtiqueta = textoEtiqueta.length * 6.4 + 20;
   const pilulas = [
     caixaPilula(CX, Y(10) + 30, `↑ ${t("polo_autoridade")}`, "meio"),
     caixaPilula(CX, Y(-10) - 24, `↓ ${t("polo_liberdade")}`, "meio"),
@@ -147,9 +153,6 @@ export default function Bussola({
               />
             </linearGradient>
           ))}
-          <filter id={`${id}-borrao`} x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="9" />
-          </filter>
           <clipPath id={`${id}-recorte`}>
             <rect x={X(-10)} y={Y(10)} width={LADO} height={LADO} rx="6" />
           </clipPath>
@@ -167,27 +170,26 @@ export default function Bussola({
             />
           ))}
 
-          {celulas.length > 0 && (
-            <g filter={`url(#${id}-borrao)`}>
-              {celulas.map((c, i) => (
-                <rect
-                  key={i}
-                  x={X(c.economico - 1)}
-                  y={Y(c.autoridade + 1)}
-                  width={LADO / 10}
-                  height={LADO / 10}
-                  fill="var(--populacao)"
-                  opacity={0.1 + c.densidade * 0.4}
-                />
-              ))}
-            </g>
-          )}
-
           {GRADE.map((v) => (
             <g key={v} stroke="var(--panel)" strokeOpacity="0.55" strokeWidth="1">
               <line x1={X(v)} y1={Y(10)} x2={X(v)} y2={Y(-10)} />
               <line x1={X(-10)} y1={Y(v)} x2={X(10)} y2={Y(v)} />
             </g>
+          ))}
+
+          {/* Quem ja respondeu: um ponto por pessoa, por cima da grade. Onde
+              eles se juntam, caiu mais gente. */}
+          {outros.map((p, i) => (
+            <circle
+              key={i}
+              cx={X(p.economico)}
+              cy={Y(p.autoridade)}
+              r="3.2"
+              fill="var(--populacao)"
+              fillOpacity="0.5"
+              stroke="var(--panel)"
+              strokeWidth="0.8"
+            />
           ))}
         </g>
 
@@ -328,6 +330,8 @@ export default function Bussola({
           <ValorNaBorda x={X(-10) - 22} y={vy} texto={numSinal(lang, aut)} />
           </>
           )}
+          {!ehMedia && (
+          <>
           <circle cx={px} cy={py} r={Math.max(rx, ry) + 10} fill="var(--voce)" fillOpacity="0.07" />
           <ellipse
             cx={px}
@@ -341,7 +345,13 @@ export default function Bussola({
             strokeWidth="1.5"
             strokeDasharray="4 3"
           />
-          <circle cx={px} cy={py} r="7.5" fill="var(--voce)" stroke="var(--panel)" strokeWidth="3" />
+          </>
+          )}
+          {ehMedia ? (
+            <circle cx={px} cy={py} r="7" fill="var(--panel)" stroke="var(--ink)" strokeWidth="2.5" />
+          ) : (
+            <circle cx={px} cy={py} r="7.5" fill="var(--voce)" stroke="var(--panel)" strokeWidth="3" />
+          )}
           <g>
             <rect
               x={voceX - vx + px}
@@ -359,7 +369,7 @@ export default function Bussola({
               fontWeight="700"
               fill="var(--bg)"
             >
-              {etiqueta ?? t("bus_voce")}
+              {textoEtiqueta}
             </text>
           </g>
         </g>
@@ -384,9 +394,13 @@ export default function Bussola({
           </svg>
           {t("bus_margem")}
         </span>
-        {celulas.length > 0 && (
+        {outros.length > 0 && (
           <span className="bussola-legenda-item">
-            <span className="grafico-amostra" aria-hidden="true" />
+            <svg width="18" height="12" aria-hidden="true">
+              {[[4, 7], [9, 4], [14, 8]].map(([x, y]) => (
+                <circle key={x} cx={x} cy={y} r="2.6" fill="var(--populacao)" fillOpacity="0.55" />
+              ))}
+            </svg>
             {t("bus_populacao")}
           </span>
         )}

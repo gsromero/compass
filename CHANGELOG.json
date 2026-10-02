@@ -1,5 +1,28 @@
 [
   {
+    "version": "10.6",
+    "date": "2026-10-02T21:00:00",
+    "author": "claude",
+    "summary": "Pagina publica de Resultados no menu, e a mancha borrada do grafico virou um ponto por pessoa (no resultado e na pagina nova).",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/pages/Panorama.jsx",
+        "client/src/App.jsx",
+        "client/src/components/Bussola.jsx",
+        "client/src/lib/compass.js",
+        "client/src/lib/agregados.js",
+        "functions/api/agregados.js",
+        "client/src/lib/i18n.js",
+        "client/src/index.css",
+        "client/src/pages/Resultado.jsx",
+        "client/src/components/VitrineCards.jsx"
+      ],
+      "technical": "/api/agregados ganhou pontos (ROUND de 1 em 1 com contagem), medias, quadrantes, demografia (null abaixo de 10) e afirmacoes; mapa removido. Bussola: pontosEspalhados no lugar das celulas borradas; prop media para marcar a media sem resultado. Conferido: SQL novo rodado em producao (so leitura) e as duas paginas renderizadas com os dados reais (53 pontos, 48 afirmacoes, sem erro). Previa avulsa nao le o banco de producao, por isso nao serviu para conferir.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.5",
     "date": "2026-10-02T14:30:00",
     "author": "claude",
@@ -76,37 +99,6 @@
         "docs/ARQUITETURA.md"
       ],
       "technical": "Bussola ganhou prop amostra: sem legenda e chave, escala sempre visivel, grupo Voce desenhado no centro e levado por transform (CSS anima 1100ms; rx/ry por style). AmostraResultado alterna EXEMPLOS a cada 3600ms, texto troca 550ms depois com fade. BussolaAmostra.jsx removido. .caixa-verificacao virou fixed no canto inferior direito e recebe hidden 1,5 s depois do token.",
-      "pending": []
-    }
-  },
-  {
-    "version": "10.1",
-    "date": "2026-10-02T03:00:00",
-    "author": "claude",
-    "summary": "Secao de compartilhar nova (cards em leque, WhatsApp, faixa propria), teste rapido fora da escolha, card Story corrigido, etiqueta Voce desvia dos polos, afirmacao de ecologia reescrita (banco v4) e linha da sua posicao nos partidos.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/components/Bussola.jsx",
-        "client/src/components/Icones.jsx",
-        "client/src/components/SeletorModo.jsx",
-        "client/src/components/VitrineCards.jsx",
-        "client/src/data/questions.json",
-        "client/src/index.css",
-        "client/src/lib/compass.js",
-        "client/src/lib/i18n.js",
-        "client/src/lib/manchete.test.js",
-        "client/src/lib/previa.test.js",
-        "client/src/lib/shareCard.js",
-        "client/src/pages/Partidos.jsx",
-        "client/src/pages/Resultado.jsx",
-        "docs/ARQUITETURA.md",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/FONTES.md",
-        "docs/METODOLOGIA.md",
-        "functions/api/_versao.js"
-      ],
-      "technical": "Story montado de baixo para cima (convite fixo, tradicao, reguas, bussola no espaco restante com escala proporcional); nome da tradicao encolhe se longo. lugarDaEtiqueta em compass.js testa quatro posicoes contra os retangulos das pilulas de polo; usada no canvas e no SVG. Testado com a frase mais longa possivel em pt e en e a tradicao de nome mais longo, nos tres formatos. Compartilhar: faixa .faixa-compartilhar com fundo --palco, VitrineCards gera os tres cards e os mostra em leque (mesma altura, chave da tradicao sempre no lugar), botao principal com Web Share e tres secundarios (WhatsApp via wa.me, Baixar, Copiar link), linha de privacidade. Comparacao, quando existe, fica na faixa anterior. Teste rapido: so saiu do SeletorModo; continua em scoring.js para sessoes em andamento; convite do visitante passou a dizer 'a partir de 6 min'. Banco v4: nova redacao da afirmacao de tecnologia e crise ambiental, VERSAO=4 nas Functions.",
       "pending": []
     }
   }

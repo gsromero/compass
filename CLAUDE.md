@@ -148,7 +148,7 @@ Ler o handoff recente **antes de começar**.
   `caches.default`; não existe job que recalcula sozinho.
 - **Gravação da tabela `itens` é em lote** (`db.batch`), nunca em laço: são dezenas de linhas por
   resposta.
-- **Abaixo de 50 respostas** as seções de percentil, mapa de calor e "onde você destoa" não
+- **Abaixo de 50 respostas** as seções de percentil, pontos no gráfico e "onde você destoa" não
   aparecem. É de propósito, não é bug.
 - **`VERSAO` em `functions/api/_versao.js` tem que ser igual ao `versao` do `questions.json`.**
   Não dá para importar o JSON do client dentro das Functions sem arrastar o bundle do front junto,
