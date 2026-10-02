@@ -488,6 +488,7 @@ export default function Resultado() {
             <CabecalhoSecao rotulo={t("sec_comparacao")} titulo={t("pop_titulo")} />
             <div className="pilha">
               <p className="apoio">{t("pop_total", agregados.total)}</p>
+              <p className="apoio">{t("pop_aviso")}</p>
               {EIXOS_PRINCIPAIS.map((eixo) => {
                 const pct = percentil(agregados, eixo, resultado[eixo].posicao);
                 if (pct === null) return null;

@@ -1,5 +1,20 @@
 [
   {
+    "version": "10.5",
+    "date": "2026-10-02T14:30:00",
+    "author": "claude",
+    "summary": "Comparacao com os outros respondentes avisa que sao pessoas que chegaram ao teste, nao uma amostra do pais.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/lib/i18n.js",
+        "client/src/pages/Resultado.jsx"
+      ],
+      "technical": "Chave pop_aviso (pt e en) logo abaixo de pop_total. Motivo: o link foi divulgado no Instagram do dono e 32 das 38 respostas caiam em Esquerda e Liberdade; sem o aviso, o percentil pareceria falar do pais.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.4",
     "date": "2026-10-01T20:30:00",
     "author": "claude",
@@ -93,36 +108,6 @@
       ],
       "technical": "Story montado de baixo para cima (convite fixo, tradicao, reguas, bussola no espaco restante com escala proporcional); nome da tradicao encolhe se longo. lugarDaEtiqueta em compass.js testa quatro posicoes contra os retangulos das pilulas de polo; usada no canvas e no SVG. Testado com a frase mais longa possivel em pt e en e a tradicao de nome mais longo, nos tres formatos. Compartilhar: faixa .faixa-compartilhar com fundo --palco, VitrineCards gera os tres cards e os mostra em leque (mesma altura, chave da tradicao sempre no lugar), botao principal com Web Share e tres secundarios (WhatsApp via wa.me, Baixar, Copiar link), linha de privacidade. Comparacao, quando existe, fica na faixa anterior. Teste rapido: so saiu do SeletorModo; continua em scoring.js para sessoes em andamento; convite do visitante passou a dizer 'a partir de 6 min'. Banco v4: nova redacao da afirmacao de tecnologia e crise ambiental, VERSAO=4 nas Functions.",
       "pending": []
-    }
-  },
-  {
-    "version": "10.0",
-    "date": "2026-10-02T02:00:00",
-    "author": "claude",
-    "summary": "So tema claro, comparacao escondida ate ter dados, cards claros em tres formatos e convite para quem abre o link de outra pessoa. Revisao de textos e modo de resposta por tipo de aparelho.",
-    "details": {
-      "commits": [
-        "6c8fb89",
-        "cad0ce3"
-      ],
-      "files": [
-        "client/src/lib/shareCard.js",
-        "client/src/components/VitrineCards.jsx",
-        "client/src/components/SeletorModo.jsx",
-        "client/src/lib/meusResultados.js",
-        "client/src/pages/Resultado.jsx",
-        "client/src/pages/Home.jsx",
-        "client/src/pages/Teste.jsx",
-        "client/src/App.jsx",
-        "client/src/main.jsx",
-        "client/src/index.css",
-        "client/src/lib/i18n.js",
-        "client/index.html"
-      ],
-      "technical": "Removidos tema.jsx, botao e bloco :root[data-tema=escuro]. Secao comparar so com agregados.suficiente; atalhos de 4 combinacoes pre-montadas. shareCard reescrito: LAYOUTS quadrado/story/minimo, cores sRGB derivadas dos tokens OKLCH, bussola em canvas com degrade, pilulas e etiqueta posicionada pela margem; frase e leituras via manchete.js; comTradicao so no story. meusResultados (localStorage) marcado em Teste.terminar; Resultado decide visitante = !state.doTeste && !eMeuResultado(codigo). Teste.jsx: compass.modoResposta.{mouse,toque}, padrao lista no mouse e cartao no toque, chave antiga removida. i18n: textos revistos em pt e en; nivel_* para os cartoes de eixo; eixo_povo = Quem decide.",
-      "pending": [
-        "comparacao dono x visitante (segunda etapa, opcional)"
-      ]
     }
   }
 ]
