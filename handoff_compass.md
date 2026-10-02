@@ -33,6 +33,11 @@
 11. **Prévia de link desenhada na hora** com o resultado real (`functions/og/r`, `@resvg/resvg-wasm`,
     autorizado) e nova prévia geral "Onde você cai?" (`npm run og:geral`).
 
+12. **Aviso de amostra na comparação** (`pop_aviso`): o dono divulgou o link no Instagram (37
+    respostas em 2026-10-02, 32 de 38 em Esquerda e Liberdade), então o percentil não fala do
+    país. **Aberto:** eixo de crime e punição (pena de morte etc.) discutido, sem decisão; o
+    dono não quer perder as respostas atuais, o que é possível só acrescentando perguntas no fim.
+
 **Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
 formatos, sem rolagem lateral).
 

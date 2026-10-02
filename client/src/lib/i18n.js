@@ -250,6 +250,7 @@ const dict = {
     pop_sua_resposta: "Você",
     pop_media_quadrante: "Média do seu quadrante",
     pop_total: (n) => `${n} respostas até agora`,
+    pop_aviso: "São pessoas que chegaram a este teste, e não uma amostra do país. Leia as comparações com isso em mente.",
 
     // eixos
     eixo_economico: "Econômico",
@@ -554,6 +555,7 @@ const dict = {
     pop_sua_resposta: "You",
     pop_media_quadrante: "Your quadrant's average",
     pop_total: (n) => `${n} answers so far`,
+    pop_aviso: "These are people who found this test, not a sample of the country. Read the comparisons with that in mind.",
 
     eixo_economico: "Economic",
     eixo_autoridade: "Authority",
