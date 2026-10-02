@@ -57,7 +57,7 @@ describe("margemUnica", () => {
   });
 });
 
-import { lugarDaEtiqueta } from "./compass.js";
+import { lugarDaEtiqueta, pontosEspalhados } from "./compass.js";
 
 describe("lugarDaEtiqueta", () => {
   const limites = { x0: 0, y0: 0, x1: 300, y1: 300 };
@@ -81,5 +81,26 @@ describe("lugarDaEtiqueta", () => {
     expect(o.x).toBeGreaterThanOrEqual(0);
     expect(o.x + 50).toBeLessThanOrEqual(300);
     expect(o.y).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe("pontosEspalhados", () => {
+  it("um ponto por pessoa, perto do grupo e sempre no mesmo lugar", () => {
+    const grupos = [
+      { e: -4, a: -3, n: 5 },
+      { e: 10, a: 10, n: 2 },
+    ];
+    const pontos = pontosEspalhados(grupos);
+    expect(pontos).toHaveLength(7);
+    for (const p of pontos.slice(0, 5)) {
+      expect(Math.abs(p.economico + 4)).toBeLessThanOrEqual(0.45);
+      expect(Math.abs(p.autoridade + 3)).toBeLessThanOrEqual(0.45);
+    }
+    for (const p of pontos.slice(5)) {
+      expect(p.economico).toBeLessThanOrEqual(10);
+      expect(p.autoridade).toBeLessThanOrEqual(10);
+    }
+    expect(pontosEspalhados(grupos)).toEqual(pontos);
+    expect(pontosEspalhados(null)).toEqual([]);
   });
 });

@@ -21,7 +21,7 @@ pontuar(respostas)  →  6 eixos, cada um com posição E margem de erro
 resultado codificado na URL  →  o link funciona sem banco e sem conta
    ↓  em paralelo, POST /api/respostas (anônimo) alimenta os agregados,
    ↓  UMA vez e só vindo do fim do teste: abrir um link compartilhado não grava
-GET /api/agregados  →  percentil, mapa de calor, "onde você destoa"
+GET /api/agregados  →  percentil, pontos no gráfico, "onde você destoa" e a página /resultados
 ```
 
 **Faixa etária e gênero não entram nesse fluxo.** São opcionais, perguntados uma vez em
@@ -43,12 +43,12 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 | `questions.js` | Porta de entrada do banco de perguntas: carrega `data/questions.json`, filtra por idioma (`so_no_idioma`) e valida forma. Nenhuma tela lê o JSON direto |
 | `i18n.js` | TODAS as strings de interface, pt e en. Valor pode ser função quando tem número no meio |
 | `lang.jsx` | `LangProvider` + `useLang()`, devolvendo `{ lang, setLang, t, pick }`. `t` é string de interface; `pick` é texto de conteúdo (objetos `{pt, en}`). A escolha fica no localStorage e manda sobre o navegador |
-| `compass.js` | Geometria do gráfico: converte posição de eixo (-10 a +10) em coordenada de SVG, e margem de erro em elipse. Usado pela tela de resultado E pelo card social, para os dois nunca discordarem |
+| `compass.js` | Geometria do gráfico: converte posição de eixo (-10 a +10) em coordenada de SVG, e margem de erro em elipse. Usado pela tela de resultado E pelo card social, para os dois nunca discordarem. `pontosEspalhados` transforma os grupos do servidor em um ponto por pessoa, com espalhamento fixo (sem `Math.random`) |
 | `shareCard.js` | Card em Canvas 2D, três formatos (`quadrado`, `story`, `minimo`), tema claro, frase do resultado via `manchete.js`. Tradição só no Story e só com `comTradicao`. Fundo sempre sólido |
 | `meusResultados.js` | Códigos de resultado feitos neste aparelho (localStorage). Separa o dono de quem recebeu o link |
 | `shareImage.js` | `shareCanvasPng()` e `downloadCanvasPng()`: compartilhamento nativo quando o navegador aceita arquivo, download quando não. Portado do BBB, sem a parte de Capacitor |
 | `permalink.js` | Codifica e decodifica o resultado na URL. É o que faz o link de resultado funcionar sem banco. `versaoDoCodigo()` separa "link de versão anterior do teste" de "link quebrado", que pedem mensagens diferentes |
-| `agregados.js` | Busca `GET /api/agregados` e nunca lança: sem servidor, devolve "dados insuficientes" e a tela esconde as seções que dependem de volume |
+| `agregados.js` | `carregarAgregados` busca `GET /api/agregados` e nunca lança: sem servidor, devolve "dados insuficientes" e a tela de resultado esconde as seções que dependem de volume. `buscarAgregados` lança, para a página de Resultados distinguir erro (com tentar de novo) de "poucas respostas" |
 | `turnstile.js` | Verificação contra robô (Cloudflare Turnstile), uma vez, no fim do teste, antes do `POST /api/respostas`. Carrega o script da Cloudflare só nessa hora. Chave de produção no código (é pública); em localhost usa a chave oficial de teste, que faz par com o segredo de teste do `.dev.vars` |
 | `manchete.js` | A frase que abre o resultado: intensidade de cada eixo principal (`centro`, `leve`, `media`, `forte`) e o polo para onde aponta. O texto fica no i18n (`manchete_<eixo>_<intensidade>`). Também `margemUnica()`, que diz se a margem é igual nos seis eixos |
 | `demografia.js` | `FAIXAS_ETARIAS` e `GENEROS`: as listas fechadas da etapa opcional antes da primeira pergunta. `functions/api/respostas.js` valida contra uma CÓPIA dessas listas (runtime separado, não importa daqui). Mudou uma lista, muda a outra |
@@ -66,7 +66,7 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 |---|---|
 | `respostas.js` | `POST`. Valida faixa e tipo de tudo, aceita só ids de pergunta que existem (`_perguntas.js`), sem repetição, e quadrante coerente com o sinal dos eixos. Depois da validação, confere o token do Turnstile com a Cloudflare (`TURNSTILE_SECRET_KEY`, segredo do projeto no Pages; sem `remoteip`, de propósito): sem token válido, 403 e nada gravado. Grava uma linha em `respostas` e as linhas de `itens` **em lote**, cada item com a sua `via` (arrasto, botao, teclado; lista `VIAS` copiada de `lib/agregados.js`), que viaja de `Teste.jsx` para `Resultado.jsx` no `state` da navegação, como a demografia, e nunca no código da URL. `criado_em` guarda só o dia, nunca a hora. Não guarda nada que identifique quem respondeu |
 | `_versao.js`, `_perguntas.js` | Cópias da versão e dos ids de `questions.json` (as Functions não importam do client). `client/src/lib/sincronia.test.js` compara as cópias, inclusive as listas de demografia de `respostas.js`, e barra o build se divergirem |
-| `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta |
+| `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta. Acima: distribuição e média por eixo, `pontos` (posição arredondada de 1 em 1 com a contagem, sem nenhum outro dado junto; aprovado pelo dono em 2026-10-02), quadrantes, `demografia` (grupo com menos de `MINIMO_GRUPO` = 10 vem `null`), concordância por afirmação e média por pergunta dentro de cada quadrante |
 
 ## Partidos (`/partidos`)
 
@@ -103,6 +103,7 @@ números, bússola com ponto e margem). SVG de `lib/previaImagem.js` virando PNG
 | `components/Icones.jsx` | Ícones de linha dos botões de compartilhar (traço em `currentColor`) |
 | `components/SeletorModo.jsx` | Padrão e Completo numa linha (o Rápido saiu da escolha em 2026-10). Usado no início e no convite do visitante |
 | `lib/previaImagem.js` | SVG 1200x630 da prévia de link (`svgDoResultado`, `svgGeral`). Puro, sem DOM: roda na Function e no script. Cores, frase e leituras vêm de `shareCard.js` (exportadas de lá). Texto medido por estimativa de largura da Inter |
+| `pages/Panorama.jsx` | `/resultados`, item "Resultados" no menu: a página pública com os números somados. Aviso de amostra no topo, bússola com um ponto por pessoa e a média, seis eixos com histograma, quem respondeu (grupos pequenos como "menos de 10"), as 48 afirmações com filtro por eixo e ordem |
 | `components/ResultadoBloqueado.jsx` | Aviso no meio da tela, com o resultado borrado atrás, quando o teste não mediu nada (confiança baixa ou tudo igual). Só deixa refazer |
 | `components/AmostraResultado.jsx` | A prévia viva do resultado na página inicial: quatro exemplos, um por quadrante, com a `Bussola` em modo `amostra` (sem legenda nem chave; o ponto desliza por `transform`) |
 

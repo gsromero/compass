@@ -1,6 +1,8 @@
 // GET /api/agregados
-// Os numeros da populacao: total, distribuicao por eixo, mancha do grafico e
-// media por pergunta dentro de cada quadrante.
+// Os numeros da populacao: total, distribuicao e media por eixo, os pontos do
+// grafico, quadrantes, quem respondeu, concordancia de cada afirmacao e media
+// por pergunta dentro de cada quadrante. Alimenta a tela de resultado e a
+// pagina publica de Resultados.
 //
 // Guardado no cache da propria plataforma por 10 minutos. Pages Functions nao
 // tem cron, entao nao existe job recalculando isso sozinho: a primeira visita
@@ -14,6 +16,8 @@ import { VERSAO } from "./_versao.js";
 
 const EIXOS = ["economico", "autoridade", "fronteiras", "costumes", "ecologia", "povo"];
 const MINIMO = 50;
+// Menor grupo de idade, genero ou idioma que mostra o numero (ver demografia).
+const MINIMO_GRUPO = 10;
 const CACHE_SEGUNDOS = 600;
 const FAIXAS = 10; // de -10 a +10, em faixas de 2
 
@@ -70,44 +74,84 @@ async function calcular(env) {
     eixos[eixo] = { distribuicao };
   }
 
-  // Mancha do grafico: uma grade grossa dos dois eixos principais, para nao
-  // devolver um ponto por pessoa nem permitir reidentificar ninguem.
-  // Mesma conta de faixa da distribuicao acima: deslocar para 0..20 ANTES do
-  // CAST. Fazer CAST(eixo / 2) direto truncava em direcao ao zero, juntando
-  // -2..+2 numa celula so (desenhada em +1) e empurrando todo o lado negativo
-  // uma celula para o centro.
-  const grade = await env.DB.prepare(
-    `SELECT MIN(9, MAX(0, CAST((economico + 10) / 2 AS INTEGER))) AS gx,
-            MIN(9, MAX(0, CAST((autoridade + 10) / 2 AS INTEGER))) AS gy,
+  // Onde cada um caiu nos dois eixos do grafico, agrupado de 1 em 1 ponto:
+  // quem caiu perto vira o mesmo grupo, com a contagem. A tela desenha um ponto
+  // por pessoa, espalhado dentro do grupo. Vai SO a posicao, sem idade, genero
+  // ou qualquer outro dado junto: um ponto nao diz de quem e. Antes era uma
+  // grade grossa de 2 em 2 borrada; o dono aprovou trocar pelos pontos em
+  // 2026-10-02 sabendo que a posicao fica mais precisa.
+  const grupos = await env.DB.prepare(
+    `SELECT CAST(ROUND(economico) AS INTEGER) AS e, CAST(ROUND(autoridade) AS INTEGER) AS a,
             COUNT(*) AS n
-       FROM respostas WHERE versao = ? GROUP BY gx, gy`,
+       FROM respostas WHERE versao = ? GROUP BY e, a`,
   )
     .bind(VERSAO)
     .all();
-  const celulas = grade.results ?? [];
-  const maior = celulas.reduce((m, c) => Math.max(m, c.n), 1);
-  const mapa = {
-    // Centro da celula: a faixa i vai de -10 + 2i a -8 + 2i.
-    celulas: celulas.map((c) => ({
-      economico: c.gx * 2 - 9,
-      autoridade: c.gy * 2 - 9,
-      densidade: c.n / maior,
-    })),
+  const pontos = (grupos.results ?? []).map(({ e, a, n }) => ({ e, a, n }));
+
+  // A media de cada eixo, para a pagina publica de Resultados.
+  const somas = await env.DB.prepare(
+    `SELECT ${EIXOS.map((eixo) => `AVG(${eixo}) AS ${eixo}`).join(", ")}
+       FROM respostas WHERE versao = ?`,
+  )
+    .bind(VERSAO)
+    .first();
+  const medias = Object.fromEntries(
+    EIXOS.map((eixo) => [eixo, Number((somas?.[eixo] ?? 0).toFixed(2))]),
+  );
+
+  const porQuadrante = await env.DB.prepare(
+    "SELECT quadrante, COUNT(*) AS n FROM respostas WHERE versao = ? GROUP BY quadrante",
+  )
+    .bind(VERSAO)
+    .all();
+  const quadrantes = Object.fromEntries(
+    (porQuadrante.results ?? []).map((linha) => [linha.quadrante, linha.n]),
+  );
+
+  // Quem respondeu. Grupo com menos de MINIMO_GRUPO pessoas sai daqui como
+  // null, sem numero: com poucas pessoas, "55 a 64: 1" ajudaria a reconhecer
+  // alguem. Nunca cruza idade com genero nem com posicao.
+  const contar = async (coluna) => {
+    const linhas = await env.DB.prepare(
+      `SELECT ${coluna} AS valor, COUNT(*) AS n FROM respostas WHERE versao = ? GROUP BY ${coluna}`,
+    )
+      .bind(VERSAO)
+      .all();
+    return Object.fromEntries(
+      (linhas.results ?? []).map(({ valor, n }) => [valor ?? "nao_disse", n >= MINIMO_GRUPO ? n : null]),
+    );
   };
+  const demografia = {
+    idade: await contar("faixa_etaria"),
+    genero: await contar("genero"),
+    idioma: await contar("idioma"),
+  };
+
+  // Concordancia de cada afirmacao, somando todo mundo (o "nao sei" a parte).
+  const porAfirmacao = await env.DB.prepare(
+    `SELECT pergunta, SUM(r > 0) AS concordam, SUM(r < 0) AS discordam, SUM(r = 0) AS nao_sei
+       FROM itens WHERE versao = ? GROUP BY pergunta`,
+  )
+    .bind(VERSAO)
+    .all();
+  const afirmacoes = Object.fromEntries(
+    (porAfirmacao.results ?? []).map(({ pergunta, ...resto }) => [pergunta, resto]),
+  );
 
   // Media por pergunta dentro de cada quadrante: alimenta o "onde voce destoa".
   const porPergunta = {};
   // O "nao sei" (r = 0) fica de fora: ele nao e uma opiniao central, e entrar
   // na media puxaria a media do quadrante para o meio sem que ninguem tenha
   // dito nada. Mesma regra da conta individual, em lib/scoring.js.
-  const medias = await env.DB.prepare(
+  const mediasPorQuadrante = await env.DB.prepare(
     `SELECT quadrante, pergunta, AVG(r) AS media, COUNT(*) AS n
        FROM itens WHERE versao = ? AND r != 0
        GROUP BY quadrante, pergunta HAVING n >= 10`,
   )
     .bind(VERSAO)
     .all();
-  for (const linha of medias.results ?? []) {
+  for (const linha of mediasPorQuadrante.results ?? []) {
     porPergunta[linha.quadrante] ??= {};
     porPergunta[linha.quadrante][linha.pergunta] = {
       media: Number(linha.media.toFixed(2)),
@@ -115,5 +159,17 @@ async function calcular(env) {
     };
   }
 
-  return { suficiente: true, total, minimo: MINIMO, eixos, mapa, porPergunta };
+  return {
+    suficiente: true,
+    total,
+    minimo: MINIMO,
+    minimoGrupo: MINIMO_GRUPO,
+    eixos,
+    pontos,
+    medias,
+    quadrantes,
+    demografia,
+    afirmacoes,
+    porPergunta,
+  };
 }

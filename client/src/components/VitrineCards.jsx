@@ -82,7 +82,7 @@ export default function VitrineCards({
 
       <div className="vitrine-lado">
         {cabecalho}
-        <div className="vitrine-formato" role="group" aria-label={t("res_formato")}>
+        <div className="pilulas-escolha" role="group" aria-label={t("res_formato")}>
           {LAYOUTS.map((nome) => (
             <button
               key={nome}

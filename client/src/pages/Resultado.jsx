@@ -329,7 +329,7 @@ export default function Resultado() {
           <Bussola
             resultado={resultado}
             quadrante={quad}
-            populacao={agregados?.suficiente ? agregados.mapa : null}
+            populacao={agregados?.suficiente ? { pontos: agregados.pontos } : null}
             proximas={proximas}
             etiqueta={visitante ? t("bus_esta_pessoa") : null}
           />

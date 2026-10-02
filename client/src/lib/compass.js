@@ -76,3 +76,30 @@ export function lugarDaEtiqueta({ vx, vy, rx, ry, largura, altura, folga, limite
   });
   return opcoes.find((o) => cabe(o) && livre(o)) ?? prende(opcoes.find(cabe) ?? opcoes[0]);
 }
+
+/**
+ * Os pontos de quem ja respondeu, a partir dos grupos que o servidor manda
+ * (posicao arredondada de 1 em 1, com a contagem). Cada pessoa vira um ponto,
+ * espalhado dentro do proprio grupo para os pontos nao cairem um em cima do
+ * outro. O espalhamento e fixo (sai da posicao do grupo, sem Math.random):
+ * a mesma tela desenha sempre igual, e recarregar nao faz os pontos pularem.
+ * @param {{e: number, a: number, n: number}[]} grupos
+ * @returns {{economico: number, autoridade: number}[]}
+ */
+export function pontosEspalhados(grupos, raio = 0.45) {
+  const pontos = [];
+  for (const { e, a, n } of grupos ?? []) {
+    let semente = ((e + 11) * 73856093) ^ ((a + 11) * 19349663);
+    const sorteio = () => {
+      semente = (semente * 1103515245 + 12345) & 0x7fffffff;
+      return semente / 0x7fffffff;
+    };
+    for (let i = 0; i < n; i += 1) {
+      pontos.push({
+        economico: Math.max(-10, Math.min(10, e + (sorteio() * 2 - 1) * raio)),
+        autoridade: Math.max(-10, Math.min(10, a + (sorteio() * 2 - 1) * raio)),
+      });
+    }
+  }
+  return pontos;
+}

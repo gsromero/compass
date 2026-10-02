@@ -38,6 +38,10 @@
     país. **Aberto:** eixo de crime e punição (pena de morte etc.) discutido, sem decisão; o
     dono não quer perder as respostas atuais, o que é possível só acrescentando perguntas no fim.
 
+13. **Página pública de Resultados** (`/resultados`, branch `feat/pagina-resultados`) e a mancha
+    do gráfico virou um ponto por pessoa, também no resultado individual. O servidor passou a
+    mandar a posição de cada resposta, arredondada e sem nenhum outro dado; o dono aprovou.
+
 **Verificado:** 394 testes e build; tela conferida em 1300, 1000 e 390 px (altura igual nos três
 formatos, sem rolagem lateral).
 

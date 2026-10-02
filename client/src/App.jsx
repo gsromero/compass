@@ -10,6 +10,7 @@ import Sobre from "./pages/Sobre.jsx";
 import Metodologia from "./pages/Metodologia.jsx";
 import Tradicoes from "./pages/Tradicoes.jsx";
 import Partidos from "./pages/Partidos.jsx";
+import Panorama from "./pages/Panorama.jsx";
 
 function SeletorIdioma() {
   const { lang, setLang, t } = useLang();
@@ -30,6 +31,7 @@ function SeletorIdioma() {
 const LINKS = [
   ["/", "nav_inicio"],
   ["/tradicoes", "nav_tradicoes"],
+  ["/resultados", "nav_resultados"],
   ["/metodologia", "nav_metodologia"],
   ["/sobre", "nav_sobre"],
 ];
@@ -182,6 +184,7 @@ export default function App() {
           <Route path="/tradicoes" element={<Tradicoes />} />
           <Route path="/tradicoes/:id" element={<Tradicoes />} />
           <Route path="/partidos" element={<Partidos />} />
+          <Route path="/resultados" element={<Panorama />} />
           <Route path="*" element={<NaoEncontrado />} />
         </Routes>
       </ErroLimite>
