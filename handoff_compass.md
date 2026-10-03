@@ -1,3 +1,24 @@
+## 2026-10-03, claude
+
+**O que foi feito** (publicado com autorização do dono):
+
+1. **Página pública de Resultados** (`/resultados`, no menu) e um ponto por pessoa no gráfico, no
+   lugar da mancha borrada, também no resultado individual. O servidor manda a posição de cada
+   resposta, arredondada de 1 em 1 e sem nenhum outro dado; o dono aprovou sabendo disso.
+2. **Partidos viraram seção expansível do resultado** (`SecaoPartidos.jsx`); a página `/partidos`
+   saiu e redireciona para o início. Mockup aprovado na terceira rodada.
+3. **Título da aba** de `/resultados` corrigido (aparecia "não encontramos essa página").
+4. Antes disso, no dia 2: aviso de amostra na comparação (`pop_aviso`), porque o dono divulgou no
+   Instagram e 83% caíram em Esquerda e Liberdade.
+
+**Cuidado aprendido:** `client/src/lib/partidos.test.js` já existia e quase foi sobrescrito por um
+teste novo com o mesmo nome. Ver se o arquivo existe antes de criar.
+
+**Aberto:** eixo de crime e punição (pena de morte etc.), sem decisão; o dono não quer perder as
+respostas atuais, o que é possível acrescentando perguntas no fim, sem mudar a versão. Pergunta
+opcional de estado, sem decisão. Cópias de teste avulsas (`previa-og`, `pagina-resultados`) ficaram
+no Pages; não leem o banco e podem ser apagadas.
+
 ## 2026-10-01 (fim de tarde), claude
 
 **O que foi feito:** na branch `fix/card-story`, tudo publicado junto com autorização do dono
@@ -76,30 +97,3 @@ atalho "Compartilhar", os três cards exportados e conferidos), visitante num na
 "Resultado compartilhado", "Resposta: …", atalho "Sua vez", "Começar o teste" leva ao teste), sem
 erro no console. Achado e corrigido: no Story com tradição, a caixa invadia o convite.
 
-## 2026-10-01 (madrugada), claude
-
-**O que foi feito:** tudo que o dono aprovou em mockup, na branch `feat/turnstile-modo-resposta`,
-junto do Turnstile e da `via` já prontos. **Publicado no mesmo dia, tudo junto, com autorização do
-dono:** 0003 aplicada em produção antes do deploy; conferido em compass.gsromerolab.com (prévia
-por quadrante via `curl`, link quebrado com a prévia geral, POST sem token recusado, resultado,
-vitrine e partidos renderizando sem erro, 0 POST ao abrir link).
-
-1. **Página de partidos** (`/partidos`): BLS 2021, 20 partidos, mínimo de 10 notas (PV e Rede de
-   fora, 1 nota cada; o dono pediu que o PCdoB entrasse, e com 10 ele entra). Fusões conferidas
-   no TSE. Dados brutos em `dados-bls/` (gitignored), médias geradas por `scripts/partidos-bls.mjs`.
-   Link discreto no fim da seção de tradições do resultado.
-2. **Prévia por quadrante:** Function `functions/resultado/[codigo].js` com `HTMLRewriter`. Imagens
-   refeitas com os polos na horizontal, coerentes com a bússola nova.
-3. **Redesenho do resultado e da bússola**, conforme o artefato "Resultado Redesenhado".
-4. **Card:** a faixa da margem vazava no extremo (+10).
-
-**Verificado:** 389 testes e build; `wrangler pages dev` local, celular e computador, pt e en,
-claro e escuro; teste inteiro passa pelo Turnstile de teste e grava 1 linha; F5 não reenvia;
-`curl` na Function devolve `og:image` do quadrante e a geral para link quebrado. Três defeitos
-achados só ao renderizar e corrigidos: cartões de eixo estourando em duas colunas no celular,
-"↓ Liberdade" encostando no nome do quadrante, e a etiqueta "Você" saindo do desenho com margem
-grande.
-
-**Ainda não confirmado em produção:** o Turnstile com a chave real num teste completo (exige
-gravar uma resposta de verdade; o dono pode fazer o próprio teste e conferir se `itens.via` veio
-preenchido) e a prévia aparecendo no WhatsApp.

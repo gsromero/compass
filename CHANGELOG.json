@@ -1,5 +1,25 @@
 [
   {
+    "version": "10.7",
+    "date": "2026-10-03T16:30:00",
+    "author": "claude",
+    "summary": "Partidos viraram uma secao expansivel do resultado (a pagina /partidos saiu), e a pagina de Resultados ganhou o titulo certo na aba.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/components/SecaoPartidos.jsx",
+        "client/src/lib/partidos.js",
+        "client/src/lib/partidos.test.js",
+        "client/src/pages/Resultado.jsx",
+        "client/src/App.jsx",
+        "client/src/lib/i18n.js",
+        "client/src/index.css"
+      ],
+      "technical": "SecaoPartidos: grade comum .pt-grade para a regua de cima e a lista de baixo; siglas empilhadas por empilharSiglas (largura medida com ResizeObserver); maisProximos para os tres destaques. /partidos redireciona para /. Atalho Partidos na barra do resultado. Titulo da aba de /resultados (faltava na lista TITULO_DA_ROTA e caia em 'nao encontrado'). Conferido: 20 siglas sem sobreposicao em 1200 e 390 px, lista abre com 20 linhas, sem rolagem lateral, sem erro.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.6",
     "date": "2026-10-02T21:00:00",
     "author": "claude",
@@ -78,27 +98,6 @@
         "docs/ARQUITETURA.md"
       ],
       "technical": "bloqueado = confianca baixa || respondeuTudoIgual. No efeito de envio, bloqueado so limpa o state e nao chama Turnstile nem /api/respostas. ResultadoBloqueado: alertdialog fixo, backdrop-filter, foco no botao, inert no main, body sem rolagem. Refazer limpa a sessao e abre /teste (completo se havia 48 respostas, senao padrao). Visitante: titulo e texto proprios, botao Comecar o teste. .aviso-forte removido.",
-      "pending": []
-    }
-  },
-  {
-    "version": "10.2",
-    "date": "2026-10-01T18:30:00",
-    "author": "claude",
-    "summary": "Pagina inicial com previa viva do resultado (bussola de verdade passeando por quatro exemplos) e verificacao da Cloudflare no canto da tela, sumindo depois do sucesso.",
-    "details": {
-      "commits": [],
-      "files": [
-        "client/src/components/AmostraResultado.jsx",
-        "client/src/components/Bussola.jsx",
-        "client/src/pages/Home.jsx",
-        "client/src/pages/Resultado.jsx",
-        "client/src/index.css",
-        "client/src/lib/i18n.js",
-        "docs/DESIGN-SYSTEM.md",
-        "docs/ARQUITETURA.md"
-      ],
-      "technical": "Bussola ganhou prop amostra: sem legenda e chave, escala sempre visivel, grupo Voce desenhado no centro e levado por transform (CSS anima 1100ms; rx/ry por style). AmostraResultado alterna EXEMPLOS a cada 3600ms, texto troca 550ms depois com fade. BussolaAmostra.jsx removido. .caixa-verificacao virou fixed no canto inferior direito e recebe hidden 1,5 s depois do token.",
       "pending": []
     }
   }

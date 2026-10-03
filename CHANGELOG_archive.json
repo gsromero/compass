@@ -1,5 +1,26 @@
 [
   {
+    "version": "10.2",
+    "date": "2026-10-01T18:30:00",
+    "author": "claude",
+    "summary": "Pagina inicial com previa viva do resultado (bussola de verdade passeando por quatro exemplos) e verificacao da Cloudflare no canto da tela, sumindo depois do sucesso.",
+    "details": {
+      "commits": [],
+      "files": [
+        "client/src/components/AmostraResultado.jsx",
+        "client/src/components/Bussola.jsx",
+        "client/src/pages/Home.jsx",
+        "client/src/pages/Resultado.jsx",
+        "client/src/index.css",
+        "client/src/lib/i18n.js",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/ARQUITETURA.md"
+      ],
+      "technical": "Bussola ganhou prop amostra: sem legenda e chave, escala sempre visivel, grupo Voce desenhado no centro e levado por transform (CSS anima 1100ms; rx/ry por style). AmostraResultado alterna EXEMPLOS a cada 3600ms, texto troca 550ms depois com fade. BussolaAmostra.jsx removido. .caixa-verificacao virou fixed no canto inferior direito e recebe hidden 1,5 s depois do token.",
+      "pending": []
+    }
+  },
+  {
     "version": "10.1",
     "date": "2026-10-02T03:00:00",
     "author": "claude",
