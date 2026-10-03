@@ -68,14 +68,16 @@ isso, cada recarga e cada amigo abrindo o link virava uma resposta nova nos agre
 | `_versao.js`, `_perguntas.js` | Cópias da versão e dos ids de `questions.json` (as Functions não importam do client). `client/src/lib/sincronia.test.js` compara as cópias, inclusive as listas de demografia de `respostas.js`, e barra o build se divergirem |
 | `agregados.js` | `GET`. Números da população, guardados no `caches.default` por 10 minutos. Abaixo de 50 respostas devolve `{ suficiente: false }` e a tela se ajusta. Acima: distribuição e média por eixo, `pontos` (posição arredondada de 1 em 1 com a contagem, sem nenhum outro dado junto; aprovado pelo dono em 2026-10-02), quadrantes, `demografia` (grupo com menos de `MINIMO_GRUPO` = 10 vem `null`), concordância por afirmação e média por pergunta dentro de cada quadrante |
 
-## Partidos (`/partidos`)
+## Partidos (seção do resultado; `/partidos` redireciona para o início)
 
 `data/partidos-bls.json` é GERADO por `scripts/partidos-bls.mjs` a partir dos dados brutos do
 Brazilian Legislative Surveys (rodada de 2021), que ficam em `dados-bls/`, **fora do git**: o
 download pede cadastro na Harvard Dataverse e o termo proíbe expor respostas individuais. Só entram
 partidos com pelo menos 10 notas (`minimo`); `lib/partidos.test.js` segura essa regra, a fonte e a
-escala. A página não liga partido a tradição. O ponto "Você" só aparece vindo do resultado
-(`state.economico` na navegação), nunca guardado.
+escala. Desde 2026-10-03 é uma seção do resultado (`components/SecaoPartidos.jsx`), e não mais uma
+página: régua com as siglas empilhadas, a pessoa, os três mais próximos e a lista completa ao
+expandir. A conta mora em `lib/partidos.js` (`paraRegua`, `naRegua`, `maisProximos`,
+`empilharSiglas`, esta testada para nenhuma sigla sobrepor outra). Não liga partido a tradição.
 
 ## Prévia de link por quadrante
 

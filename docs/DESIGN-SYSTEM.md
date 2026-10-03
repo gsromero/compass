@@ -423,18 +423,20 @@ não encosta em nome de polo. Antes ia sempre em cima à esquerda, e perto do ce
 
 **Fundo sempre sólido.** Transparência vira preto no Instagram. Gotcha herdado do BBB.
 
-## A página de partidos
+## Partidos no resultado
 
-Uma linha por partido (HTML, não um SVG só, para quebrar bem no celular e ser lida por leitor de
-tela): nome, régua de 1 a 10 e valor. Vindo do resultado, aparecem o losango "Você" na primeira
-linha e uma **linha vertical na sua posição atravessando a lista inteira**
-(`.partidos-linha-voce`), desenhada em pedaços, um por linha, para sair contínua sem medir altura.
-Ela é mais escura que a linha do meio (5,5), para as duas não se confundirem.
+Seção expansível depois das tradições (`SecaoPartidos.jsx`, classes `.pt-*`, mockup aprovado em
+2026-10-03 na terceira rodada). **Régua de cima e lista de baixo usam a mesma grade**
+(`.pt-grade`: nome | régua | nota): a primeira versão do mockup desalinhava as duas e foi recusada.
+Fechada: as 20 siglas empilhadas sobre a régua (quem não cabe sobe uma linha, com fio até o ponto),
+os três mais próximos em preto e destacados embaixo, e o aviso de cuidado sempre visível. Aberta:
+uma linha por partido com a margem de erro. A linha da pessoa atravessa tudo, mais escura que a do
+centro (5,5). Pontas da régua em `--regua-esquerda` e `--regua-direita`, só como degradê.
 
 ## Quem abre o link de outra pessoa
 
 `lib/meusResultados.js` guarda no navegador os códigos feitos naquele aparelho (no fim do teste).
 Quem abre um código que não está lá é **visitante**: faixa escura no topo com "Fazer o teste",
 "Resultado compartilhado", "Esta pessoa" na bússola, "Resposta: …" no lugar de "Você: …", e no fim
-"Agora é a sua vez" com `SeletorModo` no lugar do card. O ponto "Você" da página de partidos não
-vai para visitante. Nada vai para o servidor: é só conveniência de quem abre.
+"Agora é a sua vez" com `SeletorModo` no lugar do card. Na seção de partidos, o visitante vê "Esta
+pessoa" no lugar de "Você". Nada vai para o servidor: é só conveniência de quem abre.

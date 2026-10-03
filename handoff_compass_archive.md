@@ -1,3 +1,31 @@
+## 2026-10-01 (madrugada), claude
+
+**O que foi feito:** tudo que o dono aprovou em mockup, na branch `feat/turnstile-modo-resposta`,
+junto do Turnstile e da `via` já prontos. **Publicado no mesmo dia, tudo junto, com autorização do
+dono:** 0003 aplicada em produção antes do deploy; conferido em compass.gsromerolab.com (prévia
+por quadrante via `curl`, link quebrado com a prévia geral, POST sem token recusado, resultado,
+vitrine e partidos renderizando sem erro, 0 POST ao abrir link).
+
+1. **Página de partidos** (`/partidos`): BLS 2021, 20 partidos, mínimo de 10 notas (PV e Rede de
+   fora, 1 nota cada; o dono pediu que o PCdoB entrasse, e com 10 ele entra). Fusões conferidas
+   no TSE. Dados brutos em `dados-bls/` (gitignored), médias geradas por `scripts/partidos-bls.mjs`.
+   Link discreto no fim da seção de tradições do resultado.
+2. **Prévia por quadrante:** Function `functions/resultado/[codigo].js` com `HTMLRewriter`. Imagens
+   refeitas com os polos na horizontal, coerentes com a bússola nova.
+3. **Redesenho do resultado e da bússola**, conforme o artefato "Resultado Redesenhado".
+4. **Card:** a faixa da margem vazava no extremo (+10).
+
+**Verificado:** 389 testes e build; `wrangler pages dev` local, celular e computador, pt e en,
+claro e escuro; teste inteiro passa pelo Turnstile de teste e grava 1 linha; F5 não reenvia;
+`curl` na Function devolve `og:image` do quadrante e a geral para link quebrado. Três defeitos
+achados só ao renderizar e corrigidos: cartões de eixo estourando em duas colunas no celular,
+"↓ Liberdade" encostando no nome do quadrante, e a etiqueta "Você" saindo do desenho com margem
+grande.
+
+**Ainda não confirmado em produção:** o Turnstile com a chave real num teste completo (exige
+gravar uma resposta de verdade; o dono pode fazer o próprio teste e conferir se `itens.via` veio
+preenchido) e a prévia aparecendo no WhatsApp.
+
 ## 2026-10-01 (noite), claude
 
 **O que foi feito:** Turnstile ligado, na branch `feat/turnstile`. O dono criou o widget no painel

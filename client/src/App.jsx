@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useLang } from "./lib/lang.jsx";
 import { TRADICOES } from "./lib/tradicoes.js";
 import ErroLimite from "./components/ErroLimite.jsx";
@@ -9,7 +9,6 @@ import Resultado from "./pages/Resultado.jsx";
 import Sobre from "./pages/Sobre.jsx";
 import Metodologia from "./pages/Metodologia.jsx";
 import Tradicoes from "./pages/Tradicoes.jsx";
-import Partidos from "./pages/Partidos.jsx";
 import Panorama from "./pages/Panorama.jsx";
 
 function SeletorIdioma() {
@@ -132,7 +131,7 @@ const TITULO_DA_ROTA = [
   ["/sobre", "sobre_titulo"],
   ["/metodologia", "metodologia_titulo"],
   ["/tradicoes", "tradicoes_titulo"],
-  ["/partidos", "partidos_titulo"],
+  ["/resultados", "pub_rotulo"],
 ];
 
 /**
@@ -183,7 +182,8 @@ export default function App() {
           <Route path="/metodologia" element={<Metodologia />} />
           <Route path="/tradicoes" element={<Tradicoes />} />
           <Route path="/tradicoes/:id" element={<Tradicoes />} />
-          <Route path="/partidos" element={<Partidos />} />
+          {/* A pagina de partidos virou secao do resultado (2026-10-03). */}
+          <Route path="/partidos" element={<Navigate to="/" replace />} />
           <Route path="/resultados" element={<Panorama />} />
           <Route path="*" element={<NaoEncontrado />} />
         </Routes>

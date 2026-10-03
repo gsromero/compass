@@ -16,6 +16,7 @@ import {
   IconeWhatsApp,
 } from "../components/Icones.jsx";
 import SeletorModo from "../components/SeletorModo.jsx";
+import SecaoPartidos from "../components/SecaoPartidos.jsx";
 import ResultadoBloqueado from "../components/ResultadoBloqueado.jsx";
 import { useLang } from "../lib/lang.jsx";
 import { num, numSinal } from "../lib/i18n.js";
@@ -55,6 +56,7 @@ for (const comparacao of [true, false]) {
       "eixos",
       "porque",
       "tradicoes",
+      "partidos",
       ...(comparacao ? ["comparar"] : []),
       visitante ? "suavez" : "compartilhar",
     ];
@@ -465,19 +467,9 @@ export default function Resultado() {
             {t("res_todas_tradicoes", TRADICOES.length)}
           </Link>
         </div>
-        {/* A pagina de partidos e separada de proposito: os dados vem de outra
-            pesquisa e medem outra coisa. O eixo economico vai junto so para o
-            ponto "Voce" de la, nunca guardado. */}
-        <Link
-          to="/partidos"
-          // O ponto "Voce" de la e o da pessoa que fez o teste: visitante nao leva.
-          state={visitante ? null : { economico: resultado.economico.posicao }}
-          className="cartao cartao-link partidos-chamada"
-        >
-          <strong>{t("partidos_link")}</strong>
-          <span className="apoio">{t("partidos_link_texto")}</span>
-        </Link>
       </section>
+
+      <SecaoPartidos economico={resultado.economico.posicao} visitante={visitante} />
 
       {(comparacao || visitante) && (
       <section

@@ -136,6 +136,7 @@ const dict = {
     res_atalho_eixos: "Seis eixos",
     res_atalho_porque: "Por quê",
     res_atalho_tradicoes: "Tradições",
+    res_atalho_partidos: "Partidos",
     res_atalho_comparar: "Comparar",
     res_atalho_compartilhar: "Compartilhar",
 
@@ -336,12 +337,21 @@ const dict = {
     tradicoes_titulo: "Tradições ideológicas",
 
     // partidos (dados do Brazilian Legislative Surveys)
-    partidos_titulo: "Onde ficam os partidos",
-    partidos_rotulo: (ano) => `Partidos · Brazilian Legislative Survey ${ano}`,
-    partidos_intro: (n, ano) =>
-      `Como os próprios parlamentares posicionam cada partido, numa escala de 1 (mais à esquerda) a 10 (mais à direita). ${n} deputados e senadores responderam em ${ano}.`,
-    partidos_aviso:
-      "O Compass não posiciona partidos e não liga partidos a tradições. Esta página só mostra o que a pesquisa mediu, com uma régua só: esquerda e direita.",
+    partidos_sec_rotulo: "Partidos",
+    partidos_sec_titulo: "Perto de quais partidos você fica",
+    partidos_sec_titulo_vis: "Perto de quais partidos esta pessoa fica",
+    partidos_sec_intro: (ano) =>
+      `Como os próprios deputados e senadores posicionam cada partido de esquerda a direita, numa pesquisa acadêmica de ${ano}, e onde o seu eixo econômico cai nessa mesma régua.`,
+    partidos_sec_intro_vis: (ano) =>
+      `Como os próprios deputados e senadores posicionam cada partido de esquerda a direita, numa pesquisa acadêmica de ${ano}, e onde o eixo econômico desta pessoa cai nessa mesma régua.`,
+    partidos_nota_escala: "nota de 1 a 10",
+    partidos_perto: "Mais perto de você",
+    partidos_perto_vis: "Mais perto desta pessoa",
+    partidos_hoje_curto: (sigla) => `hoje ${sigla}`,
+    partidos_cuidado:
+      "Compare com cuidado: a pesquisa mede a posição geral de cada partido, e o Compass mede só a economia. O Compass não posiciona partido nenhum nem diz em quem votar.",
+    partidos_ver_todos: (n) => `Ver os ${n} partidos`,
+    partidos_fechar: "Fechar a lista",
     partidos_grafico: "Posição média de cada partido, de 1 (mais à esquerda) a 10 (mais à direita)",
     partidos_voce: "Você",
     partidos_voce_eixo: "eixo econômico",
@@ -351,7 +361,7 @@ const dict = {
     partidos_direita: "mais à direita →",
     partidos_como_ler: "Como ler",
     partidos_como_ler_texto:
-      "Cada ponto é a média das notas que os parlamentares deram ao partido, de 1 a 10. O traço em volta é a margem de erro: quanto menos gente avaliou, maior ele fica. A linha mais escura no meio é o 5,5, o centro da escala.",
+      "Cada ponto é a média das notas que os parlamentares deram ao partido, de 1 a 10. O traço em volta é a margem de erro: quanto menos gente avaliou, maior ele fica. A linha tracejada é o 5,5, o centro da escala. A linha escura que atravessa todas é você.",
     partidos_mudou: (ano) => `O que mudou desde ${ano}`,
     partidos_mudou_texto:
       "DEM e PSL formaram o União Brasil (2022). O PROS foi incorporado ao Solidariedade e o PSC ao Podemos (2023). PTB e Patriota formaram o PRD (2023). Partidos criados depois da pesquisa não aparecem.",
@@ -359,14 +369,8 @@ const dict = {
     partidos_fora_texto: (minimo, lista) =>
       `Só entram partidos avaliados por pelo menos ${minimo} parlamentares. Abaixo disso a média é instável e, com uma ou duas notas, vira a resposta de uma pessoa só, o que a pesquisa proíbe expor. Ficaram de fora: ${lista}.`,
     partidos_fora_item: (sigla, n) => `${sigla} (${n} ${n === 1 ? "nota" : "notas"})`,
-    partidos_voce_titulo: "Você nesta régua",
-    partidos_voce_texto:
-      "O seu ponto é o seu eixo econômico, levado para a mesma escala de 1 a 10. As duas medidas não são iguais: a pesquisa pergunta a posição geral de cada partido, o Compass mede só a economia. Compare com cuidado.",
     partidos_fonte: "Fonte",
     partidos_coordenacao: (quem) => `Projeto coordenado por ${quem}.`,
-    partidos_link: "Onde ficam os partidos →",
-    partidos_link_texto:
-      "Como os parlamentares posicionam cada partido de esquerda a direita, segundo uma pesquisa acadêmica de 2021.",
     teste_titulo_aba: "Teste",
     titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adaptado do item",
@@ -493,6 +497,7 @@ const dict = {
     res_atalho_eixos: "Six axes",
     res_atalho_porque: "Why",
     res_atalho_tradicoes: "Traditions",
+    res_atalho_partidos: "Parties",
     res_atalho_comparar: "Compare",
     res_atalho_compartilhar: "Share",
 
@@ -673,12 +678,21 @@ const dict = {
     metodologia_titulo: "Methodology",
     tradicoes_titulo: "Ideological traditions",
 
-    partidos_titulo: "Where the parties stand",
-    partidos_rotulo: (ano) => `Parties · Brazilian Legislative Survey ${ano}`,
-    partidos_intro: (n, ano) =>
-      `How Brazilian legislators themselves place each party, on a scale from 1 (most left) to 10 (most right). ${n} deputies and senators answered in ${ano}.`,
-    partidos_aviso:
-      "Compass does not place parties and does not link parties to traditions. This page only shows what the survey measured, on a single scale: left and right.",
+    partidos_sec_rotulo: "Parties",
+    partidos_sec_titulo: "Which parties you are close to",
+    partidos_sec_titulo_vis: "Which parties this person is close to",
+    partidos_sec_intro: (ano) =>
+      `How Brazilian congressmembers themselves place each party from left to right, in an academic survey from ${ano}, and where your economic axis falls on the same scale.`,
+    partidos_sec_intro_vis: (ano) =>
+      `How Brazilian congressmembers themselves place each party from left to right, in an academic survey from ${ano}, and where this person's economic axis falls on the same scale.`,
+    partidos_nota_escala: "score from 1 to 10",
+    partidos_perto: "Closest to you",
+    partidos_perto_vis: "Closest to this person",
+    partidos_hoje_curto: (sigla) => `now ${sigla}`,
+    partidos_cuidado:
+      "Compare with care: the survey measures each party's overall position, and Compass measures only the economy. Compass does not place any party or tell anyone how to vote.",
+    partidos_ver_todos: (n) => `See all ${n} parties`,
+    partidos_fechar: "Close the list",
     partidos_grafico: "Average position of each party, from 1 (most left) to 10 (most right)",
     partidos_voce: "You",
     partidos_voce_eixo: "economic axis",
@@ -688,7 +702,7 @@ const dict = {
     partidos_direita: "more to the right →",
     partidos_como_ler: "How to read it",
     partidos_como_ler_texto:
-      "Each dot is the average of the ratings legislators gave the party, from 1 to 10. The bar around it is the margin of error: the fewer people rated it, the wider it gets. The darker line in the middle is 5.5, the centre of the scale.",
+      "Each dot is the average of the ratings legislators gave the party, from 1 to 10. The bar around it is the margin of error: the fewer people rated it, the wider it gets. The dashed line is 5.5, the centre of the scale. The dark line running through every row is you.",
     partidos_mudou: (ano) => `What changed since ${ano}`,
     partidos_mudou_texto:
       "DEM and PSL merged into União Brasil (2022). PROS was absorbed by Solidariedade and PSC by Podemos (2023). PTB and Patriota merged into PRD (2023). Parties created after the survey do not appear.",
@@ -696,14 +710,8 @@ const dict = {
     partidos_fora_texto: (minimo, lista) =>
       `Only parties rated by at least ${minimo} legislators are shown. Below that the average is unstable and, with one or two ratings, it becomes a single person's answer, which the survey forbids disclosing. Left out: ${lista}.`,
     partidos_fora_item: (sigla, n) => `${sigla} (${n} ${n === 1 ? "rating" : "ratings"})`,
-    partidos_voce_titulo: "You on this scale",
-    partidos_voce_texto:
-      "Your dot is your economic axis, converted to the same 1 to 10 scale. The two measures are not the same: the survey asks for each party's overall position, Compass measures only the economy. Compare with care.",
     partidos_fonte: "Source",
     partidos_coordenacao: (quem) => `Project led by ${quem}.`,
-    partidos_link: "Where the parties stand →",
-    partidos_link_texto:
-      "How Brazilian legislators place each party from left to right, according to a 2021 academic survey.",
     teste_titulo_aba: "Test",
     titulo_aba: (pagina) => (pagina ? `${pagina} · Compass` : "Compass"),
     fonte_adaptado: "adapted from item",

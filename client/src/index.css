@@ -36,6 +36,9 @@
   --q-igualdade-autoridade: oklch(0.7 0.145 65);
   --q-mercado-liberdade: oklch(0.7 0.145 245);
   --q-mercado-autoridade: oklch(0.7 0.145 335);
+  /* As pontas da regua dos partidos (SecaoPartidos), so como degrade de fundo. */
+  --regua-esquerda: oklch(0.62 0.13 25);
+  --regua-direita: oklch(0.55 0.12 255);
 
   /* Dados: o ponto da pessoa e a mancha de quem ja respondeu */
   --voce: var(--ink);
@@ -1566,195 +1569,330 @@ td.texto-longo {
   }
 }
 
-/* --- partidos (Brazilian Legislative Surveys) ---------------------------- */
+/* --- partidos, dentro do resultado (components/SecaoPartidos.jsx) ---------- */
 
-/* Uma linha por partido: nome, regua de 1 a 10 e valor. Lista em HTML, e nao
-   um SVG unico, para quebrar bem no celular e ser lida por leitor de tela. */
-.partidos-aviso {
-  font-size: 14px;
-  background: var(--raised);
-  border-radius: var(--raio-pequeno);
-  padding: 10px 12px;
-}
-
-.partidos-grade {
+/* Grade comum: a regua de cima e a lista de baixo usam as MESMAS colunas
+   (nome | regua | nota), entao o mesmo numero cai no mesmo lugar nas duas. */
+.pt-cartao {
+  --pt-nome: 9rem;
+  --pt-valor: 2.8rem;
   display: grid;
-  gap: 24px;
-  align-items: start;
-}
-
-@media (min-width: 900px) {
-  .partidos-grade {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: 32px;
-  }
-}
-
-.partidos-grafico {
-  margin: 0;
+  gap: 18px;
+  padding: 22px 22px 18px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--raio);
-  box-shadow: var(--sombra);
-  padding: 14px 12px 12px;
 }
 
-.partidos-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+@media (max-width: 35rem) {
+  .pt-cartao {
+    --pt-nome: 4.8rem;
+    --pt-valor: 2.4rem;
+    padding: 18px 14px 14px;
+  }
 }
 
-.partidos-linha {
+.pt-grade {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr) 3.6rem;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: var(--pt-nome) minmax(0, 1fr) var(--pt-valor);
+  column-gap: 12px;
+  align-items: end;
 }
 
-.partidos-escala,
-.partidos-pontas {
-  border-bottom: none;
-  min-height: 26px;
+.pt-nome strong {
+  display: block;
+  font-size: 14.5px;
 }
 
-.partidos-nome,
-.partidos-valor {
-  display: grid;
-  line-height: 1.2;
-}
-
-.partidos-nome strong {
-  font-size: 14px;
-}
-
-.partidos-nome small,
-.partidos-valor small {
-  font-size: 10.5px;
-  color: var(--ink-mid);
-}
-
-.partidos-valor {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.partidos-trilho {
-  position: relative;
-  /* Estica ate a altura toda da linha: e o que faz a linha da sua posicao
-     sair continua de um partido para o outro. */
-  align-self: stretch;
-  height: auto;
-  min-height: 26px;
-  /* As linhas verticais de 1 a 10, e o meio (5,5) tracejado, desenhados como
-     fundo: sem um elemento por marca em cada linha. */
-  background:
-    linear-gradient(var(--line-forte), var(--line-forte)) calc(50% - 0.5px) 0 / 1px 100% no-repeat,
-    repeating-linear-gradient(
-      to right,
-      var(--line) 0 1px,
-      transparent 1px calc(100% / 9)
-    );
-}
-
-.partidos-escala .partidos-trilho,
-.partidos-pontas .partidos-trilho {
-  background: none;
-}
-
-.partidos-marca {
-  position: absolute;
-  top: 4px;
-  transform: translateX(-50%);
-  font-size: 11px;
+.pt-nome small {
+  font-size: 12px;
   color: var(--ink-dim);
 }
 
-.partidos-margem {
-  position: absolute;
-  top: 50%;
-  height: 7px;
-  transform: translateY(-50%);
-  border-radius: 4px;
-  background: var(--ink);
-  opacity: 0.22;
+.pt-valor {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-.partidos-ponto,
-.partidos-losango {
-  position: absolute;
-  top: 50%;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--ink);
-  box-shadow: 0 0 0 2.5px var(--panel);
-  transform: translate(-50%, -50%);
+/* As siglas empilhadas: etiqueta, fio ate a regua e o pino no ponto. */
+.pt-pilha {
+  position: relative;
 }
 
-.partidos-losango {
+.pt-eixo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
   border-radius: 2px;
-  transform: translate(-50%, -50%) rotate(45deg);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--regua-esquerda) 45%, transparent),
+    var(--line) 50%,
+    color-mix(in oklch, var(--regua-direita) 45%, transparent)
+  );
 }
 
-/* A linha da sua posicao, de cima a baixo do grafico. Repetida em cada linha
-   da lista (cada uma desenha o seu pedaco), entao forma um traco continuo sem
-   medir a altura de nada. Fica por baixo dos pontos dos partidos. */
-.partidos-linha-voce {
+.pt-fio {
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--line-forte);
+}
+
+.pt-pino {
+  position: absolute;
+  bottom: -3px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--ink-mid);
+}
+
+.pt-sigla {
+  position: absolute;
+  transform: translateX(-50%);
+  height: 20px;
+  padding: 0 7px;
+  line-height: 18px;
+  border: 1px solid var(--line-forte);
+  border-radius: 99px;
+  background: var(--panel);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pt-pino.pt-perto,
+.pt-sigla.pt-perto {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--panel);
+}
+
+/* A linha da pessoa atravessa a pilha e todas as linhas da lista. */
+.pt-vline {
   position: absolute;
   top: 0;
-  /* Cobre tambem a borda de 1px entre as linhas. */
-  bottom: -1px;
+  bottom: -6px;
   width: 2px;
-  transform: translateX(-50%);
+  margin-left: -1px;
   background: var(--ink);
-  /* Mais escura que a linha do meio (5,5) para as duas nao se confundirem. */
   opacity: 0.7;
 }
 
-.partidos-escala .partidos-linha-voce {
-  top: 18px;
+.pt-trilho {
+  position: relative;
+  height: 18px;
 }
 
-.partidos-margem,
-.partidos-ponto,
-.partidos-losango {
+.pt-trilho .pt-vline {
+  top: -8px;
+  bottom: -8px;
+}
+
+.pt-base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  height: 2px;
+  background: var(--line);
+}
+
+.pt-meio {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  border-left: 1px dashed var(--line-forte);
+}
+
+.pt-margem {
+  position: absolute;
+  top: 5px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in oklch, var(--ink-mid) 22%, transparent);
+}
+
+.pt-ponto,
+.pt-losango {
+  position: absolute;
   z-index: 1;
 }
 
-.partidos-voce {
-  background: var(--raised);
-  border-radius: var(--raio-pequeno);
-  border-bottom: none;
-  padding-inline: 6px;
-  margin-inline: -6px;
+.pt-ponto {
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--ink-mid);
 }
 
-.partidos-pontas-texto {
+.pt-losango {
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  background: var(--ink);
+  transform: rotate(45deg);
+}
+
+.pt-linha-voce {
+  align-items: center;
+  padding-block: 6px;
+}
+
+.pt-escala {
+  position: relative;
+  height: 16px;
+}
+
+.pt-escala span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.pt-pontas {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
   color: var(--ink-mid);
 }
 
-/* No celular a regua precisa de largura: sai a contagem de notas (o traco
-   da margem ja mostra quanta gente avaliou; no computador ela aparece). */
-@media (max-width: 30rem) {
-  .partidos-linha {
-    grid-template-columns: 5rem minmax(0, 1fr) 2.4rem;
-    gap: 6px;
-  }
+.pt-proximos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-  .partidos-valor small {
-    display: none;
-  }
+.pt-proximos li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--line-forte);
+  border-radius: 12px;
+  background: var(--bg);
+}
 
-  .partidos-pontas-texto {
-    font-size: 11px;
-  }
+.pt-proximos strong {
+  font-size: 17px;
+}
+
+.pt-proximos span {
+  font-size: 13px;
+  color: var(--ink-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+.pt-cuidado {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-mid);
+}
+
+.pt-cuidado svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.pt-abrir {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 16px;
+  border: 1px solid var(--line-forte);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pt-abrir:hover {
+  background: var(--raised);
+}
+
+.pt-abrir svg {
+  transition: transform var(--transicao);
+}
+
+.pt-abrir[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.pt-completa {
+  display: grid;
+  gap: 20px;
+}
+
+.pt-completa[hidden] {
+  display: none;
+}
+
+.pt-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.pt-lista li {
+  align-items: center;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pt-notas {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.pt-notas div {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--raised);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-mid);
+}
+
+.pt-notas strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.pt-fonte {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
 }
 
 /* --- resultado: estrutura em faixas ---------------------------------------- */
@@ -2162,12 +2300,6 @@ td.texto-longo {
 .tradicao-legenda-ela {
   border: 2px solid var(--ink);
   box-sizing: border-box;
-}
-
-.partidos-chamada {
-  display: grid;
-  gap: 4px;
-  max-width: 34rem;
 }
 
 /* --- faixa final: comparacao e compartilhar --------------------------------- */
